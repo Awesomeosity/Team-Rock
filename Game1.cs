@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TeamRock.Scene;
 
 namespace TeamRock
 {
@@ -9,14 +11,32 @@ namespace TeamRock
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+
+        #region Screen Management
+
+        private MainScreen _mainScreen;
+
+        private enum GameScreen
+        {
+            MainScreen
+        }
+        private GameScreen _gameScreen;
+
+        #endregion
+
+        #region Constructor
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+
+        #endregion
+
+        #region Initialize
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -26,8 +46,6 @@ namespace TeamRock
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -38,19 +56,21 @@ namespace TeamRock
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            SetupScreens();
+            SetGameScreen(GameScreen.MainScreen);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
-        protected override void UnloadContent()
+        private void SetupScreens()
         {
-            // TODO: Unload any non ContentManager content here
+            _mainScreen = MainScreen.Instance;
+            _mainScreen.Initialize(Content);
         }
+
+        #endregion
+
+        #region Update
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -61,11 +81,25 @@ namespace TeamRock
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
+
+            if (IsActive)
+            {
+                switch (_gameScreen)
+                {
+                    case GameScreen.MainScreen:
+                        _mainScreen.Update(gameTime);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
         }
+
+        #endregion
+
+        #region Draw
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -74,10 +108,46 @@ namespace TeamRock
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
+
+            switch (_gameScreen)
+            {
+                case GameScreen.MainScreen:
+                    _mainScreen.Draw(_spriteBatch);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
+
+        #endregion
+
+        #region UnLoad Content
+
+        /// <summary>
+        /// UnloadContent will be called once per game and is the place to unload
+        /// game-specific content.
+        /// </summary>
+        protected override void UnloadContent()
+        {
+            _mainScreen.UnLoadContent();
+        }
+
+        #endregion
+
+        #region Utility Functions
+
+        private void SetGameScreen(GameScreen gameScreen)
+        {
+            if (_gameScreen == gameScreen)
+            {
+                return;
+            }
+
+            _gameScreen = gameScreen;
+        }
+
+        #endregion
     }
 }
