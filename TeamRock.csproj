@@ -45,6 +45,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\GameObjects\GameObject.cs" />
+    <Compile Include="Src\GameObjects\Sprite.cs" />
+    <Compile Include="Src\Scene\CustomScreen.cs" />
+    <Compile Include="Src\Scene\MainScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
