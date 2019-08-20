@@ -15,13 +15,15 @@ namespace TeamRock.Src.GameObjects
         private Vector2 _position;
         private Vector2 _velocity;
         private Vector2 _acceleration;
+        private int _hitboxSize;
 
-        public GameObject(Texture2D sprite, Vector2 position, Vector2 velocity, Vector2 acceleration)
+        public GameObject(Texture2D sprite, Vector2 position, Vector2 velocity, Vector2 acceleration, int hitboxSize)
         {
             _sprite = sprite;
             _position = position;
             _velocity = velocity;
             _acceleration = acceleration;
+            _hitboxSize = hitboxSize;
         }
 
         public Texture2D Sprite
@@ -76,12 +78,21 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
-        public Vector2 getNewPosition(double totalSeconds)
+        public Vector2 GetNewPosition(double totalSeconds)
         {
             Vector2 deltaVelocity = _acceleration * (float)totalSeconds;
             _velocity += deltaVelocity;
             _position += _velocity;
             return _position;
+        }
+
+        public Rectangle GenerateHitbox()
+        {
+            //Probably stupid
+            int xOffset = (int)(_position.X - (_hitboxSize / 2));
+            int yOffset = (int)(_position.Y - (_hitboxSize / 2));
+
+            return new Rectangle(xOffset, yOffset, _hitboxSize, _hitboxSize);
         }
     }
 }
