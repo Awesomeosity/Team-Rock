@@ -89,10 +89,10 @@ namespace TeamRock.Src.GameObjects
         public Rectangle GenerateHitbox()
         {
             //Probably stupid
-            int xOffset = (int)(_position.X - (_hitboxSize / 2));
-            int yOffset = (int)(_position.Y - (_hitboxSize / 2));
+            int xOffset = (int)(_position.X - _hitboxSize);
+            int yOffset = (int)(_position.Y - _hitboxSize);
 
-            return new Rectangle(xOffset, yOffset, _hitboxSize, _hitboxSize);
+            return new Rectangle(xOffset, yOffset, _hitboxSize * 2, _hitboxSize * 2);
         }
     }
 }
