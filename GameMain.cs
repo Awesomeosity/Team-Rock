@@ -3,13 +3,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TeamRock.Scene;
+using TeamRock.Utils;
 
 namespace TeamRock
 {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class GameMain : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -28,10 +29,14 @@ namespace TeamRock
 
         #region Constructor
 
-        public Game1()
+        public GameMain()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            _graphics.PreferredBackBufferWidth = GameInfo.WindowWidth;
+            _graphics.PreferredBackBufferHeight = GameInfo.WindowHeight;
+            _graphics.ApplyChanges();
         }
 
         #endregion
@@ -70,6 +75,34 @@ namespace TeamRock
 
         #endregion
 
+        #region Draw
+
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+            base.Draw(gameTime);
+
+            _spriteBatch.Begin();
+
+            switch (_gameScreen)
+            {
+                case GameScreen.MainScreen:
+                    _mainScreen.Draw(_spriteBatch);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            _spriteBatch.End();
+        }
+
+        #endregion
+
         #region Update
 
         /// <summary>
@@ -85,39 +118,18 @@ namespace TeamRock
 
             if (IsActive)
             {
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                float totalGameTime = (float)gameTime.TotalGameTime.TotalSeconds;
+
                 switch (_gameScreen)
                 {
                     case GameScreen.MainScreen:
-                        _mainScreen.Update(gameTime);
+                        _mainScreen.Update(deltaTime, totalGameTime);
                         break;
 
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
-        }
-
-        #endregion
-
-        #region Draw
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.Black);
-            base.Draw(gameTime);
-
-            switch (_gameScreen)
-            {
-                case GameScreen.MainScreen:
-                    _mainScreen.Draw(_spriteBatch);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -129,10 +141,7 @@ namespace TeamRock
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
         /// </summary>
-        protected override void UnloadContent()
-        {
-            _mainScreen.UnLoadContent();
-        }
+        protected override void UnloadContent() => Content.Unload();
 
         #endregion
 

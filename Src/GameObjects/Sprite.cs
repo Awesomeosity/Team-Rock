@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TeamRock.Src.GameObjects
 {
-    public class Sprite : Texture2D
+    public class Sprite
     {
+        private Texture2D _texture2D;
+
         private Vector2 _position;
         private Vector2 _origin;
 
@@ -13,12 +15,22 @@ namespace TeamRock.Src.GameObjects
 
         private Color _spriteColor;
 
+        #region Constructor
+
+        public Sprite(Texture2D texture2D)
+        {
+            _texture2D = texture2D;
+            Initialize();
+        }
+
+        #endregion
+
         #region Render
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                this,
+                _texture2D,
                 _position,
                null,
                 _spriteColor,
@@ -64,7 +76,9 @@ namespace TeamRock.Src.GameObjects
             set => _scale = value;
         }
 
-        public void SetOriginCenter() => _origin = new Vector2(base.Width / 2.0f, base.Height / 2.0f);
+        public void UpdateTexture(Texture2D texture2D) => _texture2D = texture2D;
+
+        public void SetOriginCenter() => _origin = new Vector2(_texture2D.Width / 2.0f, _texture2D.Height / 2.0f);
 
         #endregion
 
@@ -78,31 +92,6 @@ namespace TeamRock.Src.GameObjects
             _scale = 1;
             _spriteColor = Color.White;
 
-        }
-
-        #endregion
-
-        // Not required to override
-        #region Base Members 
-
-        public Sprite(GraphicsDevice graphicsDevice, int width, int height) : base(graphicsDevice, width, height)
-        {
-            Initialize();
-        }
-
-        public Sprite(GraphicsDevice graphicsDevice, int width, int height, bool mipmap, SurfaceFormat format) : base(graphicsDevice, width, height, mipmap, format)
-        {
-            Initialize();
-        }
-
-        public Sprite(GraphicsDevice graphicsDevice, int width, int height, bool mipmap, SurfaceFormat format, int arraySize) : base(graphicsDevice, width, height, mipmap, format, arraySize)
-        {
-            Initialize();
-        }
-
-        protected Sprite(GraphicsDevice graphicsDevice, int width, int height, bool mipmap, SurfaceFormat format, SurfaceType type, bool shared, int arraySize) : base(graphicsDevice, width, height, mipmap, format, type, shared, arraySize)
-        {
-            Initialize();
         }
 
         #endregion

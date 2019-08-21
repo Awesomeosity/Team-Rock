@@ -41,13 +41,18 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
+    <Compile Include="GameMain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\GameObjects\GameObject.cs" />
+    <Compile Include="Src\GameObjects\Player.cs" />
+    <Compile Include="Src\GameObjects\Projectile.cs" />
     <Compile Include="Src\GameObjects\Sprite.cs" />
     <Compile Include="Src\Scene\CustomScreen.cs" />
     <Compile Include="Src\Scene\MainScreen.cs" />
+    <Compile Include="Src\Utils\AssetManager.cs" />
+    <Compile Include="Src\Utils\ExtensionFunctions.cs" />
+    <Compile Include="Src\Utils\GameInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

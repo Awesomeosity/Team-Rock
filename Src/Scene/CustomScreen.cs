@@ -8,10 +8,8 @@ namespace TeamRock.Scene
     {
         public virtual void Initialize(ContentManager contentManager) { }
 
-        public virtual void Update(GameTime gameTime) { }
+        public virtual void Update(float deltaTime, float gameTime) { }
 
         public virtual void Draw(SpriteBatch spriteBatch) { }
-
-        public virtual void UnLoadContent() { }
     }
 }
