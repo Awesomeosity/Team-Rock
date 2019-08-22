@@ -34,5 +34,6 @@ namespace TeamRock.Utils
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
         public const float ProjectileAssetScale = 0.1f;
+        public const float ProjectileAimRadius = 100;
     }
 }

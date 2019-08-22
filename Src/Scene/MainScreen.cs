@@ -130,7 +130,10 @@ namespace TeamRock.Scene
             }
 
             Vector2 launchPosition = new Vector2(xPosition, yPosition);
-            Vector2 launchDirection = _player.GameObject.Position - launchPosition;
+            float offsetX = _player.GameObject.Position.X + (ExtensionFunctions.RandomInRange(-1 * GameInfo.ProjectileAimRadius, GameInfo.ProjectileAimRadius));
+            float offsetY = _player.GameObject.Position.Y + (ExtensionFunctions.RandomInRange(-1 * GameInfo.ProjectileAimRadius, GameInfo.ProjectileAimRadius));
+            Vector2 offsetAim = new Vector2(offsetX, offsetY);
+            Vector2 launchDirection = offsetAim - launchPosition;
             launchDirection.Normalize();
 
             Projectile projectile = new Projectile(projectileSprite,
@@ -143,6 +146,7 @@ namespace TeamRock.Scene
 
             _enemies.Add(projectile);
         }
+
 
         #endregion
 
