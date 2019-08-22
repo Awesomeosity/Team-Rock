@@ -29,6 +29,8 @@ namespace TeamRock.Scene
             _player.Initialize(_contentManager);
 
             _audiences = new List<Audience>();
+            
+
 
             _testSpriteSheetAnimation = new SpriteSheetAnimationManager();
             _testSpriteSheetAnimation.Initialize(_contentManager, AssetManager.TestBlastBase,
@@ -50,6 +52,7 @@ namespace TeamRock.Scene
 
             foreach (Audience audience in _audiences)
             {
+                audience.Draw(spriteBatch);
                 audience.DrawProjectiles(spriteBatch);
             }
 
@@ -69,7 +72,10 @@ namespace TeamRock.Scene
         {
             _player.Update(deltaTime, gameTime);
             _testSpriteSheetAnimation.Update(deltaTime);
-
+            foreach(Audience audience in _audiences)
+            {
+                audience.Update(deltaTime, gameTime);
+            }
         }
 
         #endregion
