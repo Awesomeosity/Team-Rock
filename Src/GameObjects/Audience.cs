@@ -48,6 +48,16 @@ namespace TeamRock.Src.GameObjects
 
         #endregion
 
+        #region Draw
+        public void DrawProjectiles(SpriteBatch spriteBatch)
+        {
+            foreach(Projectile enemy in _enemies)
+            {
+                enemy.Draw(spriteBatch);
+            }
+        }
+        #endregion
+
         #region Utility Functions
         private void SpawnProjectileAndResetTimer()
         {
@@ -83,5 +93,6 @@ namespace TeamRock.Src.GameObjects
 
         }
         #endregion
+
     }
 }
