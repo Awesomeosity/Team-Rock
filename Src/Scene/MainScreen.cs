@@ -34,12 +34,12 @@ namespace TeamRock.Scene
             _player.Initialize(_contentManager);
 
             _testSpriteSheetAnimation = new SpriteSheetAnimationManager();
-            _testSpriteSheetAnimation.Initialize(_contentManager, AssetManager.TestExplosionBase,
-                AssetManager.TestExplosionTotalCount, true);
+            _testSpriteSheetAnimation.Initialize(_contentManager, AssetManager.TestBlastBase,
+                AssetManager.TestBlastTotalCount, true);
             Sprite animationSprite = _testSpriteSheetAnimation.Sprite;
             animationSprite.Position = new Vector2(GameInfo.WindowWidth / 2.0f, GameInfo.WindowHeight / 2.0f);
             animationSprite.SetOriginCenter();
-            _testSpriteSheetAnimation.FrameTime = 0.0834f;
+            _testSpriteSheetAnimation.FrameTime = 0.01538462F;
             _testSpriteSheetAnimation.StartSpriteAnimation();
         }
 
@@ -134,8 +134,8 @@ namespace TeamRock.Scene
             launchDirection.Normalize();
 
             Projectile projectile = new Projectile(projectileSprite,
-                (int)(projectileTexture.Width * GameInfo.ProjectileAssetScale),
-                (int)(projectileTexture.Height * GameInfo.ProjectileAssetScale))
+                (int) (projectileTexture.Width * GameInfo.ProjectileAssetScale),
+                (int) (projectileTexture.Height * GameInfo.ProjectileAssetScale))
             {
                 Position = launchPosition
             };
