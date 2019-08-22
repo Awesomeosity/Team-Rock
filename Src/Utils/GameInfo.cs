@@ -25,6 +25,9 @@ namespace TeamRock.Utils
 
         // Audience Position
         private const int AudienceWidth = (WindowWidth - CenterBoardWidth) / 2;
+        public const float AudienceAssetScale = 0.5f;
+        public const float LeftAudiencePos = 0;
+        public const float RightAudiencePos = 480;
         public static readonly Rectangle LeftAudienceRectangle = new Rectangle(0, 0, AudienceWidth, WindowHeight);
         public static readonly Rectangle RightAudienceRectangle = new Rectangle(WindowWidth - AudienceWidth, 0, AudienceWidth, WindowHeight);
 
@@ -34,5 +37,6 @@ namespace TeamRock.Utils
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
         public const float ProjectileAssetScale = 0.1f;
+        public const float ProjectileAimRadius = 100;
     }
 }

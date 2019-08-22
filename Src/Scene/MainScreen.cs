@@ -12,13 +12,12 @@ namespace TeamRock.Scene
     {
         private ContentManager _contentManager;
 
-        private List<Projectile> _enemies; // TODO: Change this later to handle Audience which will spawn projectiles...
-        private float _randomTimer; // TODO: Remove this later on. Will also be for each Audience...
-
         private SpriteSheetAnimationManager
             _testSpriteSheetAnimation; // TODO: Remove this later on. Just added to test SpriteSheet Animations...
 
         private Player _player;
+
+        private List<Audience> _audiences;
 
         #region Initialization
 
@@ -26,12 +25,36 @@ namespace TeamRock.Scene
         {
             _contentManager = contentManager;
 
-            _enemies = new List<Projectile>();
-            _randomTimer =
-                ExtensionFunctions.RandomInRange(GameInfo.MinProjectileSpawnTimer, GameInfo.MaxProjectileSpawnTimer);
-
             _player = new Player();
             _player.Initialize(_contentManager);
+
+            _audiences = new List<Audience>();
+
+            Texture2D audienceTexture = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
+            Sprite audienceSprite = new Sprite(audienceTexture)
+            {
+                Scale = GameInfo.AudienceAssetScale
+            };
+
+            Sprite audienceSprite2 = new Sprite(audienceTexture)
+            {
+                Scale = GameInfo.AudienceAssetScale
+            };
+
+            _audiences.Add(new Audience(audienceSprite, _player, _contentManager,
+                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+            {
+                Position = new Vector2(GameInfo.LeftAudiencePos, 0)
+            });
+
+            _audiences.Add(new Audience(audienceSprite2, _player, _contentManager,
+                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+            {
+                Position = new Vector2(GameInfo.RightAudiencePos, 0)
+            });
+
 
             _testSpriteSheetAnimation = new SpriteSheetAnimationManager();
             _testSpriteSheetAnimation.Initialize(_contentManager, AssetManager.TestBlastBase,
@@ -51,9 +74,10 @@ namespace TeamRock.Scene
         {
             _player.Draw(spriteBatch);
 
-            foreach (Projectile enemy in _enemies)
+            foreach (Audience audience in _audiences)
             {
-                enemy.Draw(spriteBatch);
+                audience.Draw(spriteBatch);
+                audience.DrawProjectiles(spriteBatch);
             }
 
             DrawEffects(spriteBatch);
@@ -70,23 +94,11 @@ namespace TeamRock.Scene
 
         public override void Update(float deltaTime, float gameTime)
         {
-            _randomTimer -= deltaTime;
-            if (_randomTimer <= 0)
-            {
-                SpawnProjectileAndResetTimer();
-            }
-
             _player.Update(deltaTime, gameTime);
             _testSpriteSheetAnimation.Update(deltaTime);
-
-            for (int i = _enemies.Count - 1; i >= 0; i--)
+            foreach(Audience audience in _audiences)
             {
-                _enemies[i].Update(deltaTime, gameTime);
-
-                if (_enemies[i].IsProjectileDestroyed || _enemies[i].DidCollide(_player.GameObject))
-                {
-                    _enemies.RemoveAt(i);
-                }
+                audience.Update(deltaTime, gameTime);
             }
         }
 
@@ -96,7 +108,7 @@ namespace TeamRock.Scene
 
         public void ResetScreen()
         {
-            _enemies.Clear();
+            _audiences.Clear();
 
             _player = new Player();
             _player.Initialize(_contentManager);
@@ -105,44 +117,6 @@ namespace TeamRock.Scene
         #endregion
 
         #region Utility Functions
-
-        private void SpawnProjectileAndResetTimer()
-        {
-            _randomTimer =
-                ExtensionFunctions.RandomInRange(GameInfo.MinProjectileSpawnTimer, GameInfo.MaxProjectileSpawnTimer);
-
-            Texture2D projectileTexture = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
-            Sprite projectileSprite = new Sprite(projectileTexture)
-            {
-                Scale = GameInfo.ProjectileAssetScale
-            };
-
-            float xPosition;
-            float yPosition = ExtensionFunctions.RandomInRange(0, GameInfo.WindowHeight);
-            if (ExtensionFunctions.Random() <= 0.5f)
-            {
-                xPosition = ExtensionFunctions.RandomInRange(0, GameInfo.LeftAudienceRectangle.Width);
-            }
-            else
-            {
-                xPosition = ExtensionFunctions.RandomInRange(GameInfo.RightAudienceRectangle.X,
-                    GameInfo.RightAudienceRectangle.X + GameInfo.RightAudienceRectangle.Width);
-            }
-
-            Vector2 launchPosition = new Vector2(xPosition, yPosition);
-            Vector2 launchDirection = _player.GameObject.Position - launchPosition;
-            launchDirection.Normalize();
-
-            Projectile projectile = new Projectile(projectileSprite,
-                (int) (projectileTexture.Width * GameInfo.ProjectileAssetScale),
-                (int) (projectileTexture.Height * GameInfo.ProjectileAssetScale))
-            {
-                Position = launchPosition
-            };
-            projectile.LaunchProjectile(launchDirection);
-
-            _enemies.Add(projectile);
-        }
 
         #endregion
 
