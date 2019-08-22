@@ -29,7 +29,31 @@ namespace TeamRock.Scene
             _player.Initialize(_contentManager);
 
             _audiences = new List<Audience>();
-            
+
+            Texture2D audienceTexture = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
+            Sprite audienceSprite = new Sprite(audienceTexture)
+            {
+                Scale = GameInfo.AudienceAssetScale
+            };
+
+            Sprite audienceSprite2 = new Sprite(audienceTexture)
+            {
+                Scale = GameInfo.AudienceAssetScale
+            };
+
+            _audiences.Add(new Audience(audienceSprite, _player, _contentManager,
+                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+            {
+                Position = new Vector2(GameInfo.LeftAudiencePos, GameInfo.WindowHeight / 2)
+            });
+
+            _audiences.Add(new Audience(audienceSprite2, _player, _contentManager,
+                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+            {
+                Position = new Vector2(GameInfo.RightAudiencePos, GameInfo.WindowHeight / 2)
+            });
 
 
             _testSpriteSheetAnimation = new SpriteSheetAnimationManager();

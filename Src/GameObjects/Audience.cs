@@ -16,8 +16,6 @@ namespace TeamRock.Src.GameObjects
         #region Initialization
         public Audience(Sprite sprite, Player player, ContentManager contentManager, int collisionHeight, int collisionWidth) : base(sprite, collisionHeight, collisionWidth)
         {
-            Texture2D audienceTexture = contentManager.Load<Texture2D>(AssetManager.WhitePixel);
-
             _contentManager = contentManager;
             _randomTimer =
                 ExtensionFunctions.RandomInRange(GameInfo.MinProjectileSpawnTimer, GameInfo.MaxProjectileSpawnTimer);
