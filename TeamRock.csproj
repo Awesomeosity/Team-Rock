@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -48,6 +49,7 @@
     <Compile Include="Src\GameObjects\Player.cs" />
     <Compile Include="Src\GameObjects\Projectile.cs" />
     <Compile Include="Src\GameObjects\Sprite.cs" />
+    <Compile Include="Src\Managers\SpriteSheetAnimationManager.cs" />
     <Compile Include="Src\Scene\CustomScreen.cs" />
     <Compile Include="Src\Scene\MainScreen.cs" />
     <Compile Include="Src\Utils\AssetManager.cs" />
