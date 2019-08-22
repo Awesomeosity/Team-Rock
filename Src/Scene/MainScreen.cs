@@ -45,14 +45,14 @@ namespace TeamRock.Scene
                 (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
                 (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
-                Position = new Vector2(GameInfo.LeftAudiencePos, GameInfo.WindowHeight / 2)
+                Position = new Vector2(GameInfo.LeftAudiencePos, 0)
             });
 
             _audiences.Add(new Audience(audienceSprite2, _player, _contentManager,
                 (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
                 (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
-                Position = new Vector2(GameInfo.RightAudiencePos, GameInfo.WindowHeight / 2)
+                Position = new Vector2(GameInfo.RightAudiencePos, 0)
             });
 
 
