@@ -5,6 +5,9 @@
         // Textures
         public const string WhitePixel = "Textures/White Pixel";
 
+        //Fonts
+        public const string Arial = "Fonts/Arial";
+
         #region Sprite Sheets
 
         // Test Explosion

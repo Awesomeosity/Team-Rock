@@ -120,7 +120,6 @@ namespace TeamRock
             {
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 float totalGameTime = (float)gameTime.TotalGameTime.TotalSeconds;
-
                 switch (_gameScreen)
                 {
                     case GameScreen.MainScreen:

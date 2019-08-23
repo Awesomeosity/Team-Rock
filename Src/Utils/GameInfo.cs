@@ -38,5 +38,8 @@ namespace TeamRock.Utils
         public const float MaxProjectileSpawnTimer = 5;
         public const float ProjectileAssetScale = 0.1f;
         public const float ProjectileAimRadius = 100;
+
+        //Game State
+        public const int TotalGameTime = 1000; //TODO: Remove this, only for testing
     }
 }

@@ -19,6 +19,9 @@ namespace TeamRock.Scene
 
         private List<Audience> _audiences;
 
+        private SpriteFont _font;
+        private int _timeLeft; //TODO: Remove this? only for testing purposes
+
         #region Initialization
 
         public override void Initialize(ContentManager contentManager)
@@ -64,6 +67,9 @@ namespace TeamRock.Scene
             animationSprite.SetOriginCenter();
             _testSpriteSheetAnimation.FrameTime = 0.01538462F;
             _testSpriteSheetAnimation.StartSpriteAnimation();
+
+            _font = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _timeLeft = GameInfo.TotalGameTime;
         }
 
         #endregion
@@ -79,6 +85,8 @@ namespace TeamRock.Scene
                 audience.Draw(spriteBatch);
                 audience.DrawProjectiles(spriteBatch);
             }
+
+            spriteBatch.DrawString(_font, "Hello World!" + _timeLeft, new Vector2(GameInfo.WindowWidth / 2, GameInfo.WindowHeight / 2), Color.White);
 
             DrawEffects(spriteBatch);
         }
@@ -100,6 +108,7 @@ namespace TeamRock.Scene
             {
                 audience.Update(deltaTime, gameTime);
             }
+
         }
 
         #endregion
