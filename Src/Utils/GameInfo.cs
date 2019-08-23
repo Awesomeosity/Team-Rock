@@ -40,6 +40,6 @@ namespace TeamRock.Utils
         public const float ProjectileAimRadius = 100;
 
         //Game State
-        public const int TotalGameTime = 1000; //TODO: Remove this, only for testing
+        public const float TotalGameTime = 10; //TODO: Remove this, only for testing
     }
 }

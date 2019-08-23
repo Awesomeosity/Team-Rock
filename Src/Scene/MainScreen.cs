@@ -20,7 +20,7 @@ namespace TeamRock.Scene
         private List<Audience> _audiences;
 
         private SpriteFont _font;
-        private int _timeLeft; //TODO: Remove this? only for testing purposes
+        private float _timeLeft; //TODO: Remove this? only for testing purposes
 
         #region Initialization
 
@@ -109,6 +109,11 @@ namespace TeamRock.Scene
                 audience.Update(deltaTime, gameTime);
             }
 
+            _timeLeft -= deltaTime;
+            if(_timeLeft <= 0)
+            {
+                ResetScreen();
+            }
         }
 
         #endregion
@@ -117,10 +122,8 @@ namespace TeamRock.Scene
 
         public void ResetScreen()
         {
-            _audiences.Clear();
-
-            _player = new Player();
-            _player.Initialize(_contentManager);
+            //Possibly abuse? Might need to change later.
+            Initialize(_contentManager);
         }
 
         #endregion
