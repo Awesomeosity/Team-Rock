@@ -4,12 +4,17 @@ using Microsoft.Xna.Framework.Graphics;
 using TeamRock.Src.GameObjects;
 using TeamRock.UI;
 using TeamRock.Utils;
+using TeamRock.Managers;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TeamRock.Scene
 {
     public class HomeScreen : CustomScreen
     {
         private UiImageButton _playButton;
+        private ContentManager _contentManager;
+        private SoundEffect _music;
+        private int _musicIndex;
 
         #region Initialization
 
@@ -23,7 +28,21 @@ namespace TeamRock.Scene
                 GameInfo.FixedWindowWidth / 2.0f,
                 GameInfo.FixedWindowHeight / 2.0f
             );
+            _contentManager = contentManager;
+            _music = _contentManager.Load<SoundEffect>(AssetManager.Music1);
         }
+
+        public void StartMusic()
+        {
+            _musicIndex = SoundManager.Instance.PlaySound(_music);
+            SoundManager.Instance.SetSoundLooping(_musicIndex, true);
+        }
+
+        public void StopMusic()
+        {
+            SoundManager.Instance.StopSound(_musicIndex);
+        }
+
 
         #endregion
 

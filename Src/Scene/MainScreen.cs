@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -16,12 +17,17 @@ namespace TeamRock.Scene
         private ContentManager _contentManager;
 
         private SoundEffect _testSoundEffect;
+        private SoundEffect _music;
+        private SoundEffect _clap;
         private KeyboardState _oldKeyboardState; // TODO: Remove this later on... Just added for testing
 
         private Player _player;
         private ScrollingBackground _scrollingBackground;
 
         private List<Audience> _audiences;
+
+        private SpriteFont _font;
+        private float _timeLeft; //TODO: Remove this? only for testing purposes
 
         #region Initialization
 
@@ -32,11 +38,16 @@ namespace TeamRock.Scene
             CreateSounds();
             CreatePlayerAndBackground();
             CreateAudiences();
+
+            _font = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _timeLeft = GameInfo.TotalGameTime;
         }
 
         private void CreateSounds()
         {
             _testSoundEffect = _contentManager.Load<SoundEffect>(AssetManager.TestSound);
+            _music = _contentManager.Load<SoundEffect>(AssetManager.Music2);
+            _clap = _contentManager.Load<SoundEffect>(AssetManager.Clap);
         }
 
         private void CreatePlayerAndBackground()
@@ -66,15 +77,15 @@ namespace TeamRock.Scene
             };
 
             _audiences.Add(new Audience(audienceSprite, _player, _contentManager,
-                (int) (audienceTexture.Width * GameInfo.AudienceAssetScale),
-                (int) (audienceTexture.Height * GameInfo.AudienceAssetScale))
+                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
                 Position = new Vector2(GameInfo.LeftAudiencePos, 0)
             });
 
             _audiences.Add(new Audience(audienceSprite2, _player, _contentManager,
-                (int) (audienceTexture.Width * GameInfo.AudienceAssetScale),
-                (int) (audienceTexture.Height * GameInfo.AudienceAssetScale))
+                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
                 Position = new Vector2(GameInfo.RightAudiencePos, 0)
             });
@@ -94,6 +105,8 @@ namespace TeamRock.Scene
                 audience.Draw(spriteBatch);
                 audience.DrawProjectiles(spriteBatch);
             }
+
+            spriteBatch.DrawString(_font, "Hello World! " + _timeLeft, new Vector2(GameInfo.FixedWindowWidth / 2, GameInfo.FixedWindowHeight / 2), Color.White);
         }
 
         #endregion
@@ -120,8 +133,16 @@ namespace TeamRock.Scene
                 audience.Update(deltaTime, gameTime);
             }
 
+            _timeLeft -= deltaTime;
+            if (_timeLeft <= 0)
+            {
+                SoundManager.Instance.PlaySound(_clap);
+                ResetScreen();
+            }
+
             return false;
         }
+
 
         #endregion
 
@@ -129,10 +150,19 @@ namespace TeamRock.Scene
 
         public void ResetScreen()
         {
-            _audiences.Clear();
+            //Possibly abuse? Might need to change later.
+            Initialize(_contentManager);
+        }
 
-            _player = new Player();
-            _player.Initialize(_contentManager);
+        public void StartMusic()
+        {
+            _musicIndex = SoundManager.Instance.PlaySound(_music);
+            SoundManager.Instance.SetSoundLooping(_musicIndex, true);
+        }
+
+        public void StopMusic()
+        {
+            SoundManager.Instance.StopSound(_musicIndex);
         }
 
         #endregion
@@ -144,11 +174,14 @@ namespace TeamRock.Scene
         #region Singleton
 
         private static MainScreen _instance;
+        private int _musicIndex;
+
         public static MainScreen Instance => _instance ?? (_instance = new MainScreen());
 
         private MainScreen()
         {
         }
+
 
         #endregion
     }

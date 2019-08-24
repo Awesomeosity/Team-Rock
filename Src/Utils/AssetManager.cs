@@ -10,6 +10,9 @@
 
         #endregion
 
+        //Fonts
+        public const string Arial = "Fonts/Arial";
+
         #region Sprite Sheets
 
         // Test Explosion
@@ -29,7 +32,15 @@
         #region Sounds
 
         public const string TestSound = "Sounds/Cutting line";
+        public const string Boo = "Sounds/Boo";
+        public const string Clap = "Sounds/Crowd_Clap";
+        public const string Dizzy = "Sounds/Dizzy";
+        public const string Clap2 = "Sounds/Hand_Claps";
+        #endregion
 
+        #region Music
+        public const string Music1 = "Music/Hermanos_Ranchero";
+        public const string Music2 = "Music/Mariachiando";
         #endregion
     }
 }
