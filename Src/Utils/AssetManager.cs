@@ -10,6 +10,9 @@
 
         #endregion
 
+        //Fonts
+        public const string Arial = "Fonts/Arial";
+
         #region Sprite Sheets
 
         // Test Explosion
