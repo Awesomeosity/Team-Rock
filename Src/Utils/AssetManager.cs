@@ -25,5 +25,11 @@
         public const int FireFallingTotalCount = 81;
 
         #endregion
+
+        #region Sounds
+
+        public const string TestSound = "Sounds/Cutting line";
+
+        #endregion
     }
 }

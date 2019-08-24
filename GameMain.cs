@@ -25,6 +25,7 @@ namespace TeamRock
         private BoxingViewportAdapter _mainViewport;
         private OrthographicCamera _mainCamera;
 
+        private SoundManager _soundManager;
         private CameraShaker _cameraShaker;
 
         #region Screen Management
@@ -81,6 +82,7 @@ namespace TeamRock
             SetupCamerasAndViewports();
             SetupSpecialControllers();
             SetupScreens();
+            SetupOtherItems();
             SetGameScreen(GameScreen.HomeScreen);
         }
 
@@ -120,6 +122,12 @@ namespace TeamRock
 
             _gameOverScreen = GameOverScreen.Instance;
             _gameOverScreen.Initialize(Content);
+        }
+
+        private void SetupOtherItems()
+        {
+            _soundManager = SoundManager.Instance;
+            _soundManager.Initialize();
         }
 
         #endregion
