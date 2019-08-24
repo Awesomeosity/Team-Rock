@@ -23,6 +23,9 @@ namespace TeamRock.Scene
 
         private List<Audience> _audiences;
 
+        private SpriteFont _font;
+        private float _timeLeft; //TODO: Remove this? only for testing purposes
+
         #region Initialization
 
         public override void Initialize(ContentManager contentManager)
@@ -32,6 +35,9 @@ namespace TeamRock.Scene
             CreateSounds();
             CreatePlayerAndBackground();
             CreateAudiences();
+
+            _font = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _timeLeft = GameInfo.TotalGameTime;
         }
 
         private void CreateSounds()
@@ -94,6 +100,8 @@ namespace TeamRock.Scene
                 audience.Draw(spriteBatch);
                 audience.DrawProjectiles(spriteBatch);
             }
+
+            spriteBatch.DrawString(_font, "Hello World!" + _timeLeft, new Vector2(GameInfo.FixedWindowWidth / 2, GameInfo.FixedWindowHeight / 2), Color.White);
         }
 
         #endregion
@@ -120,6 +128,12 @@ namespace TeamRock.Scene
                 audience.Update(deltaTime, gameTime);
             }
 
+            _timeLeft -= deltaTime;
+            if (_timeLeft <= 0)
+            {
+                ResetScreen();
+            }
+
             return false;
         }
 
@@ -129,10 +143,8 @@ namespace TeamRock.Scene
 
         public void ResetScreen()
         {
-            _audiences.Clear();
-
-            _player = new Player();
-            _player.Initialize(_contentManager);
+            //Possibly abuse? Might need to change later.
+            Initialize(_contentManager);
         }
 
         #endregion
