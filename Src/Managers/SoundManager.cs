@@ -92,19 +92,6 @@ namespace TeamRock.Managers
             soundData.SoundEffectInstance.Stop();
         }
 
-        public int StopSound(SoundEffect soundEffect)
-        {
-            if (!_soundEffects.Contains(soundEffect))
-            {
-                _soundEffects.Add(soundEffect);
-            }
-
-            SoundData soundData = GetEmptySoundEffect(soundEffect);
-            soundData.SoundEffectInstance.Play();
-
-            return soundData.SoundIndex;
-        }
-
         #endregion
 
         #region Looping Tracks
