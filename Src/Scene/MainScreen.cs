@@ -18,6 +18,7 @@ namespace TeamRock.Scene
 
         private SoundEffect _testSoundEffect;
         private SoundEffect _music;
+        private SoundEffect _clap;
         private KeyboardState _oldKeyboardState; // TODO: Remove this later on... Just added for testing
 
         private Player _player;
@@ -46,6 +47,7 @@ namespace TeamRock.Scene
         {
             _testSoundEffect = _contentManager.Load<SoundEffect>(AssetManager.TestSound);
             _music = _contentManager.Load<SoundEffect>(AssetManager.Music2);
+            _clap = _contentManager.Load<SoundEffect>(AssetManager.Clap);
         }
 
         private void CreatePlayerAndBackground()
@@ -134,6 +136,7 @@ namespace TeamRock.Scene
             _timeLeft -= deltaTime;
             if (_timeLeft <= 0)
             {
+                SoundManager.Instance.PlaySound(_clap);
                 ResetScreen();
             }
 
