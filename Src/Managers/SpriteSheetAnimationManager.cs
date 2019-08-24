@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TeamRock.Src.GameObjects;
+using TeamRock.Utils;
 
 namespace TeamRock.Managers
 {
     public class SpriteSheetAnimationManager
     {
-        private int _assetMaxIndex;
+        private int _totalAssetIndex;
         private int _currentAssetIndex;
 
         private string _assetBaseName;
@@ -23,23 +24,25 @@ namespace TeamRock.Managers
 
         #region Initialization
 
-        public void Initialize(ContentManager contentManager, string assetBaseName, int assetMaxIndex, bool isRepeating)
+        public void Initialize(ContentManager contentManager, string assetBaseName, int totalAssetIndex,
+            int assetStartIndex, bool isRepeating)
         {
             _isRepeating = isRepeating;
 
             _assetBaseName = assetBaseName;
-            _assetMaxIndex = assetMaxIndex;
+            _totalAssetIndex = totalAssetIndex;
 
             _currentFrameTime = 0;
             _currentAssetIndex = 0;
 
             _animationTextures = new List<Texture2D>();
-            for (int i = 0; i < assetMaxIndex; i++)
+            for (int i = assetStartIndex; i < totalAssetIndex + assetStartIndex; i++)
             {
                 _animationTextures.Add(contentManager.Load<Texture2D>($"{assetBaseName}{i}"));
             }
 
             _sprite = new Sprite(_animationTextures[0]);
+            _frameTime = GameInfo.DefaultAnimationSpeed;
         }
 
         #endregion
@@ -69,7 +72,7 @@ namespace TeamRock.Managers
                 _currentFrameTime = 0;
                 _currentAssetIndex += 1;
 
-                if (_currentAssetIndex >= _assetMaxIndex)
+                if (_currentAssetIndex >= _totalAssetIndex)
                 {
                     if (_isRepeating)
                     {
@@ -88,6 +91,8 @@ namespace TeamRock.Managers
         #endregion
 
         #region External Functions
+
+        public Texture2D GetCurrentFrameTexture() => _animationTextures[_currentAssetIndex];
 
         public void StartSpriteAnimation()
         {
