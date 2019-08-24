@@ -1,32 +1,41 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using TeamRock.Managers;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
 {
     public class Player
     {
+        private PlayerController _playerController;
         private GameObject _playerGameObject;
+        private SpriteSheetAnimationManager _playerFallingSpriteSheet;
 
         #region Initialization
 
         public void Initialize(ContentManager contentManager)
         {
-            Texture2D playerTexture = contentManager.Load<Texture2D>(AssetManager.WhitePixel);
+            Texture2D playerTexture = contentManager.Load<Texture2D>($"{AssetManager.FireFallingBase}1");
             Sprite playerSprite = new Sprite(playerTexture)
             {
-                Scale = GameInfo.PlayerAssetScale,
+                Scale = 2,
             };
             playerSprite.SetOriginCenter();
 
+            _playerFallingSpriteSheet = new SpriteSheetAnimationManager();
+            _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
+                AssetManager.FireFallingTotalCount, 1, true);
+            _playerFallingSpriteSheet.StartSpriteAnimation();
+
             _playerGameObject = new GameObject(playerSprite,
-                (int)(playerTexture.Width * GameInfo.PlayerAssetScale),
-                (int)(playerTexture.Height * GameInfo.PlayerAssetScale))
+                playerTexture.Width * GameInfo.PlayerAssetScale,
+                playerTexture.Height * GameInfo.PlayerAssetScale)
             {
                 Acceleration = GameInfo.BaseAccelerationRate,
                 Position = GameInfo.PlayerInitialPosition,
             };
+
+            _playerController = new PlayerController();
         }
 
         #endregion
@@ -35,6 +44,7 @@ namespace TeamRock.Src.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            _playerGameObject.Sprite.UpdateTexture(_playerFallingSpriteSheet.GetCurrentFrameTexture());
             _playerGameObject.Draw(spriteBatch);
         }
 
@@ -45,14 +55,15 @@ namespace TeamRock.Src.GameObjects
         public void Update(float deltaTime, float gameTime)
         {
             _playerGameObject.UpdateOnlyVelocity(deltaTime, gameTime);
+            _playerController.Update();
+            _playerFallingSpriteSheet.Update(deltaTime);
+
             HandleInput(deltaTime);
         }
 
         private void HandleInput(float deltaTime)
         {
-            KeyboardState state = Keyboard.GetState();
-
-            if (state.IsKeyDown(Keys.Right))
+            if (_playerController.State == PlayerController.ControllerState.Right)
             {
                 if (_playerGameObject.Position.X > GameInfo.PlayerRightPosition)
                 {
@@ -61,7 +72,7 @@ namespace TeamRock.Src.GameObjects
 
                 _playerGameObject.Position += GameInfo.HorizontalVelocity * deltaTime;
             }
-            else if (state.IsKeyDown(Keys.Left))
+            else if (_playerController.State == PlayerController.ControllerState.Left)
             {
                 if (_playerGameObject.Position.X < GameInfo.PlayerLeftPosition)
                 {
@@ -70,7 +81,7 @@ namespace TeamRock.Src.GameObjects
 
                 _playerGameObject.Position -= GameInfo.HorizontalVelocity * deltaTime;
             }
-            else if (state.IsKeyDown(Keys.Up))
+            else if (_playerController.State == PlayerController.ControllerState.Up)
             {
                 if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
                 {
@@ -80,7 +91,7 @@ namespace TeamRock.Src.GameObjects
                 _playerGameObject.Position -= GameInfo.VerticalVelocity * deltaTime;
                 _playerGameObject.Acceleration -= GameInfo.AccelerationChangeRate * deltaTime;
             }
-            else if (state.IsKeyDown(Keys.Down))
+            else if (_playerController.State == PlayerController.ControllerState.Down)
             {
                 if (_playerGameObject.Position.Y > GameInfo.PlayerMaxYPosition)
                 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 
 namespace TeamRock.Src.GameObjects
 {
@@ -10,19 +11,18 @@ namespace TeamRock.Src.GameObjects
         private Vector2 _position;
         private Vector2 _velocity;
         private Vector2 _acceleration;
-        private Rectangle _collisionObject;
+        private RectangleF _collisionObject;
 
         #region Initialization
-
-        public GameObject(Sprite sprite, int collisionWidth, int collisionHeight)
+        public GameObject(Sprite sprite, float collisionWidth, float collisionHeight)
         {
             _sprite = sprite;
             GenerateHitBox(collisionWidth, collisionHeight);
         }
 
-        private void GenerateHitBox(int width, int height)
+        private void GenerateHitBox(float width, float height)
         {
-            _collisionObject = new Rectangle
+            _collisionObject = new RectangleF
             {
                 Width = width,
                 Height = height
@@ -69,8 +69,8 @@ namespace TeamRock.Src.GameObjects
             {
                 _position = value;
 
-                _collisionObject.X = (int)(_position.X - _collisionObject.Width / 2.0f);
-                _collisionObject.Y = (int)(_position.Y - _collisionObject.Height / 2.0f);
+                _collisionObject.X = _position.X - _collisionObject.Width / 2.0f;
+                _collisionObject.Y = _position.Y - _collisionObject.Height / 2.0f;
 
                 _sprite.Position = _position;
             }

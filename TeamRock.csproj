@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,8 +13,9 @@
     <AssemblyName>TeamRock</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <LangVersion>7</LangVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -45,14 +46,23 @@
     <Compile Include="GameMain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\CustomCamera\CameraShaker.cs" />
     <Compile Include="Src\GameObjects\Audience.cs" />
     <Compile Include="Src\GameObjects\GameObject.cs" />
-    <Compile Include="Src\GameObjects\Player.cs" />
+    <Compile Include="Src\GameObjects\Player\Player.cs" />
+    <Compile Include="Src\GameObjects\Player\PlayerController.cs" />
     <Compile Include="Src\GameObjects\Projectile.cs" />
     <Compile Include="Src\GameObjects\Sprite.cs" />
+    <Compile Include="Src\Managers\GamePadVibrationController.cs" />
+    <Compile Include="Src\Managers\MouseController.cs" />
+    <Compile Include="Src\Managers\ScrollingBackground.cs" />
+    <Compile Include="Src\Managers\SoundManager.cs" />
     <Compile Include="Src\Managers\SpriteSheetAnimationManager.cs" />
     <Compile Include="Src\Scene\CustomScreen.cs" />
+    <Compile Include="Src\Scene\GameOverScreen.cs" />
+    <Compile Include="Src\Scene\HomeScreen.cs" />
     <Compile Include="Src\Scene\MainScreen.cs" />
+    <Compile Include="Src\UI\UiImageButton.cs" />
     <Compile Include="Src\Utils\AssetManager.cs" />
     <Compile Include="Src\Utils\ExtensionFunctions.cs" />
     <Compile Include="Src\Utils\GameInfo.cs" />
@@ -69,7 +79,14 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+    <None Include="app.config" />
     <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MonoGame.Extended\Source\MonoGame.Extended\MonoGame.Extended.csproj">
+      <Project>{1844f0c1-f931-4408-95cb-8315c88900a1}</Project>
+      <Name>MonoGame.Extended</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

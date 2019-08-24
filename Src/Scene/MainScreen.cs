@@ -1,9 +1,12 @@
-﻿using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using TeamRock.Src.GameObjects;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using TeamRock.CustomCamera;
 using TeamRock.Managers;
+using TeamRock.Src.GameObjects;
 using TeamRock.Utils;
 
 namespace TeamRock.Scene
@@ -12,15 +15,13 @@ namespace TeamRock.Scene
     {
         private ContentManager _contentManager;
 
-        private SpriteSheetAnimationManager
-            _testSpriteSheetAnimation; // TODO: Remove this later on. Just added to test SpriteSheet Animations...
+        private SoundEffect _testSoundEffect;
+        private KeyboardState _oldKeyboardState; // TODO: Remove this later on... Just added for testing
 
         private Player _player;
+        private ScrollingBackground _scrollingBackground;
 
         private List<Audience> _audiences;
-
-        private SpriteFont _font;
-        private float _timeLeft; //TODO: Remove this? only for testing purposes
 
         #region Initialization
 
@@ -28,9 +29,29 @@ namespace TeamRock.Scene
         {
             _contentManager = contentManager;
 
+            CreateSounds();
+            CreatePlayerAndBackground();
+            CreateAudiences();
+        }
+
+        private void CreateSounds()
+        {
+            _testSoundEffect = _contentManager.Load<SoundEffect>(AssetManager.TestSound);
+        }
+
+        private void CreatePlayerAndBackground()
+        {
             _player = new Player();
             _player.Initialize(_contentManager);
 
+
+            Texture2D backgroundTexture = _contentManager.Load<Texture2D>(AssetManager.TestSeamless);
+            _scrollingBackground = new ScrollingBackground();
+            _scrollingBackground.Initialization(backgroundTexture, GameInfo.CenterBoardWidth);
+        }
+
+        private void CreateAudiences()
+        {
             _audiences = new List<Audience>();
 
             Texture2D audienceTexture = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
@@ -45,31 +66,18 @@ namespace TeamRock.Scene
             };
 
             _audiences.Add(new Audience(audienceSprite, _player, _contentManager,
-                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
-                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+                (int) (audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int) (audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
                 Position = new Vector2(GameInfo.LeftAudiencePos, 0)
             });
 
             _audiences.Add(new Audience(audienceSprite2, _player, _contentManager,
-                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
-                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+                (int) (audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int) (audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
                 Position = new Vector2(GameInfo.RightAudiencePos, 0)
             });
-
-
-            _testSpriteSheetAnimation = new SpriteSheetAnimationManager();
-            _testSpriteSheetAnimation.Initialize(_contentManager, AssetManager.TestBlastBase,
-                AssetManager.TestBlastTotalCount, true);
-            Sprite animationSprite = _testSpriteSheetAnimation.Sprite;
-            animationSprite.Position = new Vector2(GameInfo.WindowWidth / 2.0f, GameInfo.WindowHeight / 2.0f);
-            animationSprite.SetOriginCenter();
-            _testSpriteSheetAnimation.FrameTime = 0.01538462F;
-            _testSpriteSheetAnimation.StartSpriteAnimation();
-
-            _font = _contentManager.Load<SpriteFont>(AssetManager.Arial);
-            _timeLeft = GameInfo.TotalGameTime;
         }
 
         #endregion
@@ -78,6 +86,7 @@ namespace TeamRock.Scene
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            _scrollingBackground.Draw(spriteBatch);
             _player.Draw(spriteBatch);
 
             foreach (Audience audience in _audiences)
@@ -85,35 +94,33 @@ namespace TeamRock.Scene
                 audience.Draw(spriteBatch);
                 audience.DrawProjectiles(spriteBatch);
             }
-
-            spriteBatch.DrawString(_font, "Hello World!" + _timeLeft, new Vector2(GameInfo.WindowWidth / 2, GameInfo.WindowHeight / 2), Color.White);
-
-            DrawEffects(spriteBatch);
-        }
-
-        private void DrawEffects(SpriteBatch spriteBatch)
-        {
-            _testSpriteSheetAnimation.Draw(spriteBatch);
         }
 
         #endregion
 
         #region Update
 
-        public override void Update(float deltaTime, float gameTime)
+        public override bool Update(float deltaTime, float gameTime)
         {
+            _scrollingBackground.Update(deltaTime, 500);
             _player.Update(deltaTime, gameTime);
-            _testSpriteSheetAnimation.Update(deltaTime);
-            foreach(Audience audience in _audiences)
+
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.X) && _oldKeyboardState.IsKeyUp(Keys.X))
+            {
+                SoundManager.Instance.PlaySound(_testSoundEffect);
+                GamePadVibrationController.Instance.StartVibration(0.5f, 0.7f, 2);
+                CameraShaker.Instance.StartShake(2, 5);
+            }
+
+            _oldKeyboardState = keyboardState;
+
+            foreach (Audience audience in _audiences)
             {
                 audience.Update(deltaTime, gameTime);
             }
 
-            _timeLeft -= deltaTime;
-            if(_timeLeft <= 0)
-            {
-                ResetScreen();
-            }
+            return false;
         }
 
         #endregion
@@ -122,8 +129,10 @@ namespace TeamRock.Scene
 
         public void ResetScreen()
         {
-            //Possibly abuse? Might need to change later.
-            Initialize(_contentManager);
+            _audiences.Clear();
+
+            _player = new Player();
+            _player.Initialize(_contentManager);
         }
 
         #endregion

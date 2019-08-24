@@ -2,6 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.ViewportAdapters;
+using TeamRock.CustomCamera;
+using TeamRock.Managers;
 using TeamRock.Scene;
 using TeamRock.Utils;
 
@@ -12,17 +16,31 @@ namespace TeamRock
     /// </summary>
     public class GameMain : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private GamePadVibrationController _gamePadVibrationController;
+        private MouseController _mouseController;
+
+        private BoxingViewportAdapter _mainViewport;
+        private OrthographicCamera _mainCamera;
+
+        private SoundManager _soundManager;
+        private CameraShaker _cameraShaker;
 
         #region Screen Management
 
+        private HomeScreen _homeScreen;
         private MainScreen _mainScreen;
+        private GameOverScreen _gameOverScreen;
 
         private enum GameScreen
         {
-            MainScreen
+            HomeScreen,
+            MainScreen,
+            GameOverScreen
         }
+
         private GameScreen _gameScreen;
 
         #endregion
@@ -31,12 +49,10 @@ namespace TeamRock
 
         public GameMain()
         {
-            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            _graphics.PreferredBackBufferWidth = GameInfo.WindowWidth;
-            _graphics.PreferredBackBufferHeight = GameInfo.WindowHeight;
-            _graphics.ApplyChanges();
+            _graphics = new GraphicsDeviceManager(this);
+            Window.AllowUserResizing = true;
         }
 
         #endregion
@@ -60,17 +76,58 @@ namespace TeamRock
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            Window.Title = "POCO LOCO";
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            SetupCamerasAndViewports();
+            SetupSpecialControllers();
             SetupScreens();
-            SetGameScreen(GameScreen.MainScreen);
+            SetupOtherItems();
+            SetGameScreen(GameScreen.HomeScreen);
+        }
+
+        private void SetupCamerasAndViewports()
+        {
+            _mainViewport =
+                new BoxingViewportAdapter(Window, GraphicsDevice, GameInfo.FixedWindowWidth,
+                    GameInfo.FixedWindowHeight);
+            _mainCamera = new OrthographicCamera(_mainViewport)
+            {
+                Zoom = 1
+            };
+
+            _cameraShaker = CameraShaker.Instance;
+            _cameraShaker.Initialize(_mainCamera);
+
+            // This is a hack that was required to reset the ViewPort so that textures scaled properly
+            _mainViewport.Reset();
+        }
+
+        private void SetupSpecialControllers()
+        {
+            _mouseController = MouseController.Instance;
+            _mouseController.Initialize(this, _mainCamera);
+            _mouseController.DisplayMouse();
+
+            _gamePadVibrationController = GamePadVibrationController.Instance;
         }
 
         private void SetupScreens()
         {
+            _homeScreen = HomeScreen.Instance;
+            _homeScreen.Initialize(Content);
+
             _mainScreen = MainScreen.Instance;
             _mainScreen.Initialize(Content);
+
+            _gameOverScreen = GameOverScreen.Instance;
+            _gameOverScreen.Initialize(Content);
+        }
+
+        private void SetupOtherItems()
+        {
+            _soundManager = SoundManager.Instance;
+            _soundManager.Initialize();
         }
 
         #endregion
@@ -86,12 +143,20 @@ namespace TeamRock
             GraphicsDevice.Clear(Color.Black);
             base.Draw(gameTime);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(transformMatrix: _mainCamera.GetViewMatrix());
 
             switch (_gameScreen)
             {
+                case GameScreen.HomeScreen:
+                    _homeScreen.Draw(_spriteBatch);
+                    break;
+
                 case GameScreen.MainScreen:
                     _mainScreen.Draw(_spriteBatch);
+                    break;
+
+                case GameScreen.GameOverScreen:
+                    _gameOverScreen.Draw(_spriteBatch);
                     break;
 
                 default:
@@ -112,23 +177,55 @@ namespace TeamRock
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            }
+
             base.Update(gameTime);
 
             if (IsActive)
             {
-                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                float totalGameTime = (float)gameTime.TotalGameTime.TotalSeconds;
+                float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+                float totalGameTime = (float) gameTime.TotalGameTime.TotalSeconds;
+
+                _gamePadVibrationController.Update(deltaTime);
+                _cameraShaker.Update(deltaTime);
+
                 switch (_gameScreen)
                 {
+                    case GameScreen.HomeScreen:
+                    {
+                        bool switchScreen = _homeScreen.Update(deltaTime, totalGameTime);
+                        if (switchScreen)
+                        {
+                            SetGameScreen(GameScreen.MainScreen);
+                        }
+                    }
+                        break;
+
                     case GameScreen.MainScreen:
-                        _mainScreen.Update(deltaTime, totalGameTime);
+                    {
+                        bool switchScreens = _mainScreen.Update(deltaTime, totalGameTime);
+                        if (switchScreens)
+                        {
+                            SetGameScreen(GameScreen.GameOverScreen);
+                        }
+                    }
+                        break;
+
+                    case GameScreen.GameOverScreen:
+                        _gameOverScreen.Update(deltaTime, totalGameTime);
                         break;
 
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+            else
+            {
+                _gamePadVibrationController.StopVibration();
             }
         }
 
