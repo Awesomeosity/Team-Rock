@@ -1,15 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace TeamRock.Scene
 {
     public abstract class CustomScreen
     {
-        public virtual void Initialize(ContentManager contentManager) { }
+        public abstract void Initialize(ContentManager contentManager);
 
-        public virtual void Update(float deltaTime, float gameTime) { }
+        public abstract bool Update(float deltaTime, float gameTime); // The return value tells when to switch screens
 
-        public virtual void Draw(SpriteBatch spriteBatch) { }
+        public abstract void Draw(SpriteBatch spriteBatch);
     }
 }
