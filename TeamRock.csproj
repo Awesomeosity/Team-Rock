@@ -56,6 +56,7 @@
     <Compile Include="Src\Managers\GamePadVibrationController.cs" />
     <Compile Include="Src\Managers\MouseController.cs" />
     <Compile Include="Src\Managers\ScrollingBackground.cs" />
+    <Compile Include="Src\Managers\SoundManager.cs" />
     <Compile Include="Src\Managers\SpriteSheetAnimationManager.cs" />
     <Compile Include="Src\Scene\CustomScreen.cs" />
     <Compile Include="Src\Scene\GameOverScreen.cs" />
