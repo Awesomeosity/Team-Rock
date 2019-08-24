@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 using TeamRock.CustomCamera;
@@ -84,6 +85,8 @@ namespace TeamRock
             SetupScreens();
             SetupOtherItems();
             SetGameScreen(GameScreen.HomeScreen);
+
+            _homeScreen.StartMusic();
         }
 
         private void SetupCamerasAndViewports()
@@ -187,8 +190,8 @@ namespace TeamRock
 
             if (IsActive)
             {
-                float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
-                float totalGameTime = (float) gameTime.TotalGameTime.TotalSeconds;
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                float totalGameTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
                 _gamePadVibrationController.Update(deltaTime);
                 _cameraShaker.Update(deltaTime);
@@ -196,23 +199,27 @@ namespace TeamRock
                 switch (_gameScreen)
                 {
                     case GameScreen.HomeScreen:
-                    {
-                        bool switchScreen = _homeScreen.Update(deltaTime, totalGameTime);
-                        if (switchScreen)
                         {
-                            SetGameScreen(GameScreen.MainScreen);
+                            bool switchScreen = _homeScreen.Update(deltaTime, totalGameTime);
+                            if (switchScreen)
+                            {
+                                _homeScreen.StopMusic();
+                                SetGameScreen(GameScreen.MainScreen);
+                                _mainScreen.StartMusic();
+                            }
                         }
-                    }
                         break;
 
                     case GameScreen.MainScreen:
-                    {
-                        bool switchScreens = _mainScreen.Update(deltaTime, totalGameTime);
-                        if (switchScreens)
                         {
-                            SetGameScreen(GameScreen.GameOverScreen);
+                            bool switchScreens = _mainScreen.Update(deltaTime, totalGameTime);
+                            if (switchScreens)
+                            {
+                                _mainScreen.StopMusic();
+
+                                SetGameScreen(GameScreen.GameOverScreen);
+                            }
                         }
-                    }
                         break;
 
                     case GameScreen.GameOverScreen:
