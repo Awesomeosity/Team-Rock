@@ -33,7 +33,7 @@ namespace TeamRock.Src.GameObjects
 
         #region Draw
 
-        public void Draw(SpriteBatch spriteBatch) => _sprite.Draw(spriteBatch);
+        public void Draw(SpriteBatch spriteBatch) => _sprite?.Draw(spriteBatch);
 
         #endregion
 

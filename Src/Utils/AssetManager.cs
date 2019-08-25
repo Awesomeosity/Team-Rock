@@ -16,6 +16,9 @@ namespace TeamRock.Utils
         public const string BackgroundRopes = "Textures/Background Ropes Tiling";
         public const string WrestingBackground = "Textures/WrestlingBackground";
 
+        public const string Soda = "Textures/Soda";
+        public const string Popcorn = "Textures/PopCorn";
+
         #endregion
 
         #region Fonts

@@ -29,27 +29,29 @@ namespace TeamRock.Managers
 
         public int PlaySound(SoundEffect soundEffect)
         {
-            if (!_soundEffects.Contains(soundEffect))
-            {
-                _soundEffects.Add(soundEffect);
-            }
+//            if (!_soundEffects.Contains(soundEffect))
+//            {
+//                _soundEffects.Add(soundEffect);
+//            }
+//
+//            SoundData soundData = GetEmptySoundEffect(soundEffect);
+//            soundData.SoundEffectInstance.Play();
+//
+//            return soundData.SoundIndex;
 
-            SoundData soundData = GetEmptySoundEffect(soundEffect);
-            soundData.SoundEffectInstance.Play();
-
-            return soundData.SoundIndex;
+            return -1;
         }
 
         public void PlaySound(int soundIndex)
         {
-            SoundData soundData = GetEffectByIndex(soundIndex);
-            if (soundData == null)
-            {
-                Console.WriteLine("Invalid Sound Requested");
-                return;
-            }
-
-            soundData.SoundEffectInstance.Play();
+//            SoundData soundData = GetEffectByIndex(soundIndex);
+//            if (soundData == null)
+//            {
+//                Console.WriteLine("Invalid Sound Requested");
+//                return;
+//            }
+//
+//            soundData.SoundEffectInstance.Play();
         }
 
         public void ResumeSound(int soundIndex)
@@ -82,14 +84,14 @@ namespace TeamRock.Managers
 
         public void StopSound(int soundIndex)
         {
-            SoundData soundData = GetEffectByIndex(soundIndex);
-            if (soundData == null)
-            {
-                Console.WriteLine("Invalid Sound Requested");
-                return;
-            }
-
-            soundData.SoundEffectInstance.Stop();
+//            SoundData soundData = GetEffectByIndex(soundIndex);
+//            if (soundData == null)
+//            {
+//                Console.WriteLine("Invalid Sound Requested");
+//                return;
+//            }
+//
+//            soundData.SoundEffectInstance.Stop();
         }
 
         #endregion
@@ -98,14 +100,14 @@ namespace TeamRock.Managers
 
         public void SetSoundLooping(int soundIndex, bool looping = true)
         {
-            SoundData soundData = GetEffectByIndex(soundIndex);
-            if (soundData == null)
-            {
-                Console.WriteLine("Invalid Sound Requested");
-                return;
-            }
-
-            soundData.SoundEffectInstance.IsLooped = looping;
+//            SoundData soundData = GetEffectByIndex(soundIndex);
+//            if (soundData == null)
+//            {
+//                Console.WriteLine("Invalid Sound Requested");
+//                return;
+//            }
+//
+//            soundData.SoundEffectInstance.IsLooped = looping;
         }
 
         #endregion
