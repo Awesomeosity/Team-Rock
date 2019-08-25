@@ -50,6 +50,8 @@ namespace TeamRock.Utils
         public const string Clap = "Sounds/Crowd_Clap";
         public const string Dizzy = "Sounds/Dizzy";
         public const string Clap2 = "Sounds/Hand_Claps";
+        public const string Anchor = "Sounds/Anchor";
+        public const string CottonCandy = "Sounds/Cotton_Candy";
 
         #endregion
 
