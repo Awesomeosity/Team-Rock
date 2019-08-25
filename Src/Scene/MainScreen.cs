@@ -46,7 +46,7 @@ namespace TeamRock.Scene
         private void CreateSounds()
         {
             _testSoundEffect = _contentManager.Load<SoundEffect>(AssetManager.TestSound);
-            _music = _contentManager.Load<SoundEffect>(AssetManager.Music2);
+            _music = _contentManager.Load<SoundEffect>(AssetManager.MainScreenMusic);
             _clap = _contentManager.Load<SoundEffect>(AssetManager.Clap);
         }
 
@@ -77,15 +77,15 @@ namespace TeamRock.Scene
             };
 
             _audiences.Add(new Audience(audienceSprite, _player, _contentManager,
-                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
-                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+                (int) (audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int) (audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
                 Position = new Vector2(GameInfo.LeftAudiencePos, 0)
             });
 
             _audiences.Add(new Audience(audienceSprite2, _player, _contentManager,
-                (int)(audienceTexture.Width * GameInfo.AudienceAssetScale),
-                (int)(audienceTexture.Height * GameInfo.AudienceAssetScale))
+                (int) (audienceTexture.Width * GameInfo.AudienceAssetScale),
+                (int) (audienceTexture.Height * GameInfo.AudienceAssetScale))
             {
                 Position = new Vector2(GameInfo.RightAudiencePos, 0)
             });
@@ -106,7 +106,8 @@ namespace TeamRock.Scene
                 audience.DrawProjectiles(spriteBatch);
             }
 
-            spriteBatch.DrawString(_font, "Hello World! " + _timeLeft, new Vector2(GameInfo.FixedWindowWidth / 2, GameInfo.FixedWindowHeight / 2), Color.White);
+            spriteBatch.DrawString(_font, "Hello World! " + _timeLeft,
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f), Color.White);
         }
 
         #endregion
@@ -142,7 +143,6 @@ namespace TeamRock.Scene
 
             return false;
         }
-
 
         #endregion
 
@@ -181,7 +181,6 @@ namespace TeamRock.Scene
         private MainScreen()
         {
         }
-
 
         #endregion
     }
