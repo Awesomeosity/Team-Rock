@@ -12,7 +12,7 @@ namespace TeamRock.Utils
         public const int MaxBackgroundElements = 3;
 
         // Center Board
-        public const int CenterBoardWidth = 480;
+        public const int CenterBoardWidth = 300;
 
         // Player State
         public const float PlayerMinYPosition = 10;
@@ -22,7 +22,8 @@ namespace TeamRock.Utils
         public static readonly Vector2 PlayerInitialPosition =
             new Vector2(FixedWindowWidth / 2.0f, 70);
 
-        public static readonly Vector2 BaseAccelerationRate = new Vector2(0, 10);
+        public const float PlayerMaxYVelocity = 500;
+        public static readonly Vector2 BaseAccelerationRate = new Vector2(0, 5);
         public static readonly Vector2 AccelerationChangeRate = new Vector2(0, 3);
         public static readonly Vector2 HorizontalVelocity = new Vector2(250, 0);
         public static readonly Vector2 VerticalVelocity = new Vector2(0, 50);
@@ -30,9 +31,11 @@ namespace TeamRock.Utils
         public const int PlayerRightPosition = FixedWindowWidth - AudienceWidth;
         public const float PlayerGamePadAxisThreshold = 0.5f;
 
+        // Stage
+        public const float StageScale = 0.3f;
+
         // Audience Position
         private const int AudienceWidth = (FixedWindowWidth - CenterBoardWidth) / 2;
-        public const float AudienceAssetScale = 0.5f;
         public const float LeftAudiencePos = 0;
         public const float RightAudiencePos = 480;
         public static readonly Rectangle LeftAudienceRectangle = new Rectangle(0, 0, AudienceWidth, FixedWindowHeight);
@@ -41,11 +44,12 @@ namespace TeamRock.Utils
             new Rectangle(FixedWindowWidth - AudienceWidth, 0, AudienceWidth, FixedWindowHeight);
 
         // Projectile
-        public const float ProjectileVelocity = 750;
+        public const float MinProjectileVelocity = 300;
+        public const float MaxProjectileVelocity = 750;
         public const float ProjectileLifeTime = 1.5f;
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
-        public const float ProjectileAssetScale = 0.1f;
+        public const float ProjectileAssetScale = 0.3f;
         public const float ProjectileAimRadius = 100;
 
         // SpriteSheet Animations

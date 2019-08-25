@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 using TeamRock.CustomCamera;
@@ -52,7 +51,11 @@ namespace TeamRock
         {
             Content.RootDirectory = "Content";
 
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = GameInfo.FixedWindowWidth,
+                PreferredBackBufferHeight = GameInfo.FixedWindowHeight
+            };
             Window.AllowUserResizing = true;
         }
 
@@ -84,8 +87,8 @@ namespace TeamRock
             SetupSpecialControllers();
             SetupScreens();
             SetupOtherItems();
-            SetGameScreen(GameScreen.HomeScreen);
 
+            SetGameScreen(GameScreen.HomeScreen);
             _homeScreen.StartMusic();
         }
 
@@ -190,8 +193,8 @@ namespace TeamRock
 
             if (IsActive)
             {
-                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                float totalGameTime = (float)gameTime.TotalGameTime.TotalSeconds;
+                float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+                float totalGameTime = (float) gameTime.TotalGameTime.TotalSeconds;
 
                 _gamePadVibrationController.Update(deltaTime);
                 _cameraShaker.Update(deltaTime);
@@ -199,31 +202,41 @@ namespace TeamRock
                 switch (_gameScreen)
                 {
                     case GameScreen.HomeScreen:
+                    {
+                        bool switchScreen = _homeScreen.Update(deltaTime, totalGameTime);
+                        if (switchScreen)
                         {
-                            bool switchScreen = _homeScreen.Update(deltaTime, totalGameTime);
-                            if (switchScreen)
-                            {
-                                _homeScreen.StopMusic();
-                                SetGameScreen(GameScreen.MainScreen);
-                                _mainScreen.StartMusic();
-                            }
+                            _homeScreen.StopMusic();
+
+                            SetGameScreen(GameScreen.MainScreen);
+                            _mainScreen.StartMusic();
                         }
+                    }
                         break;
 
                     case GameScreen.MainScreen:
+                    {
+                        bool switchScreens = _mainScreen.Update(deltaTime, totalGameTime);
+                        if (switchScreens)
                         {
-                            bool switchScreens = _mainScreen.Update(deltaTime, totalGameTime);
-                            if (switchScreens)
-                            {
-                                _mainScreen.StopMusic();
+                            _mainScreen.StopMusic();
 
-                                SetGameScreen(GameScreen.GameOverScreen);
-                            }
+                            SetGameScreen(GameScreen.GameOverScreen);
                         }
+                    }
                         break;
 
                     case GameScreen.GameOverScreen:
-                        _gameOverScreen.Update(deltaTime, totalGameTime);
+                    {
+                        bool switchScreens = _gameOverScreen.Update(deltaTime, totalGameTime);
+                        if (switchScreens)
+                        {
+                            _homeScreen.StartMusic();
+                            _homeScreen.ResetScreen();
+
+                            SetGameScreen(GameScreen.HomeScreen);
+                        }
+                    }
                         break;
 
                     default:

@@ -6,32 +6,33 @@ using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
 {
-    class Audience : GameObject
+    class Audience
     {
-        private ContentManager _contentManager;
+        private readonly ContentManager _contentManager;
+
+        private readonly List<Projectile> _projectiles;
+        private readonly Player _player;
+
+        private Vector2 _position;
         private float _randomTimer;
-        private List<Projectile> _enemies;
-        private Player _player;
 
         #region Initialization
 
-        public Audience(Sprite sprite, Player player, ContentManager contentManager, int collisionHeight,
-            int collisionWidth) : base(sprite, collisionHeight, collisionWidth)
+        public Audience(Player player, ContentManager contentManager)
         {
             _contentManager = contentManager;
             _randomTimer =
                 ExtensionFunctions.RandomInRange(GameInfo.MinProjectileSpawnTimer, GameInfo.MaxProjectileSpawnTimer);
 
             _player = player;
-            _enemies = new List<Projectile>();
+            _projectiles = new List<Projectile>();
         }
 
         #endregion
 
-
         #region Update
 
-        public override void Update(float deltaTime, float gameTime)
+        public void Update(float deltaTime, float gameTime)
         {
             _randomTimer -= deltaTime;
             if (_randomTimer <= 0)
@@ -39,13 +40,13 @@ namespace TeamRock.Src.GameObjects
                 SpawnProjectileAndResetTimer();
             }
 
-            for (int i = _enemies.Count - 1; i >= 0; i--)
+            for (int i = _projectiles.Count - 1; i >= 0; i--)
             {
-                _enemies[i].Update(deltaTime, gameTime);
+                _projectiles[i].Update(deltaTime, gameTime);
 
-                if (_enemies[i].IsProjectileDestroyed || _enemies[i].DidCollide(_player.GameObject))
+                if (_projectiles[i].IsProjectileDestroyed || _projectiles[i].DidCollide(_player.GameObject))
                 {
-                    _enemies.RemoveAt(i);
+                    _projectiles.RemoveAt(i);
                 }
             }
         }
@@ -56,10 +57,20 @@ namespace TeamRock.Src.GameObjects
 
         public void DrawProjectiles(SpriteBatch spriteBatch)
         {
-            foreach (Projectile enemy in _enemies)
+            foreach (Projectile projectile in _projectiles)
             {
-                enemy.Draw(spriteBatch);
+                projectile.Draw(spriteBatch);
             }
+        }
+
+        #endregion
+
+        #region External Functions
+
+        public Vector2 Position
+        {
+            get => _position;
+            set => _position = value;
         }
 
         #endregion
@@ -71,7 +82,10 @@ namespace TeamRock.Src.GameObjects
             _randomTimer =
                 ExtensionFunctions.RandomInRange(GameInfo.MinProjectileSpawnTimer, GameInfo.MaxProjectileSpawnTimer);
 
-            Texture2D projectileTexture = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
+            Texture2D projectileTexture =
+                _contentManager.Load<Texture2D>(ExtensionFunctions.Random() <= 0.5f
+                    ? AssetManager.Soda
+                    : AssetManager.Popcorn);
             Sprite projectileSprite = new Sprite(projectileTexture)
             {
                 Scale = GameInfo.ProjectileAssetScale
@@ -101,7 +115,7 @@ namespace TeamRock.Src.GameObjects
             };
             projectile.LaunchProjectile(launchDirection);
 
-            _enemies.Add(projectile);
+            _projectiles.Add(projectile);
         }
 
         #endregion
