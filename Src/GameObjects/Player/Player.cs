@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TeamRock.Managers;
 using TeamRock.Utils;
@@ -28,8 +29,8 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet.StartSpriteAnimation();
 
             _playerGameObject = new GameObject(playerSprite,
-                playerTexture.Width * GameInfo.PlayerAssetScale,
-                playerTexture.Height * GameInfo.PlayerAssetScale)
+                (playerTexture.Width / 2.0f) * GameInfo.PlayerAssetScale,
+                (playerTexture.Height / 2.0f) * GameInfo.PlayerAssetScale)
             {
                 Acceleration = GameInfo.BaseAccelerationRate,
                 Position = GameInfo.PlayerInitialPosition,
@@ -54,7 +55,11 @@ namespace TeamRock.Src.GameObjects
 
         public void Update(float deltaTime, float gameTime)
         {
-            _playerGameObject.UpdateOnlyVelocity(deltaTime, gameTime);
+            if (_playerGameObject.Velocity.Y < GameInfo.PlayerMaxYVelocity)
+            {
+                _playerGameObject.UpdateOnlyVelocity(deltaTime, gameTime);
+            }
+
             _playerController.Update();
             _playerFallingSpriteSheet.Update(deltaTime);
 

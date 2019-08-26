@@ -63,6 +63,7 @@
     <Compile Include="Src\Scene\HomeScreen.cs" />
     <Compile Include="Src\Scene\MainScreen.cs" />
     <Compile Include="Src\UI\UiImageButton.cs" />
+    <Compile Include="Src\UI\UiTextNode.cs" />
     <Compile Include="Src\Utils\AssetManager.cs" />
     <Compile Include="Src\Utils\ExtensionFunctions.cs" />
     <Compile Include="Src\Utils\GameInfo.cs" />

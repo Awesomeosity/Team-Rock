@@ -10,7 +10,8 @@ namespace TeamRock.Src.GameObjects
 
         #region Constructor
 
-        public Projectile(Sprite sprite, int collisionWidth, int collisionHeight) : base(sprite, collisionWidth, collisionHeight)
+        public Projectile(Sprite sprite, int collisionWidth, int collisionHeight) : base(sprite, collisionWidth,
+            collisionHeight)
         {
         }
 
@@ -35,7 +36,9 @@ namespace TeamRock.Src.GameObjects
 
         public void LaunchProjectile(Vector2 directionNormalized)
         {
-            Velocity = directionNormalized * GameInfo.ProjectileVelocity;
+            Velocity = directionNormalized *
+                       ExtensionFunctions.RandomInRange(GameInfo.MinProjectileVelocity,
+                           GameInfo.MaxProjectileVelocity);
             _lifeTime = GameInfo.ProjectileLifeTime;
         }
 
