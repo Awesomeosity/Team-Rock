@@ -29,14 +29,6 @@ namespace TeamRock.Utils
 
         #region Sprite Sheets
 
-        // Test Explosion
-        public const string TestExplosionBase = "SpriteSheets/TestExplosion/exp2_";
-        public const int TestExplosionTotalCount = 7;
-
-        // Test Blast
-        public const string TestBlastBase = "SpriteSheets/TestBlast/image_part_0";
-        public const int TestBlastTotalCount = 64;
-
         // Fire Falling
         public const string FireFallingBase = "SpriteSheets/FireFalling/image_part_0";
         public const int FireFallingTotalCount = 81;
