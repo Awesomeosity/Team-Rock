@@ -54,6 +54,7 @@ namespace TeamRock.Scene
             _backgroundSpriteSheet = new SpriteSheetAnimationManager();
             _backgroundSpriteSheet.Initialize(_contentManager, AssetManager.WrestlingBackgroundBase,
                 AssetManager.WrestlingBackgroundTotalCount, 0, true);
+            _backgroundSpriteSheet.Sprite.UseSize = true;
             _backgroundSpriteSheet.Sprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
             _backgroundSpriteSheet.FrameTime = AssetManager.WrestlingBackgroundAnimationSpeed;
 
