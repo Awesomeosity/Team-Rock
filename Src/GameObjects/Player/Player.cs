@@ -27,7 +27,6 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet = new SpriteSheetAnimationManager();
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
                 AssetManager.FireFallingTotalCount, 1, true);
-            _playerFallingSpriteSheet.StartSpriteAnimation();
 
             _playerGameObject = new GameObject(playerSprite,
                 playerTexture.Width * GameInfo.PlayerAssetScale / 2.0f - 30,

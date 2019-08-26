@@ -41,6 +41,11 @@ namespace TeamRock.Utils
         public const string FireFallingBase = "SpriteSheets/FireFalling/image_part_0";
         public const int FireFallingTotalCount = 81;
 
+        // Wresting Background
+        public const string WrestlingBackgroundBase = "SpriteSheets/WrestlingBackground/WrestlingBackgroundP";
+        public const int WrestlingBackgroundTotalCount = 3;
+        public const float WrestlingBackgroundAnimationSpeed = 0.1666667F;
+
         #endregion
 
         #region Sounds

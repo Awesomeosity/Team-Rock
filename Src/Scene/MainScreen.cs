@@ -19,7 +19,7 @@ namespace TeamRock.Scene
         private GameObject _stage;
         private Player _player;
 
-        private Sprite _backgroundSprite;
+        private SpriteSheetAnimationManager _backgroundSpriteSheet;
         private ScrollingBackground _scrollingBackground;
 
         private List<Audience> _audiences;
@@ -51,8 +51,11 @@ namespace TeamRock.Scene
             _player.Initialize(_contentManager);
 
             Texture2D backgroundTexture = _contentManager.Load<Texture2D>(AssetManager.WrestingBackground);
-            _backgroundSprite = new Sprite(backgroundTexture, true);
-            _backgroundSprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
+            _backgroundSpriteSheet = new SpriteSheetAnimationManager();
+            _backgroundSpriteSheet.Initialize(_contentManager, AssetManager.WrestlingBackgroundBase,
+                AssetManager.WrestlingBackgroundTotalCount, 0, true);
+            _backgroundSpriteSheet.Sprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
+            _backgroundSpriteSheet.FrameTime = AssetManager.WrestlingBackgroundAnimationSpeed;
 
             Texture2D scrollingBackgroundTexture = _contentManager.Load<Texture2D>(AssetManager.BackgroundRopes);
             _scrollingBackground = new ScrollingBackground();
@@ -85,7 +88,7 @@ namespace TeamRock.Scene
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _backgroundSprite.Draw(spriteBatch);
+            _backgroundSpriteSheet.Draw(spriteBatch);
             _scrollingBackground.Draw(spriteBatch);
             _player.Draw(spriteBatch);
             _stage.Draw(spriteBatch);
@@ -112,6 +115,8 @@ namespace TeamRock.Scene
         public override bool Update(float deltaTime, float gameTime)
         {
             _scrollingBackground.Update(deltaTime, _player.GameObject.Velocity.Y);
+            _backgroundSpriteSheet.Update(deltaTime);
+
             _player.Update(deltaTime, gameTime);
             _stage.Update(deltaTime, gameTime);
 

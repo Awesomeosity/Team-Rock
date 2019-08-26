@@ -43,6 +43,8 @@ namespace TeamRock.Managers
 
             _sprite = new Sprite(_animationTextures[0]);
             _frameTime = GameInfo.DefaultAnimationSpeed;
+
+            StartSpriteAnimation();
         }
 
         #endregion
