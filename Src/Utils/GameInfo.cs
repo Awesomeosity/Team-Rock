@@ -43,13 +43,15 @@ namespace TeamRock.Utils
         // Projectile
         public const float MinProjectileVelocity = 400;
         public const float MaxProjectileVelocity = 700;
-        public const float ProjectileLifeTime = 1.5f;
+        public const float ProjectileLifeTime = 5f;
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
         public const float MaxProjectileAssetScaleDistanceSq = 400;
         public const float ProjectileStartAssetScale = 0.05f;
         public const float ProjectileFinalAssetScale = 0.2f;
         public const float ProjectileAimRadius = 100;
+        public const float ProjectileMinRotationSpeed = 3;
+        public const float ProjectileMaxRotationSpeed = 10;
 
         // SpriteSheet Animations
         public const float DefaultAnimationSpeed = 0.01666667F;

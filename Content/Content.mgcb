@@ -20,42 +20,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Arial.spritefont
 
-#begin graphics/env/WrestlingBackgroundP0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:graphics/env/WrestlingBackgroundP0.png
-
-#begin graphics/env/WrestlingBackgroundP1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:graphics/env/WrestlingBackgroundP1.png
-
-#begin graphics/env/WrestlingBackgroundP2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:graphics/env/WrestlingBackgroundP2.png
-
 #begin Music/Hermanos_Ranchero.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor

@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-
-namespace TeamRock.Utils
+﻿namespace TeamRock.Utils
 {
     public static class AssetManager
     {

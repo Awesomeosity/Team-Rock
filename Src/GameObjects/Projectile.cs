@@ -11,6 +11,8 @@ namespace TeamRock.Src.GameObjects
         private Vector2 _positionToTarget;
         private float _initialDistanceToTarget;
 
+        private float _rotationSpeed;
+
         #region Constructor
 
         public Projectile(Sprite sprite, int collisionWidth, int collisionHeight) : base(sprite, collisionWidth,
@@ -25,6 +27,7 @@ namespace TeamRock.Src.GameObjects
         public override void Update(float deltaTime, float gameTime)
         {
             base.Update(deltaTime, gameTime);
+            UpdateRotation(deltaTime);
             UpdateAssetScale();
 
             _lifeTime -= deltaTime;
@@ -47,6 +50,9 @@ namespace TeamRock.Src.GameObjects
 
             _positionToTarget = positionToTarget;
             _initialDistanceToTarget = Vector2.DistanceSquared(Position, _positionToTarget);
+
+            _rotationSpeed = ExtensionFunctions.RandomInRange(GameInfo.ProjectileMinRotationSpeed,
+                GameInfo.ProjectileMaxRotationSpeed);
         }
 
         public bool IsProjectileDestroyed => _isProjectileDestroyed;
@@ -67,6 +73,8 @@ namespace TeamRock.Src.GameObjects
                 Sprite.Scale = scaledAsset;
             }
         }
+
+        private void UpdateRotation(float deltaTime) => Sprite.Rotation += _rotationSpeed * deltaTime;
 
         #endregion
     }
