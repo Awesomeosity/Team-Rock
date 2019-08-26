@@ -33,8 +33,8 @@
 
         // Wresting Background
         public const string WrestlingBackgroundBase = "SpriteSheets/WrestlingBackground/WrestlingBackgroundP";
-        public const int WrestlingBackgroundTotalCount = 3;
-        public const float WrestlingBackgroundAnimationSpeed = 0.1666667F;
+        public const int WrestlingBackgroundTotalCount = 4;
+        public const float WrestlingBackgroundAnimationSpeed = 0.125F;
 
         #endregion
 

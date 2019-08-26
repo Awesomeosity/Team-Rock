@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using MonoGame.Extended;
+using TeamRock.Managers;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
@@ -51,6 +52,20 @@ namespace TeamRock.Src.GameObjects
 
                 if (_projectiles[i].IsProjectileDestroyed || _projectiles[i].DidCollide(_player.GameObject))
                 {
+                    if (_projectiles[i].DidCollide(_player.GameObject))
+                    {
+                        if (_projectiles[i].Position.X < _player.GameObject.Position.X)
+                        {
+                            GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity,
+                                GameInfo.GamePadMinIntensity, GameInfo.GamePadVibrationTime);
+                        }
+                        else
+                        {
+                            GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMinIntensity,
+                                GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
+                        }
+                    }
+
                     _projectiles.RemoveAt(i);
                 }
             }

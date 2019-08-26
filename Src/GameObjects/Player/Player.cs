@@ -88,7 +88,8 @@ namespace TeamRock.Src.GameObjects
             }
             else if (_playerController.State == PlayerController.ControllerState.Up)
             {
-                if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
+                if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition ||
+                    _playerGameObject.Velocity.Y < GameInfo.PlayerMinYVelocity)
                 {
                     return;
                 }
