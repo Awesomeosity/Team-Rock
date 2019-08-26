@@ -12,7 +12,7 @@ namespace TeamRock.Utils
         public const int MaxBackgroundElements = 3;
 
         // Center Board
-        public const int CenterBoardWidth = 300;
+        private const int CenterBoardWidth = 300;
 
         // Player State
         public const float PlayerMinYPosition = 10;
@@ -41,14 +41,14 @@ namespace TeamRock.Utils
         public const float RightAudiencePos = 480;
 
         // Projectile
-        public const float MinProjectileVelocity = 100;
-        public const float MaxProjectileVelocity = 300;
+        public const float MinProjectileVelocity = 400;
+        public const float MaxProjectileVelocity = 700;
         public const float ProjectileLifeTime = 1.5f;
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
-
+        public const float MaxProjectileAssetScaleDistanceSq = 400;
         public const float ProjectileStartAssetScale = 0.05f;
-        public const float ProjectileFinalAssetScale = 0.3f;
+        public const float ProjectileFinalAssetScale = 0.2f;
         public const float ProjectileAimRadius = 100;
 
         // SpriteSheet Animations

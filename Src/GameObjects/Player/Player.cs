@@ -30,7 +30,7 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet.StartSpriteAnimation();
 
             _playerGameObject = new GameObject(playerSprite,
-                playerTexture.Width * GameInfo.PlayerAssetScale / 2.0f,
+                playerTexture.Width * GameInfo.PlayerAssetScale / 2.0f - 30,
                 (playerTexture.Height) * GameInfo.PlayerAssetScale)
             {
                 Acceleration = GameInfo.BaseAccelerationRate,

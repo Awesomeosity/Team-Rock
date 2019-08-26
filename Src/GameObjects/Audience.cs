@@ -105,22 +105,11 @@ namespace TeamRock.Src.GameObjects
             _randomTimer =
                 ExtensionFunctions.RandomInRange(GameInfo.MinProjectileSpawnTimer, GameInfo.MaxProjectileSpawnTimer);
 
-            Texture2D projectileTexture =
-                _contentManager.Load<Texture2D>(ExtensionFunctions.Random() <= 0.5f
-                    ? AssetManager.Soda
-                    : AssetManager.Popcorn);
-            Sprite projectileSprite = new Sprite(projectileTexture)
-            {
-                Scale = GameInfo.ProjectileFinalAssetScale
-            };
-            projectileSprite.SetOriginCenter();
-
-            //This might be a little hacky... Might want to change depending on number of Audiences instantiated, which means passing in more parameters for Audience's reference?
             float xPosition =
                 ExtensionFunctions.RandomInRange(Position.X, Position.X + GameInfo.AudienceWidth);
             float yPosition = ExtensionFunctions.RandomInRange(GameInfo.AudienceTopBuffer, GameInfo.FixedWindowHeight);
-
             Vector2 launchPosition = new Vector2(xPosition, yPosition);
+
             float offsetX = _player.GameObject.Position.X +
                             (ExtensionFunctions.RandomInRange(-GameInfo.ProjectileAimRadius,
                                 GameInfo.ProjectileAimRadius));
@@ -128,8 +117,19 @@ namespace TeamRock.Src.GameObjects
                             (ExtensionFunctions.RandomInRange(-GameInfo.ProjectileAimRadius,
                                 GameInfo.ProjectileAimRadius));
             Vector2 offsetAim = new Vector2(offsetX, offsetY);
+
             Vector2 launchDirection = offsetAim - launchPosition;
             launchDirection.Normalize();
+
+            Texture2D projectileTexture =
+                _contentManager.Load<Texture2D>(ExtensionFunctions.Random() <= 0.5f
+                    ? AssetManager.Soda
+                    : AssetManager.Popcorn);
+            Sprite projectileSprite = new Sprite(projectileTexture)
+            {
+                Scale = GameInfo.ProjectileStartAssetScale
+            };
+            projectileSprite.SetOriginCenter();
 
             Projectile projectile = new Projectile(projectileSprite,
                 (int) (projectileTexture.Width * GameInfo.ProjectileFinalAssetScale),
@@ -137,7 +137,7 @@ namespace TeamRock.Src.GameObjects
             {
                 Position = launchPosition
             };
-            projectile.LaunchProjectile(launchDirection);
+            projectile.LaunchProjectile(launchDirection, _player.GameObject.Position);
 
             _projectiles.Add(projectile);
         }
