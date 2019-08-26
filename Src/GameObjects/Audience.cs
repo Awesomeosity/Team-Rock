@@ -111,7 +111,7 @@ namespace TeamRock.Src.GameObjects
                     : AssetManager.Popcorn);
             Sprite projectileSprite = new Sprite(projectileTexture)
             {
-                Scale = GameInfo.ProjectileAssetScale
+                Scale = GameInfo.ProjectileFinalAssetScale
             };
             projectileSprite.SetOriginCenter();
 
@@ -122,18 +122,18 @@ namespace TeamRock.Src.GameObjects
 
             Vector2 launchPosition = new Vector2(xPosition, yPosition);
             float offsetX = _player.GameObject.Position.X +
-                            (ExtensionFunctions.RandomInRange(-1 * GameInfo.ProjectileAimRadius,
+                            (ExtensionFunctions.RandomInRange(-GameInfo.ProjectileAimRadius,
                                 GameInfo.ProjectileAimRadius));
             float offsetY = _player.GameObject.Position.Y +
-                            (ExtensionFunctions.RandomInRange(-1 * GameInfo.ProjectileAimRadius,
+                            (ExtensionFunctions.RandomInRange(-GameInfo.ProjectileAimRadius,
                                 GameInfo.ProjectileAimRadius));
             Vector2 offsetAim = new Vector2(offsetX, offsetY);
             Vector2 launchDirection = offsetAim - launchPosition;
             launchDirection.Normalize();
 
             Projectile projectile = new Projectile(projectileSprite,
-                (int) (projectileTexture.Width * GameInfo.ProjectileAssetScale),
-                (int) (projectileTexture.Height * GameInfo.ProjectileAssetScale))
+                (int) (projectileTexture.Width * GameInfo.ProjectileFinalAssetScale),
+                (int) (projectileTexture.Height * GameInfo.ProjectileFinalAssetScale))
             {
                 Position = launchPosition
             };

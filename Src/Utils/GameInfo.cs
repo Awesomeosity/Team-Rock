@@ -39,18 +39,16 @@ namespace TeamRock.Utils
         public const float AudienceTopBuffer = 100;
         public const float LeftAudiencePos = 0;
         public const float RightAudiencePos = 480;
-        public static readonly Rectangle LeftAudienceRectangle = new Rectangle(0, 0, AudienceWidth, FixedWindowHeight);
-
-        public static readonly Rectangle RightAudienceRectangle =
-            new Rectangle(FixedWindowWidth - AudienceWidth, 0, AudienceWidth, FixedWindowHeight);
 
         // Projectile
-        public const float MinProjectileVelocity = 10;
-        public const float MaxProjectileVelocity = 100;
+        public const float MinProjectileVelocity = 100;
+        public const float MaxProjectileVelocity = 300;
         public const float ProjectileLifeTime = 1.5f;
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
-        public const float ProjectileAssetScale = 0.3f;
+
+        public const float ProjectileStartAssetScale = 0.05f;
+        public const float ProjectileFinalAssetScale = 0.3f;
         public const float ProjectileAimRadius = 100;
 
         // SpriteSheet Animations
