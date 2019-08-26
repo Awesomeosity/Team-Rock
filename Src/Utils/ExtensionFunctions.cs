@@ -12,10 +12,7 @@ namespace TeamRock.Utils
             return (float) (minValue + nextRandom * (maxValue - minValue));
         }
 
-        public static float Random()
-        {
-            return (float) _random.NextDouble();
-        }
+        public static float Random() => (float) _random.NextDouble();
 
         public static float Map(float from, float fromMin, float fromMax, float toMin, float toMax)
         {

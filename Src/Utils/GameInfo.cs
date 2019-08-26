@@ -36,13 +36,13 @@ namespace TeamRock.Utils
 
         // Audience Position
         public const int AudienceWidth = (FixedWindowWidth - CenterBoardWidth) / 2;
-        public const float AudienceTopBuffer = 100;
+        public const float AudienceTopBuffer = 300;
         public const float LeftAudiencePos = 0;
         public const float RightAudiencePos = 480;
 
         // Projectile
         public const float MinProjectileVelocity = 400;
-        public const float MaxProjectileVelocity = 700;
+        public const float MaxProjectileVelocity = 500;
         public const float ProjectileLifeTime = 5f;
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
