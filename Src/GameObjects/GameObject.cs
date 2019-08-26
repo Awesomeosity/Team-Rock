@@ -14,6 +14,7 @@ namespace TeamRock.Src.GameObjects
         private RectangleF _collisionObject;
 
         #region Initialization
+
         public GameObject(Sprite sprite, float collisionWidth, float collisionHeight)
         {
             _sprite = sprite;
@@ -34,6 +35,8 @@ namespace TeamRock.Src.GameObjects
         #region Draw
 
         public void Draw(SpriteBatch spriteBatch) => _sprite?.Draw(spriteBatch);
+
+        public void DrawDebug(SpriteBatch spriteBatch) => spriteBatch.DrawRectangle(_collisionObject, Color.Red, 2);
 
         #endregion
 

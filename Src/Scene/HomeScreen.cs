@@ -53,6 +53,10 @@ namespace TeamRock.Scene
             _pressToPlayText.Draw(spriteBatch);
         }
 
+        public override void DrawDebug(SpriteBatch spriteBatch)
+        {
+        }
+
         #endregion
 
         #region Update

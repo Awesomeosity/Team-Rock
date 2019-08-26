@@ -96,6 +96,15 @@ namespace TeamRock.Scene
             }
         }
 
+        public override void DrawDebug(SpriteBatch spriteBatch)
+        {
+            _player.GameObject.DrawDebug(spriteBatch);
+            foreach (Audience audience in _audiences)
+            {
+                audience.DrawDebug(spriteBatch);
+            }
+        }
+
         #endregion
 
         #region Update

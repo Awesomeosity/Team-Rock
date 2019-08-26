@@ -28,6 +28,8 @@ namespace TeamRock
         private SoundManager _soundManager;
         private CameraShaker _cameraShaker;
 
+        private bool _drawDebug = true; // TODO: Change this later on...
+
         #region Screen Management
 
         private HomeScreen _homeScreen;
@@ -163,6 +165,36 @@ namespace TeamRock
 
                 case GameScreen.GameOverScreen:
                     _gameOverScreen.Draw(_spriteBatch);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            _spriteBatch.End();
+
+            if (_drawDebug)
+            {
+                DrawDebug();
+            }
+        }
+
+        private void DrawDebug()
+        {
+            _spriteBatch.Begin(transformMatrix: _mainCamera.GetViewMatrix());
+
+            switch (_gameScreen)
+            {
+                case GameScreen.HomeScreen:
+                    _homeScreen.DrawDebug(_spriteBatch);
+                    break;
+
+                case GameScreen.MainScreen:
+                    _mainScreen.DrawDebug(_spriteBatch);
+                    break;
+
+                case GameScreen.GameOverScreen:
+                    _gameOverScreen.DrawDebug(_spriteBatch);
                     break;
 
                 default:

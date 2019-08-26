@@ -20,6 +20,11 @@ namespace TeamRock.Scene
         {
         }
 
+        public override void DrawDebug(SpriteBatch spriteBatch)
+        {
+            
+        }
+
         #endregion
 
         #region Update

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using TeamRock.Managers;
 using TeamRock.Utils;
 
@@ -29,8 +30,8 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet.StartSpriteAnimation();
 
             _playerGameObject = new GameObject(playerSprite,
-                (playerTexture.Width / 2.0f) * GameInfo.PlayerAssetScale,
-                (playerTexture.Height / 2.0f) * GameInfo.PlayerAssetScale)
+                playerTexture.Width * GameInfo.PlayerAssetScale / 2.0f,
+                (playerTexture.Height) * GameInfo.PlayerAssetScale)
             {
                 Acceleration = GameInfo.BaseAccelerationRate,
                 Position = GameInfo.PlayerInitialPosition,

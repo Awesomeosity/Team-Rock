@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using MonoGame.Extended;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
@@ -16,6 +18,8 @@ namespace TeamRock.Src.GameObjects
         private Vector2 _position;
         private float _randomTimer;
 
+        private RectangleF _audienceRectangle;
+
         #region Initialization
 
         public Audience(Player player, ContentManager contentManager)
@@ -26,6 +30,7 @@ namespace TeamRock.Src.GameObjects
 
             _player = player;
             _projectiles = new List<Projectile>();
+            _audienceRectangle = new RectangleF();
         }
 
         #endregion
@@ -63,6 +68,16 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
+        public void DrawDebug(SpriteBatch spriteBatch)
+        {
+            foreach (Projectile projectile in _projectiles)
+            {
+                projectile.DrawDebug(spriteBatch);
+            }
+
+            spriteBatch.DrawRectangle(_audienceRectangle, Color.Red, 2);
+        }
+
         #endregion
 
         #region External Functions
@@ -70,7 +85,15 @@ namespace TeamRock.Src.GameObjects
         public Vector2 Position
         {
             get => _position;
-            set => _position = value;
+            set
+            {
+                _position = value;
+
+                _audienceRectangle.X = _position.X;
+                _audienceRectangle.Y = GameInfo.AudienceTopBuffer;
+                _audienceRectangle.Width = GameInfo.AudienceWidth;
+                _audienceRectangle.Height = Math.Abs(GameInfo.FixedWindowHeight - GameInfo.AudienceTopBuffer);
+            }
         }
 
         #endregion
@@ -90,11 +113,12 @@ namespace TeamRock.Src.GameObjects
             {
                 Scale = GameInfo.ProjectileAssetScale
             };
+            projectileSprite.SetOriginCenter();
 
             //This might be a little hacky... Might want to change depending on number of Audiences instantiated, which means passing in more parameters for Audience's reference?
             float xPosition =
-                ExtensionFunctions.RandomInRange(Position.X, Position.X + GameInfo.LeftAudienceRectangle.Width);
-            float yPosition = ExtensionFunctions.RandomInRange(0, GameInfo.FixedWindowHeight);
+                ExtensionFunctions.RandomInRange(Position.X, Position.X + GameInfo.AudienceWidth);
+            float yPosition = ExtensionFunctions.RandomInRange(GameInfo.AudienceTopBuffer, GameInfo.FixedWindowHeight);
 
             Vector2 launchPosition = new Vector2(xPosition, yPosition);
             float offsetX = _player.GameObject.Position.X +
