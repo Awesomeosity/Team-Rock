@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended;
+using TeamRock.CustomCamera;
 using TeamRock.Managers;
 using TeamRock.Utils;
 
@@ -73,6 +74,7 @@ namespace TeamRock.Src.GameObjects
                                 GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
                         }
 
+                        CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 2);
                         SoundManager.Instance.PlaySound(_hitSound);
                     }
                     _projectiles.RemoveAt(i);

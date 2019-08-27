@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TeamRock.CustomCamera;
 using TeamRock.Managers;
 using TeamRock.Src.GameObjects;
 using TeamRock.UI;
@@ -273,7 +274,10 @@ namespace TeamRock.Scene
             {
                 _endExplosion.StartSpriteAnimation();
                 _endExplosion.Sprite.Position = _player.GameObject.Position;
+
+                CameraShaker.Instance.StartShake(3, 5);
                 SoundManager.Instance.PlaySound(_explosionSound);
+
                 SetGameState(GameState.EndAnimations);
             }
         }
