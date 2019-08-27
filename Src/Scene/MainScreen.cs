@@ -103,11 +103,11 @@ namespace TeamRock.Scene
         private void CreateOtherSceneItems()
         {
             _timeToImpact = GameInfo.TotalGameTime;
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
 
             _timerText = new UiTextNode()
             {
-                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 20)
+                Position = new Vector2(GameInfo.FixedWindowWidth / 4.0f, 50)
             };
             _timerText.Initialize(_defaultFont, "");
 
@@ -290,6 +290,8 @@ namespace TeamRock.Scene
             {
                 _endExplosion.StartSpriteAnimation();
                 _endExplosion.Sprite.Position = _player.GameObject.Position;
+
+                GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity, GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
 
                 CameraShaker.Instance.StartShake(1, 5);
                 SoundManager.Instance.PlaySound(_explosionSound);

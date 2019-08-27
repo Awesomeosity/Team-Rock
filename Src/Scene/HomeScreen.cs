@@ -21,6 +21,7 @@ namespace TeamRock.Scene
         private UiTextNode _pressToPlayText;
         private Sprite _headerImage;
         private KeyboardState _oldState;
+        private GamePadState _oldControl;
 
 
         private bool _gameStarted;
@@ -36,7 +37,7 @@ namespace TeamRock.Scene
             _headerImage.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 100);
             _headerImage.SetOriginCenter();
 
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
             _pressToPlayText = new UiTextNode();
             _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO START");
             _pressToPlayText.Position =
@@ -74,10 +75,13 @@ namespace TeamRock.Scene
                 _pressToPlayText.Text = "PRESS <A> TO START";
 
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-                if (gamePadState.Buttons.A == ButtonState.Pressed)
+                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
                 {
                     _gameStarted = true;
                 }
+
+                _oldControl = gamePadState;
+
             }
             else
             {
@@ -87,9 +91,9 @@ namespace TeamRock.Scene
                 {
                     _gameStarted = true;
                 }
+                _oldState = keyboardState;
             }
 
-            _oldState = keyboardState;
 
             return _gameStarted;
         }
