@@ -212,7 +212,23 @@ namespace TeamRock.Scene
 
         public void ResetScreen()
         {
-            // TODO: Implement Actual Screen Reset Logic
+            _player.GameObject.Position = GameInfo.PlayerInitialPosition;
+            _player.GameObject.Acceleration = GameInfo.BaseAccelerationRate;
+
+            _stage.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
+
+            _timeToImpact = GameInfo.TotalGameTime;
+            _stage.Velocity = new Vector2(0, 0);
+
+
+            foreach (Audience audience in _audiences)
+            {
+                audience.IsProjectileSPawningActive = true;
+                audience.ClearProjectiles();
+            }
+
+
+            SetGameState(GameState.IsRunning);
         }
 
         public void StartMusic()
@@ -275,7 +291,7 @@ namespace TeamRock.Scene
                 _endExplosion.StartSpriteAnimation();
                 _endExplosion.Sprite.Position = _player.GameObject.Position;
 
-                CameraShaker.Instance.StartShake(3, 5);
+                CameraShaker.Instance.StartShake(1, 5);
                 SoundManager.Instance.PlaySound(_explosionSound);
 
                 SetGameState(GameState.EndAnimations);

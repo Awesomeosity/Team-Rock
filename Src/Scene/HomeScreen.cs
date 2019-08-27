@@ -20,6 +20,8 @@ namespace TeamRock.Scene
         private SpriteFont _defaultFont;
         private UiTextNode _pressToPlayText;
         private Sprite _headerImage;
+        private KeyboardState _oldState;
+
 
         private bool _gameStarted;
 
@@ -41,6 +43,7 @@ namespace TeamRock.Scene
                 new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
 
             _music = _contentManager.Load<SoundEffect>(AssetManager.HomeScreenMusic);
+            KeyboardState _oldState = Keyboard.GetState();
         }
 
         #endregion
@@ -80,11 +83,13 @@ namespace TeamRock.Scene
             {
                 _pressToPlayText.Text = "PRESS <SPACE> TO START";
 
-                if (keyboardState.IsKeyDown(Keys.Space))
+                if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
                 {
                     _gameStarted = true;
                 }
             }
+
+            _oldState = keyboardState;
 
             return _gameStarted;
         }

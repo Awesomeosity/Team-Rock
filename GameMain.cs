@@ -239,7 +239,7 @@ namespace TeamRock
                         if (switchScreen)
                         {
                             _homeScreen.StopMusic();
-
+                            _mainScreen.ResetScreen();
                             SetGameScreen(GameScreen.MainScreen);
                             _mainScreen.StartMusic();
                         }
@@ -252,7 +252,7 @@ namespace TeamRock
                         if (switchScreens)
                         {
                             _mainScreen.StopMusic();
-
+                            _gameOverScreen.ResetScreen();
                             SetGameScreen(GameScreen.GameOverScreen);
                         }
                     }
@@ -265,7 +265,6 @@ namespace TeamRock
                         {
                             _homeScreen.StartMusic();
                             _homeScreen.ResetScreen();
-
                             SetGameScreen(GameScreen.HomeScreen);
                         }
                     }

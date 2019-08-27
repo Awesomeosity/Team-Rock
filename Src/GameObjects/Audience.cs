@@ -128,11 +128,19 @@ namespace TeamRock.Src.GameObjects
             set => _isProjectileSpawningActive = value;
         }
 
-        #endregion
+        public void ClearProjectiles()
+        {
+            for (int i = _projectiles.Count - 1; i >= 0; i--)
+            {
+                _projectiles.RemoveAt(i);
+            }
+        }
 
-        #region Utility Functions
+    #endregion
 
-        private void SpawnProjectileAndResetTimer()
+    #region Utility Functions
+
+    private void SpawnProjectileAndResetTimer()
         {
             if (!_isProjectileSpawningActive)
             {
