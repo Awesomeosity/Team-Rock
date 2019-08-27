@@ -37,7 +37,7 @@ namespace TeamRock.Scene
             _headerImage.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 100);
             _headerImage.SetOriginCenter();
 
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
             _pressToPlayText = new UiTextNode();
             _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO START");
             _pressToPlayText.Position =

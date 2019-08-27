@@ -25,6 +25,8 @@
         #region Fonts
 
         public const string Arial = "Fonts/Arial";
+        public const string Ravie = "Fonts/Ravie";
+        public const string Luckiest_Guy = "Fonts/Luckiest_Guy";
 
         #endregion
 

@@ -31,7 +31,7 @@ namespace TeamRock.Scene
             };
             _gameOverSprite.SetOriginCenter();
 
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
             _pressToPlayText = new UiTextNode();
             _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO RESTART");
             _pressToPlayText.Position =

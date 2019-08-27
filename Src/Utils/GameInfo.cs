@@ -63,7 +63,7 @@ namespace TeamRock.Utils
         public const float DefaultAnimationSpeed = 0.01666667F;
 
         // Game Ending Control
-        public const float TotalGameTime = 5;
+        public const float TotalGameTime = 30;
         public const float StageMoveUpSpeed = 500;
     }
 }
