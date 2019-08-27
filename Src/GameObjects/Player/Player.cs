@@ -25,14 +25,14 @@ namespace TeamRock.Src.GameObjects
             };
             playerSprite.SetOriginCenter();
 
-            _playerFallingSpriteSheet = new SpriteSheetAnimationManager()
-            {
-                FrameTime = 0.03333334F
-            };
+            _playerFallingSpriteSheet = new SpriteSheetAnimationManager();
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
                 AssetManager.FireFallingTotalCount, 1, true);
+            _playerFallingSpriteSheet.FrameTime = 0.08333334F;
             _playerFallingSpriteSheet.Sprite.SetOriginCenter();
-            _playerFallingSpriteSheet.Sprite.Scale = 2;
+            _playerFallingSpriteSheet.Sprite.UseSize = true;
+            _playerFallingSpriteSheet.Sprite.SetSize((int) playerSprite.Width + 30,
+                (int) playerSprite.Height + 50);
             _spriteSheetPosition = Vector2.Zero;
 
             _playerGameObject = new GameObject(playerSprite,
@@ -124,7 +124,7 @@ namespace TeamRock.Src.GameObjects
         {
             _playerFallingSpriteSheet.Update(deltaTime);
             _spriteSheetPosition.X = _playerGameObject.Position.X;
-            _spriteSheetPosition.Y = _playerGameObject.Position.Y ;
+            _spriteSheetPosition.Y = _playerGameObject.Position.Y - _playerGameObject.Sprite.Height;
             _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
         }
 

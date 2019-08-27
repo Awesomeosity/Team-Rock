@@ -151,7 +151,7 @@ namespace TeamRock
             GraphicsDevice.Clear(Color.Black);
             base.Draw(gameTime);
 
-            _spriteBatch.Begin(transformMatrix: _mainCamera.GetViewMatrix());
+            _spriteBatch.Begin(transformMatrix: _mainCamera.GetViewMatrix(), samplerState: SamplerState.LinearClamp);
 
             switch (_gameScreen)
             {
