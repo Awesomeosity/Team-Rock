@@ -16,8 +16,8 @@ namespace TeamRock.Utils
 
         // Player State
         public const float PlayerMinYPosition = 50;
-        public const float PlayerMaxYPosition = FixedWindowHeight - 100;
-        public const float PlayerAssetScale = 1f;
+        public const float PlayerMaxYPosition = FixedWindowHeight - 300;
+        public const float PlayerAssetScale = 0.1f;
 
         public static readonly Vector2 PlayerInitialPosition =
             new Vector2(FixedWindowWidth / 2.0f, 70);

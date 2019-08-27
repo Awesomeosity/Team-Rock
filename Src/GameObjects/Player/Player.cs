@@ -21,7 +21,7 @@ namespace TeamRock.Src.GameObjects
             Texture2D playerTexture = contentManager.Load<Texture2D>(AssetManager.Player);
             Sprite playerSprite = new Sprite(playerTexture)
             {
-                Scale = 2,
+                Scale = GameInfo.PlayerAssetScale,
             };
             playerSprite.SetOriginCenter();
 
@@ -32,6 +32,7 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
                 AssetManager.FireFallingTotalCount, 1, true);
             _playerFallingSpriteSheet.Sprite.SetOriginCenter();
+            _playerFallingSpriteSheet.Sprite.Scale = 2;
             _spriteSheetPosition = Vector2.Zero;
 
             _playerGameObject = new GameObject(playerSprite,
@@ -123,7 +124,7 @@ namespace TeamRock.Src.GameObjects
         {
             _playerFallingSpriteSheet.Update(deltaTime);
             _spriteSheetPosition.X = _playerGameObject.Position.X;
-            _spriteSheetPosition.Y = _playerGameObject.Position.Y + 30;
+            _spriteSheetPosition.Y = _playerGameObject.Position.Y ;
             _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
         }
 
