@@ -31,6 +31,7 @@ namespace TeamRock.CustomCamera
         {
             if (!_isShaking)
             {
+                _camera.Position = _cameraInitialPosition;
                 return;
             }
 
