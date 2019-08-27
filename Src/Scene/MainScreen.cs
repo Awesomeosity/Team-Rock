@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -16,6 +17,7 @@ namespace TeamRock.Scene
 
         private SoundEffect _music;
         private SoundEffect _clap;
+        private SoundEffect _explosionSound;
 
         private GameObject _stage;
         private Player _player;
@@ -23,14 +25,23 @@ namespace TeamRock.Scene
         private SpriteSheetAnimationManager _backgroundSpriteSheet;
         private ScrollingBackground _scrollingBackground;
 
+        private SpriteSheetAnimationManager _endExplosion;
+
         private List<Audience> _audiences;
 
         private UiTextNode _timerText;
         private SpriteFont _defaultFont;
         private float _timeToImpact;
 
-        private bool _stopControlledMovement; // TODO: Probably Switch to an Enum
-        private bool _gameOver;
+        private enum GameState
+        {
+            IsRunning,
+            EndStarted,
+            EndAnimations,
+            GameOver
+        }
+
+        private GameState _gameState;
 
         #region Initialization
 
@@ -48,6 +59,7 @@ namespace TeamRock.Scene
         {
             _music = _contentManager.Load<SoundEffect>(AssetManager.MainScreenMusic);
             _clap = _contentManager.Load<SoundEffect>(AssetManager.Clap);
+            _explosionSound = _contentManager.Load<SoundEffect>(AssetManager.Explosion);
         }
 
         private void CreatePlayerAndBackground()
@@ -55,7 +67,6 @@ namespace TeamRock.Scene
             _player = new Player();
             _player.Initialize(_contentManager);
 
-            Texture2D backgroundTexture = _contentManager.Load<Texture2D>(AssetManager.WrestingBackground);
             _backgroundSpriteSheet = new SpriteSheetAnimationManager();
             _backgroundSpriteSheet.Initialize(_contentManager, AssetManager.WrestlingBackgroundBase,
                 AssetManager.WrestlingBackgroundTotalCount, 0, true);
@@ -75,7 +86,7 @@ namespace TeamRock.Scene
             stageSprite.SetOriginCenter();
             _stage = new GameObject(stageSprite, stageSprite.Width, stageSprite.Height)
             {
-                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100)
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300)
             };
         }
 
@@ -98,6 +109,13 @@ namespace TeamRock.Scene
                 Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 20)
             };
             _timerText.Initialize(_defaultFont, "");
+
+            _endExplosion = new SpriteSheetAnimationManager();
+            _endExplosion.Initialize(_contentManager, AssetManager.EndExplosionBase,
+                AssetManager.EndExplosionTotalCount, 1, false, false);
+            _endExplosion.Sprite.SetOriginCenter();
+            _endExplosion.Sprite.Position =
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
         }
 
         #endregion
@@ -110,9 +128,26 @@ namespace TeamRock.Scene
             _scrollingBackground.Draw(spriteBatch);
 
             _timerText.Draw(spriteBatch);
-
-            _player.Draw(spriteBatch);
             _stage.Draw(spriteBatch);
+
+
+            switch (_gameState)
+            {
+                case GameState.IsRunning:
+                case GameState.EndStarted:
+                    _player.Draw(spriteBatch);
+                    break;
+
+                case GameState.EndAnimations:
+                    _endExplosion.Draw(spriteBatch);
+                    break;
+
+                case GameState.GameOver:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             foreach (Audience audience in _audiences)
             {
@@ -137,29 +172,37 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            _scrollingBackground.Update(deltaTime, _player.GameObject.Velocity.Y);
             _backgroundSpriteSheet.Update(deltaTime);
 
-            if (_timeToImpact > 0)
+            switch (_gameState)
             {
-                _timeToImpact -= deltaTime;
-                _timerText.Text = $"Time To Impact: {ExtensionFunctions.Format2DecimalPlace(_timeToImpact)}";
-            }
-            else if (_timeToImpact <= 0)
-            {
-                _stopControlledMovement = true;
-                _timerText.Text = "Smack Down!!!";
-            }
+                case GameState.IsRunning:
+                    UpdateGameEndTimer(deltaTime);
+                    UpdateGameObjectsBeforeTime(deltaTime, gameTime);
+                    break;
 
-            _player.Update(deltaTime, gameTime);
-            _stage.Update(deltaTime, gameTime);
+                case GameState.EndStarted:
+                    UpdateStageAndPlayerEndState(deltaTime, gameTime);
+                    break;
+
+                case GameState.EndAnimations:
+                    UpdateEndStateAnimations(deltaTime);
+                    break;
+
+                case GameState.GameOver:
+                    // Don't do Anything
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             foreach (Audience audience in _audiences)
             {
                 audience.Update(deltaTime, gameTime);
             }
 
-            return _gameOver;
+            return _gameState == GameState.GameOver;
         }
 
         #endregion
@@ -175,16 +218,84 @@ namespace TeamRock.Scene
         {
             _musicIndex = SoundManager.Instance.PlaySound(_music);
             SoundManager.Instance.SetSoundLooping(_musicIndex, true);
+            SoundManager.Instance.SetSoundVolume(_musicIndex, 0.5f);
         }
 
-        public void StopMusic()
-        {
-            SoundManager.Instance.StopSound(_musicIndex);
-        }
+        public void StopMusic() => SoundManager.Instance.StopSound(_musicIndex);
 
         #endregion
 
         #region Utility Functions
+
+        private void UpdateGameEndTimer(float deltaTime)
+        {
+            if (_timeToImpact > 0)
+            {
+                _timeToImpact -= deltaTime;
+                _timerText.Text = $"Time To Impact: {ExtensionFunctions.Format2DecimalPlace(_timeToImpact)}";
+            }
+            else if (_timeToImpact <= 0)
+            {
+                SetGameState(GameState.EndStarted);
+                _timerText.Text = "Smack Down!!!";
+
+                foreach (Audience audience in _audiences)
+                {
+                    audience.IsProjectileSPawningActive = false;
+                }
+
+                _player.GameObject.Acceleration = Vector2.Zero;
+                _player.GameObject.Velocity = Vector2.Zero;
+            }
+        }
+
+        private void UpdateGameObjectsBeforeTime(float deltaTime, float gameTime)
+        {
+            _scrollingBackground.Update(deltaTime, _player.GameObject.Velocity.Y);
+            _player.Update(deltaTime, gameTime);
+            _stage.Update(deltaTime, gameTime);
+        }
+
+        private void UpdateStageAndPlayerEndState(float deltaTime, float gameTime)
+        {
+            // TODO: Change this. It is super hacky
+            if (_stage.Position.Y > GameInfo.FixedWindowHeight - 100)
+            {
+                _stage.Velocity = -Vector2.UnitY * GameInfo.StageMoveUpSpeed;
+                _stage.Update(deltaTime, gameTime);
+            }
+
+            _player.GameObject.Velocity = Vector2.UnitY * GameInfo.PlayerMaxYVelocity;
+            _player.GameObject.Update(deltaTime, gameTime);
+            _player.UpdateSpriteSheet(deltaTime);
+
+            if (_player.GameObject.DidCollide(_stage))
+            {
+                _endExplosion.StartSpriteAnimation();
+                _endExplosion.Sprite.Position = _player.GameObject.Position;
+                SoundManager.Instance.PlaySound(_explosionSound);
+                SetGameState(GameState.EndAnimations);
+            }
+        }
+
+        private void UpdateEndStateAnimations(float deltaTime)
+        {
+            _endExplosion.Update(deltaTime);
+            if (!_endExplosion.IsAnimationActive)
+            {
+                SetGameState(GameState.GameOver);
+            }
+        }
+
+        private void SetGameState(GameState gameState)
+        {
+            if (gameState == _gameState)
+            {
+                return;
+            }
+
+            _gameState = gameState;
+        }
 
         #endregion
 

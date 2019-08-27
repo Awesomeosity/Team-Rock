@@ -97,6 +97,7 @@ namespace TeamRock.Scene
         {
             _musicIndex = SoundManager.Instance.PlaySound(_music);
             SoundManager.Instance.SetSoundLooping(_musicIndex, true);
+            SoundManager.Instance.SetSoundVolume(_musicIndex, 0.5f);
         }
 
         public void StopMusic() => SoundManager.Instance.StopSound(_musicIndex);

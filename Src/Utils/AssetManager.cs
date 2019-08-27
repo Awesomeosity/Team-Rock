@@ -39,6 +39,11 @@
         public const int WrestlingBackgroundTotalCount = 4;
         public const float WrestlingBackgroundAnimationSpeed = 0.125F;
 
+        // End Explosion
+        public const string EndExplosionBase = "SpriteSheets/EndExplosion/image_part_0";
+        public const int EndExplosionTotalCount = 32;
+        public const float EndExplosionAnimationSpeed = 0.03125F;
+
         #endregion
 
         #region Sounds
@@ -50,6 +55,8 @@
         public const string Clap2 = "Sounds/Hand_Claps";
         public const string Anchor = "Sounds/Anchor";
         public const string CottonCandy = "Sounds/Cotton_Candy";
+        public const string Hit = "Sounds/Hit_Hurt";
+        public const string Explosion = "Sounds/Explosion";
 
         #endregion
 

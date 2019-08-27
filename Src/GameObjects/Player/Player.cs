@@ -68,12 +68,8 @@ namespace TeamRock.Src.GameObjects
 
             _playerController.Update();
 
-            _playerFallingSpriteSheet.Update(deltaTime);
-            _spriteSheetPosition.X = _playerGameObject.Position.X;
-            _spriteSheetPosition.Y = _playerGameObject.Position.Y + 30;
-            _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
-
             HandleInput(deltaTime);
+            UpdateSpriteSheet(deltaTime);
         }
 
         private void HandleInput(float deltaTime)
@@ -122,6 +118,14 @@ namespace TeamRock.Src.GameObjects
         #endregion
 
         #region External Functions
+
+        public void UpdateSpriteSheet(float deltaTime)
+        {
+            _playerFallingSpriteSheet.Update(deltaTime);
+            _spriteSheetPosition.X = _playerGameObject.Position.X;
+            _spriteSheetPosition.Y = _playerGameObject.Position.Y + 30;
+            _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
+        }
 
         public GameObject GameObject => _playerGameObject;
 

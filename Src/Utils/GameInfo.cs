@@ -15,8 +15,8 @@ namespace TeamRock.Utils
         private const int CenterBoardWidth = 300;
 
         // Player State
-        public const float PlayerMinYPosition = 10;
-        public const float PlayerMaxYPosition = FixedWindowHeight - 10;
+        public const float PlayerMinYPosition = 50;
+        public const float PlayerMaxYPosition = FixedWindowHeight - 100;
         public const float PlayerAssetScale = 1f;
 
         public static readonly Vector2 PlayerInitialPosition =
@@ -62,7 +62,8 @@ namespace TeamRock.Utils
         // SpriteSheet Animations
         public const float DefaultAnimationSpeed = 0.01666667F;
 
-        // Game State
+        // Game Ending Control
         public const float TotalGameTime = 30;
+        public const float StageMoveUpSpeed = 500;
     }
 }

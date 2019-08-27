@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended;
 using TeamRock.Managers;
 using TeamRock.Utils;
@@ -21,6 +22,9 @@ namespace TeamRock.Src.GameObjects
 
         private RectangleF _audienceRectangle;
 
+        private SoundEffect _hitSound;
+        private bool _isProjectileSpawningActive;
+
         #region Initialization
 
         public Audience(Player player, ContentManager contentManager)
@@ -32,6 +36,10 @@ namespace TeamRock.Src.GameObjects
             _player = player;
             _projectiles = new List<Projectile>();
             _audienceRectangle = new RectangleF();
+
+            _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
+
+            _isProjectileSpawningActive = true;
         }
 
         #endregion
@@ -64,8 +72,9 @@ namespace TeamRock.Src.GameObjects
                             GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMinIntensity,
                                 GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
                         }
-                    }
 
+                        SoundManager.Instance.PlaySound(_hitSound);
+                    }
                     _projectiles.RemoveAt(i);
                 }
             }
@@ -111,12 +120,23 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
+        public bool IsProjectileSPawningActive
+        {
+            get => _isProjectileSpawningActive;
+            set => _isProjectileSpawningActive = value;
+        }
+
         #endregion
 
         #region Utility Functions
 
         private void SpawnProjectileAndResetTimer()
         {
+            if (!_isProjectileSpawningActive)
+            {
+                return;
+            }
+
             _randomTimer =
                 ExtensionFunctions.RandomInRange(GameInfo.MinProjectileSpawnTimer, GameInfo.MaxProjectileSpawnTimer);
 
