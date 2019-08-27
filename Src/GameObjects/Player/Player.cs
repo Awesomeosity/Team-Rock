@@ -28,11 +28,8 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet = new SpriteSheetAnimationManager();
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
                 AssetManager.FireFallingTotalCount, 1, true);
-            _playerFallingSpriteSheet.FrameTime = 0.08333334F;
+            _playerFallingSpriteSheet.FrameTime = 0.01666667F;
             _playerFallingSpriteSheet.Sprite.SetOriginCenter();
-            _playerFallingSpriteSheet.Sprite.UseSize = true;
-            _playerFallingSpriteSheet.Sprite.SetSize((int) playerSprite.Width + 30,
-                (int) playerSprite.Height + 50);
             _spriteSheetPosition = Vector2.Zero;
 
             _playerGameObject = new GameObject(playerSprite,
@@ -124,7 +121,7 @@ namespace TeamRock.Src.GameObjects
         {
             _playerFallingSpriteSheet.Update(deltaTime);
             _spriteSheetPosition.X = _playerGameObject.Position.X;
-            _spriteSheetPosition.Y = _playerGameObject.Position.Y - _playerGameObject.Sprite.Height;
+            _spriteSheetPosition.Y = _playerGameObject.Position.Y - _playerGameObject.Sprite.Height / 2.0f;
             _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
         }
 
