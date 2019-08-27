@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using TeamRock.Managers;
 using TeamRock.Utils;
 
@@ -13,24 +12,31 @@ namespace TeamRock.Src.GameObjects
         private GameObject _playerGameObject;
         private SpriteSheetAnimationManager _playerFallingSpriteSheet;
 
+        private Vector2 _spriteSheetPosition;
+
         #region Initialization
 
         public void Initialize(ContentManager contentManager)
         {
-            Texture2D playerTexture = contentManager.Load<Texture2D>($"{AssetManager.FireFallingBase}1");
+            Texture2D playerTexture = contentManager.Load<Texture2D>(AssetManager.Player);
             Sprite playerSprite = new Sprite(playerTexture)
             {
                 Scale = 2,
             };
             playerSprite.SetOriginCenter();
 
-            _playerFallingSpriteSheet = new SpriteSheetAnimationManager();
+            _playerFallingSpriteSheet = new SpriteSheetAnimationManager()
+            {
+                FrameTime = 0.03333334F
+            };
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
                 AssetManager.FireFallingTotalCount, 1, true);
+            _playerFallingSpriteSheet.Sprite.SetOriginCenter();
+            _spriteSheetPosition = Vector2.Zero;
 
             _playerGameObject = new GameObject(playerSprite,
-                playerTexture.Width * GameInfo.PlayerAssetScale / 2.0f - 30,
-                (playerTexture.Height) * GameInfo.PlayerAssetScale)
+                playerTexture.Width * GameInfo.PlayerAssetScale,
+                playerTexture.Height * GameInfo.PlayerAssetScale)
             {
                 Acceleration = GameInfo.BaseAccelerationRate,
                 Position = GameInfo.PlayerInitialPosition,
@@ -45,7 +51,7 @@ namespace TeamRock.Src.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _playerGameObject.Sprite.UpdateTexture(_playerFallingSpriteSheet.GetCurrentFrameTexture());
+            _playerFallingSpriteSheet.Draw(spriteBatch);
             _playerGameObject.Draw(spriteBatch);
         }
 
@@ -61,7 +67,11 @@ namespace TeamRock.Src.GameObjects
             }
 
             _playerController.Update();
+
             _playerFallingSpriteSheet.Update(deltaTime);
+            _spriteSheetPosition.X = _playerGameObject.Position.X;
+            _spriteSheetPosition.Y = _playerGameObject.Position.Y + 30;
+            _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
 
             HandleInput(deltaTime);
         }

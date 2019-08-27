@@ -17,6 +17,8 @@
         public const string Soda = "Textures/Soda";
         public const string Popcorn = "Textures/PopCorn";
 
+        public const string Player = "Textures/Player";
+
         #endregion
 
         #region Fonts

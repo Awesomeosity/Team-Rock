@@ -74,7 +74,7 @@
 /processorParam:Quality=Best
 /build:Sounds/Hand_Claps.mp3
 
-#begin SpriteSheets/FireFalling/image_part_001.png
+#begin SpriteSheets/FireFalling/image_part_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -84,103 +84,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_001.png
-
-#begin SpriteSheets/FireFalling/image_part_002.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_002.png
-
-#begin SpriteSheets/FireFalling/image_part_003.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_003.png
-
-#begin SpriteSheets/FireFalling/image_part_004.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_004.png
-
-#begin SpriteSheets/FireFalling/image_part_005.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_005.png
-
-#begin SpriteSheets/FireFalling/image_part_006.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_006.png
-
-#begin SpriteSheets/FireFalling/image_part_007.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_007.png
-
-#begin SpriteSheets/FireFalling/image_part_008.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_008.png
-
-#begin SpriteSheets/FireFalling/image_part_009.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SpriteSheets/FireFalling/image_part_009.png
+/build:SpriteSheets/FireFalling/image_part_01.png
 
 #begin SpriteSheets/FireFalling/image_part_010.png
 /importer:TextureImporter
@@ -302,6 +206,18 @@
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_019.png
 
+#begin SpriteSheets/FireFalling/image_part_02.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_02.png
+
 #begin SpriteSheets/FireFalling/image_part_020.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -421,6 +337,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_029.png
+
+#begin SpriteSheets/FireFalling/image_part_03.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_03.png
 
 #begin SpriteSheets/FireFalling/image_part_030.png
 /importer:TextureImporter
@@ -542,6 +470,18 @@
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_039.png
 
+#begin SpriteSheets/FireFalling/image_part_04.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_04.png
+
 #begin SpriteSheets/FireFalling/image_part_040.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -661,6 +601,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_049.png
+
+#begin SpriteSheets/FireFalling/image_part_05.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_05.png
 
 #begin SpriteSheets/FireFalling/image_part_050.png
 /importer:TextureImporter
@@ -782,6 +734,18 @@
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_059.png
 
+#begin SpriteSheets/FireFalling/image_part_06.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_06.png
+
 #begin SpriteSheets/FireFalling/image_part_060.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -901,6 +865,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_069.png
+
+#begin SpriteSheets/FireFalling/image_part_07.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_07.png
 
 #begin SpriteSheets/FireFalling/image_part_070.png
 /importer:TextureImporter
@@ -1022,6 +998,18 @@
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_079.png
 
+#begin SpriteSheets/FireFalling/image_part_08.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_08.png
+
 #begin SpriteSheets/FireFalling/image_part_080.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1045,6 +1033,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SpriteSheets/FireFalling/image_part_081.png
+
+#begin SpriteSheets/FireFalling/image_part_09.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/FireFalling/image_part_09.png
 
 #begin SpriteSheets/WrestlingBackground/WrestlingBackgroundP0.png
 /importer:TextureImporter
