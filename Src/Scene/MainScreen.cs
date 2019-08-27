@@ -128,7 +128,6 @@ namespace TeamRock.Scene
             _backgroundSpriteSheet.Draw(spriteBatch);
             _scrollingBackground.Draw(spriteBatch);
 
-            _timerText.Draw(spriteBatch);
             _stage.Draw(spriteBatch);
 
 
@@ -154,6 +153,8 @@ namespace TeamRock.Scene
             {
                 audience.DrawProjectiles(spriteBatch);
             }
+
+            _timerText.Draw(spriteBatch);
         }
 
         public override void DrawDebug(SpriteBatch spriteBatch)
@@ -226,6 +227,8 @@ namespace TeamRock.Scene
                 audience.IsProjectileSPawningActive = true;
                 audience.ClearProjectiles();
             }
+
+            _endExplosion.StopSpriteAnimation();
             
             SetGameState(GameState.IsRunning);
         }

@@ -100,7 +100,17 @@ namespace TeamRock.Managers
 
         public void StartSpriteAnimation() => _animationActive = true;
 
-        public void StopSpriteAnimation() => _animationActive = false;
+        public void StopSpriteAnimation(bool reset = true)
+        {
+            _animationActive = false;
+
+            if (reset)
+            {
+                ResetSpriteAnimation();
+            }
+        }
+
+
 
         public void ResetSpriteAnimation()
         {

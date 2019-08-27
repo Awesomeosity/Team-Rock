@@ -49,9 +49,13 @@ namespace TeamRock.CustomCamera
 
         public void StartShake(float maxShakeTime, float shakeMultiplier)
         {
+            if (!_isShaking)
+            {
+                _cameraInitialPosition = _camera.Position;
+            }
+
             _isShaking = true;
 
-            _cameraInitialPosition = _camera.Position;
             _shakeOffset = Vector2.Zero;
 
             _currentShakeTimer = maxShakeTime;
