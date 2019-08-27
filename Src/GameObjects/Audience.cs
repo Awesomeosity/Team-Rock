@@ -74,7 +74,7 @@ namespace TeamRock.Src.GameObjects
                                 GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
                         }
 
-                        CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 2);
+                        CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 5);
                         SoundManager.Instance.PlaySound(_hitSound);
                     }
                     _projectiles.RemoveAt(i);
