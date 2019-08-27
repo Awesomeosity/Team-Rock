@@ -36,7 +36,7 @@ namespace TeamRock.Scene
             _pressToPlayText = new UiTextNode();
             _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO RESTART");
             _pressToPlayText.Position =
-                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 4.0f);
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100);
 
             _oldState = Keyboard.GetState();
             _oldControl = GamePad.GetState(PlayerIndex.One);
