@@ -17,6 +17,7 @@ namespace TeamRock.Scene
         private SpriteFont _defaultFont;
 
         private KeyboardState _oldState;
+        private GamePadState _oldControl;
 
         #region Initialization
 
@@ -37,6 +38,7 @@ namespace TeamRock.Scene
                 new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 4.0f);
 
             _oldState = Keyboard.GetState();
+            _oldControl = GamePad.GetState(PlayerIndex.One);
         }
 
         #endregion
@@ -66,10 +68,11 @@ namespace TeamRock.Scene
                 _pressToPlayText.Text = "PRESS <A> TO RETURN";
 
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-                if (gamePadState.Buttons.A == ButtonState.Pressed)
+                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
                 {
                     return true;
                 }
+                _oldControl = gamePadState;
             }
             else
             {
@@ -79,8 +82,8 @@ namespace TeamRock.Scene
                 {
                     return true;
                 }
+                _oldState = keyboardState;
             }
-            _oldState = keyboardState;
             return false;
         }
 
@@ -90,6 +93,7 @@ namespace TeamRock.Scene
         public void ResetScreen()
         {
             _oldState = Keyboard.GetState();
+            _oldControl = GamePad.GetState(PlayerIndex.One);
         }
         #endregion
 

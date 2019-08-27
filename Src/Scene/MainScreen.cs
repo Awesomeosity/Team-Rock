@@ -291,6 +291,8 @@ namespace TeamRock.Scene
                 _endExplosion.StartSpriteAnimation();
                 _endExplosion.Sprite.Position = _player.GameObject.Position;
 
+                GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity, GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
+
                 CameraShaker.Instance.StartShake(1, 5);
                 SoundManager.Instance.PlaySound(_explosionSound);
 
