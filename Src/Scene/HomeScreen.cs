@@ -20,6 +20,7 @@ namespace TeamRock.Scene
         private SpriteFont _defaultFont;
         private UiTextNode _pressToPlayText;
         private Sprite _headerImage;
+        private Sprite _luchadorSprite;
         private KeyboardState _oldState;
         private GamePadState _oldControl;
 
@@ -32,16 +33,27 @@ namespace TeamRock.Scene
         {
             _contentManager = contentManager;
 
-            Texture2D headerTexture = _contentManager.Load<Texture2D>(AssetManager.HeaderImage);
-            _headerImage = new Sprite(headerTexture);
-            _headerImage.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 100);
+            Texture2D headerTexture = _contentManager.Load<Texture2D>(AssetManager.Logo);
+            _headerImage = new Sprite(headerTexture)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 100),
+                Scale = 0.2f
+            };
             _headerImage.SetOriginCenter();
+
+            Texture2D luchadorTexture = _contentManager.Load<Texture2D>(AssetManager.LuchadorStartScreen);
+            _luchadorSprite = new Sprite(luchadorTexture)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f),
+                Scale = 0.2f
+            };
+            _luchadorSprite.SetOriginCenter();
 
             _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
             _pressToPlayText = new UiTextNode();
             _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO START");
             _pressToPlayText.Position =
-                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100);
 
             _music = _contentManager.Load<SoundEffect>(AssetManager.HomeScreenMusic);
             KeyboardState _oldState = Keyboard.GetState();
@@ -54,6 +66,7 @@ namespace TeamRock.Scene
         public override void Draw(SpriteBatch spriteBatch)
         {
             _headerImage.Draw(spriteBatch);
+            _luchadorSprite.Draw(spriteBatch);
             _pressToPlayText.Draw(spriteBatch);
         }
 
@@ -81,7 +94,6 @@ namespace TeamRock.Scene
                 }
 
                 _oldControl = gamePadState;
-
             }
             else
             {
@@ -91,6 +103,7 @@ namespace TeamRock.Scene
                 {
                     _gameStarted = true;
                 }
+
                 _oldState = keyboardState;
             }
 

@@ -128,15 +128,9 @@ namespace TeamRock.Src.GameObjects
             set => _isProjectileSpawningActive = value;
         }
 
-        public void ClearProjectiles()
-        {
-            for (int i = _projectiles.Count - 1; i >= 0; i--)
-            {
-                _projectiles.RemoveAt(i);
-            }
-        }
+        public void ClearProjectiles() => _projectiles.Clear();
 
-    #endregion
+        #endregion
 
     #region Utility Functions
 

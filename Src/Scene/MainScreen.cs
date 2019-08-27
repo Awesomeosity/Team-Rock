@@ -226,8 +226,7 @@ namespace TeamRock.Scene
                 audience.IsProjectileSPawningActive = true;
                 audience.ClearProjectiles();
             }
-
-
+            
             SetGameState(GameState.IsRunning);
         }
 

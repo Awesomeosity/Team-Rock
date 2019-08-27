@@ -27,7 +27,8 @@ namespace TeamRock.Scene
             Texture2D gameOverTexture = contentManager.Load<Texture2D>(AssetManager.GameOverImage);
             _gameOverSprite = new Sprite(gameOverTexture)
             {
-                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f)
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f),
+                Scale = 0.2f
             };
             _gameOverSprite.SetOriginCenter();
 
@@ -72,29 +73,34 @@ namespace TeamRock.Scene
                 {
                     return true;
                 }
+
                 _oldControl = gamePadState;
             }
             else
             {
                 _pressToPlayText.Text = "PRESS <SPACE> TO RETURN";
-                
+
                 if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
                 {
                     return true;
                 }
+
                 _oldState = keyboardState;
             }
+
             return false;
         }
 
         #endregion
 
         #region External Functions
+
         public void ResetScreen()
         {
             _oldState = Keyboard.GetState();
             _oldControl = GamePad.GetState(PlayerIndex.One);
         }
+
         #endregion
 
         #region Singleton

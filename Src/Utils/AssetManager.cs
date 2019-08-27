@@ -10,6 +10,8 @@
         public const string PlayImage = "Textures/Play";
         public const string HeaderImage = "Textures/Header";
         public const string GameOverImage = "Textures/GameOver";
+        public const string LuchadorStartScreen = "Textures/LuchadorStartScreen";
+        public const string Logo = "Textures/Logo";
 
         public const string Stage = "Textures/Stage Prop";
         public const string BackgroundRopes = "Textures/Background Ropes Tiling";
