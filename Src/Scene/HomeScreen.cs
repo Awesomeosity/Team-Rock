@@ -36,7 +36,7 @@ namespace TeamRock.Scene
 
             _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
             _pressToPlayText = new UiTextNode();
-            _pressToPlayText.Initialization(_defaultFont, "PRESS <SPACE> TO START");
+            _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO START");
             _pressToPlayText.Position =
                 new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
 

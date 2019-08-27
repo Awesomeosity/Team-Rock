@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TeamRock.Managers;
 using TeamRock.Src.GameObjects;
+using TeamRock.UI;
 using TeamRock.Utils;
 
 namespace TeamRock.Scene
@@ -24,9 +25,11 @@ namespace TeamRock.Scene
 
         private List<Audience> _audiences;
 
+        private UiTextNode _timerText;
         private SpriteFont _defaultFont;
         private float _timeToImpact;
 
+        private bool _stopControlledMovement; // TODO: Probably Switch to an Enum
         private bool _gameOver;
 
         #region Initialization
@@ -38,8 +41,7 @@ namespace TeamRock.Scene
             CreateSounds();
             CreatePlayerAndBackground();
             CreateAudiences();
-
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            CreateOtherSceneItems();
         }
 
         private void CreateSounds()
@@ -71,7 +73,7 @@ namespace TeamRock.Scene
                 Scale = GameInfo.StageScale
             };
             stageSprite.SetOriginCenter();
-            _stage = new GameObject(stageSprite, 0, 0)
+            _stage = new GameObject(stageSprite, stageSprite.Width, stageSprite.Height)
             {
                 Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100)
             };
@@ -86,6 +88,18 @@ namespace TeamRock.Scene
             };
         }
 
+        private void CreateOtherSceneItems()
+        {
+            _timeToImpact = GameInfo.TotalGameTime;
+            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+
+            _timerText = new UiTextNode()
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 20)
+            };
+            _timerText.Initialize(_defaultFont, "");
+        }
+
         #endregion
 
         #region Draw
@@ -94,6 +108,9 @@ namespace TeamRock.Scene
         {
             _backgroundSpriteSheet.Draw(spriteBatch);
             _scrollingBackground.Draw(spriteBatch);
+
+            _timerText.Draw(spriteBatch);
+
             _player.Draw(spriteBatch);
             _stage.Draw(spriteBatch);
 
@@ -105,7 +122,9 @@ namespace TeamRock.Scene
 
         public override void DrawDebug(SpriteBatch spriteBatch)
         {
+            _stage.DrawDebug(spriteBatch);
             _player.GameObject.DrawDebug(spriteBatch);
+
             foreach (Audience audience in _audiences)
             {
                 audience.DrawDebug(spriteBatch);
@@ -120,6 +139,17 @@ namespace TeamRock.Scene
         {
             _scrollingBackground.Update(deltaTime, _player.GameObject.Velocity.Y);
             _backgroundSpriteSheet.Update(deltaTime);
+
+            if (_timeToImpact > 0)
+            {
+                _timeToImpact -= deltaTime;
+                _timerText.Text = $"Time To Impact: {ExtensionFunctions.Format2DecimalPlace(_timeToImpact)}";
+            }
+            else if (_timeToImpact <= 0)
+            {
+                _stopControlledMovement = true;
+                _timerText.Text = "Smack Down!!!";
+            }
 
             _player.Update(deltaTime, gameTime);
             _stage.Update(deltaTime, gameTime);

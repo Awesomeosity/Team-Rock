@@ -14,7 +14,7 @@ namespace TeamRock.Utils
 
         public static float Random() => (float) _random.NextDouble();
 
-        public static string Format2DecimalPlace(float value) => value.ToString("0.##");
+        public static string Format2DecimalPlace(float value) => value.ToString("0");
 
         public static float Map(float from, float fromMin, float fromMax, float toMin, float toMax)
         {
