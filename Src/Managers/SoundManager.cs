@@ -38,6 +38,8 @@ namespace TeamRock.Managers
             soundData.SoundEffectInstance.Play();
 
             return soundData.SoundIndex;
+
+            return -1;
         }
 
         public void PlaySound(int soundIndex)

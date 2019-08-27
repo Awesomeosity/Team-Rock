@@ -8,7 +8,7 @@ namespace TeamRock.Src.GameObjects
         private Texture2D _texture2D;
 
         private Rectangle _destinationRectangle;
-        private readonly bool _useSize;
+        private bool _useSize;
 
         private Vector2 _position;
         private Vector2 _origin;
@@ -104,6 +104,12 @@ namespace TeamRock.Src.GameObjects
         {
             get => _scale;
             set => _scale = value;
+        }
+
+        public bool UseSize
+        {
+            get => _useSize;
+            set => _useSize = value;
         }
 
         public void UpdateTexture(Texture2D texture2D) => _texture2D = texture2D;

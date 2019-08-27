@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-
-namespace TeamRock.Utils
+﻿namespace TeamRock.Utils
 {
     public static class AssetManager
     {
@@ -11,6 +9,7 @@ namespace TeamRock.Utils
 
         public const string PlayImage = "Textures/Play";
         public const string HeaderImage = "Textures/Header";
+        public const string GameOverImage = "Textures/GameOver";
 
         public const string Stage = "Textures/Stage Prop";
         public const string BackgroundRopes = "Textures/Background Ropes Tiling";
@@ -18,6 +17,8 @@ namespace TeamRock.Utils
 
         public const string Soda = "Textures/Soda";
         public const string Popcorn = "Textures/PopCorn";
+
+        public const string Player = "Textures/Player";
 
         #endregion
 
@@ -29,17 +30,19 @@ namespace TeamRock.Utils
 
         #region Sprite Sheets
 
-        // Test Explosion
-        public const string TestExplosionBase = "SpriteSheets/TestExplosion/exp2_";
-        public const int TestExplosionTotalCount = 7;
-
-        // Test Blast
-        public const string TestBlastBase = "SpriteSheets/TestBlast/image_part_0";
-        public const int TestBlastTotalCount = 64;
-
         // Fire Falling
         public const string FireFallingBase = "SpriteSheets/FireFalling/image_part_0";
         public const int FireFallingTotalCount = 81;
+
+        // Wresting Background
+        public const string WrestlingBackgroundBase = "SpriteSheets/WrestlingBackground/WrestlingBackgroundP";
+        public const int WrestlingBackgroundTotalCount = 4;
+        public const float WrestlingBackgroundAnimationSpeed = 0.125F;
+
+        // End Explosion
+        public const string EndExplosionBase = "SpriteSheets/EndExplosion/image_part_0";
+        public const int EndExplosionTotalCount = 32;
+        public const float EndExplosionAnimationSpeed = 0.03125F;
 
         #endregion
 
@@ -52,6 +55,8 @@ namespace TeamRock.Utils
         public const string Clap2 = "Sounds/Hand_Claps";
         public const string Anchor = "Sounds/Anchor";
         public const string CottonCandy = "Sounds/Cotton_Candy";
+        public const string Hit = "Sounds/Hit_Hurt";
+        public const string Explosion = "Sounds/Explosion";
 
         #endregion
 

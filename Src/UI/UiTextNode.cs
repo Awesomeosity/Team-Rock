@@ -12,9 +12,9 @@ namespace TeamRock.UI
 
         private Vector2 _position;
 
-        #region Initialization
+        #region Initialize
 
-        public void Initialization(SpriteFont spriteFont, string text)
+        public void Initialize(SpriteFont spriteFont, string text)
         {
             _spriteFont = spriteFont;
             _text = text;

@@ -11,6 +11,7 @@ namespace TeamRock.Src.GameObjects
         private Vector2 _position;
         private Vector2 _velocity;
         private Vector2 _acceleration;
+        
         private RectangleF _collisionObject;
 
         #region Initialization
@@ -18,6 +19,7 @@ namespace TeamRock.Src.GameObjects
         public GameObject(Sprite sprite, float collisionWidth, float collisionHeight)
         {
             _sprite = sprite;
+            
             GenerateHitBox(collisionWidth, collisionHeight);
         }
 

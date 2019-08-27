@@ -25,7 +25,7 @@ namespace TeamRock.Managers
         #region Initialization
 
         public void Initialize(ContentManager contentManager, string assetBaseName, int totalAssetIndex,
-            int assetStartIndex, bool isRepeating)
+            int assetStartIndex, bool isRepeating, bool autoStart = true)
         {
             _isRepeating = isRepeating;
 
@@ -43,17 +43,18 @@ namespace TeamRock.Managers
 
             _sprite = new Sprite(_animationTextures[0]);
             _frameTime = GameInfo.DefaultAnimationSpeed;
+
+            if (autoStart)
+            {
+                StartSpriteAnimation();
+            }
         }
 
         #endregion
 
         #region Render
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            _sprite.Draw(spriteBatch);
-            Console.WriteLine("Hello");
-        }
+        public void Draw(SpriteBatch spriteBatch) => _sprite.Draw(spriteBatch);
 
         #endregion
 
@@ -84,7 +85,10 @@ namespace TeamRock.Managers
                     }
                 }
 
-                _sprite.UpdateTexture(_animationTextures[_currentAssetIndex]);
+                if (_animationActive)
+                {
+                    _sprite.UpdateTexture(_animationTextures[_currentAssetIndex]);
+                }
             }
         }
 
@@ -94,15 +98,9 @@ namespace TeamRock.Managers
 
         public Texture2D GetCurrentFrameTexture() => _animationTextures[_currentAssetIndex];
 
-        public void StartSpriteAnimation()
-        {
-            _animationActive = true;
-        }
+        public void StartSpriteAnimation() => _animationActive = true;
 
-        public void StopSpriteAnimation()
-        {
-            _animationActive = false;
-        }
+        public void StopSpriteAnimation() => _animationActive = false;
 
         public void ResetSpriteAnimation()
         {
@@ -120,6 +118,8 @@ namespace TeamRock.Managers
             get => _frameTime;
             set => _frameTime = value;
         }
+
+        public bool IsAnimationActive => _animationActive;
 
         #endregion
     }
