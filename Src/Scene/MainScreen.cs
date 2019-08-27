@@ -24,7 +24,10 @@ namespace TeamRock.Scene
 
         private List<Audience> _audiences;
 
-        private SpriteFont _font;
+        private SpriteFont _defaultFont;
+        private float _timeToImpact;
+
+        private bool _gameOver;
 
         #region Initialization
 
@@ -36,7 +39,7 @@ namespace TeamRock.Scene
             CreatePlayerAndBackground();
             CreateAudiences();
 
-            _font = _contentManager.Load<SpriteFont>(AssetManager.Arial);
+            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Arial);
         }
 
         private void CreateSounds()
@@ -126,7 +129,7 @@ namespace TeamRock.Scene
                 audience.Update(deltaTime, gameTime);
             }
 
-            return false;
+            return _gameOver;
         }
 
         #endregion

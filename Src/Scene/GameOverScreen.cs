@@ -1,15 +1,25 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TeamRock.Src.GameObjects;
+using TeamRock.Utils;
 
 namespace TeamRock.Scene
 {
     public class GameOverScreen : CustomScreen
-
     {
+        private Sprite _gameOverSprite;
+
         #region Initialization
 
         public override void Initialize(ContentManager contentManager)
         {
+            Texture2D gameOverTexture = contentManager.Load<Texture2D>(AssetManager.GameOverImage);
+            _gameOverSprite = new Sprite(gameOverTexture)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f)
+            };
+            _gameOverSprite.SetOriginCenter();
         }
 
         #endregion
@@ -18,11 +28,11 @@ namespace TeamRock.Scene
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            _gameOverSprite.Draw(spriteBatch);
         }
 
         public override void DrawDebug(SpriteBatch spriteBatch)
         {
-            
         }
 
         #endregion

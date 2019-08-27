@@ -1106,6 +1106,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Background Ropes Tiling.png
 
+#begin Textures/GameOver.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/GameOver.png
+
 #begin Textures/Header.png
 /importer:TextureImporter
 /processor:TextureProcessor

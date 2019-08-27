@@ -62,7 +62,7 @@ namespace TeamRock.Utils
         // SpriteSheet Animations
         public const float DefaultAnimationSpeed = 0.01666667F;
 
-        //Game State
-        public const float TotalGameTime = 10; //TODO: Remove this, only for testing
+        // Game State
+        public const float TotalGameTime = 30;
     }
 }
