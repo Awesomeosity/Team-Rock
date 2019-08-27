@@ -75,7 +75,8 @@ namespace TeamRock.Src.GameObjects
                         }
 
                         CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 5);
-                        SoundManager.Instance.PlaySound(_hitSound);
+                        int soundIndex = SoundManager.Instance.PlaySound(_hitSound);
+                        SoundManager.Instance.SetSoundVolume(soundIndex, 0.5f);
                     }
                     _projectiles.RemoveAt(i);
                 }
