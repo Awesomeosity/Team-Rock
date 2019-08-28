@@ -27,6 +27,8 @@ namespace TeamRock.Scene
         private ScrollingBackground _scrollingBackground;
 
         private SpriteSheetAnimationManager _endExplosion;
+        private SpriteSheetAnimationManager _confetti1;
+        private SpriteSheetAnimationManager _confetti2;
 
         private List<Audience> _audiences;
 
@@ -117,6 +119,23 @@ namespace TeamRock.Scene
             _endExplosion.Sprite.SetOriginCenter();
             _endExplosion.Sprite.Position =
                 new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
+
+            _confetti1 = new SpriteSheetAnimationManager();
+            _confetti1.Initialize(_contentManager, AssetManager.ConfettiBase_1,
+                AssetManager.ConfettiTotalCount_1, 1, false, false);
+            _confetti1.Sprite.SetOriginCenter();
+            _confetti1.Sprite.Position =
+                new Vector2(GameInfo.FixedWindowWidth / 4.0f, GameInfo.FixedWindowHeight + 300);
+            _confetti1.FrameTime = AssetManager.ConfettiAnimationSpeed_1;
+
+            _confetti2 = new SpriteSheetAnimationManager();
+            _confetti2.Initialize(_contentManager, AssetManager.ConfettiBase_2,
+                AssetManager.ConfettiTotalCount_2, 1, false, false);
+            _confetti2.Sprite.SetOriginCenter();
+            _confetti2.Sprite.Position =
+                new Vector2(GameInfo.FixedWindowWidth / 4.0f * 3.0f, GameInfo.FixedWindowHeight + 300);
+            _confetti2.FrameTime = AssetManager.ConfettiAnimationSpeed_2;
+
         }
 
         #endregion
@@ -140,6 +159,8 @@ namespace TeamRock.Scene
 
                 case GameState.EndAnimations:
                     _endExplosion.Draw(spriteBatch);
+                    _confetti1.Draw(spriteBatch);
+                    _confetti2.Draw(spriteBatch);
                     break;
 
                 case GameState.GameOver:
@@ -229,6 +250,8 @@ namespace TeamRock.Scene
             }
 
             _endExplosion.StopSpriteAnimation();
+            _confetti1.StopSpriteAnimation();
+            _confetti2.StopSpriteAnimation();
             
             SetGameState(GameState.IsRunning);
         }
@@ -293,6 +316,12 @@ namespace TeamRock.Scene
                 _endExplosion.StartSpriteAnimation();
                 _endExplosion.Sprite.Position = _player.GameObject.Position;
 
+                _confetti1.StartSpriteAnimation();
+                _confetti1.Sprite.Position = _player.GameObject.Position + new Vector2(100, 0);
+                _confetti2.StartSpriteAnimation();
+                _confetti2.Sprite.Position = _player.GameObject.Position + new Vector2(-100, 0);
+
+
                 GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity, GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
 
                 CameraShaker.Instance.StartShake(1, 5);
@@ -305,6 +334,8 @@ namespace TeamRock.Scene
         private void UpdateEndStateAnimations(float deltaTime)
         {
             _endExplosion.Update(deltaTime);
+            _confetti1.Update(deltaTime);
+            _confetti2.Update(deltaTime);
             if (!_endExplosion.IsAnimationActive)
             {
                 SetGameState(GameState.GameOver);

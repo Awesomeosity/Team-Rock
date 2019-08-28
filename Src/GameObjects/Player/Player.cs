@@ -12,6 +12,8 @@ namespace TeamRock.Src.GameObjects
         private GameObject _playerGameObject;
         private SpriteSheetAnimationManager _playerFallingSpriteSheet;
 
+        private float _velocityScaler;
+
         private Vector2 _spriteSheetPosition;
 
         #region Initialization
@@ -41,6 +43,8 @@ namespace TeamRock.Src.GameObjects
             };
 
             _playerController = new PlayerController();
+
+            _velocityScaler = 1.0f;
         }
 
         #endregion
@@ -59,6 +63,11 @@ namespace TeamRock.Src.GameObjects
 
         public void Update(float deltaTime, float gameTime)
         {
+            if(_velocityScaler < 1)
+            {
+                _velocityScaler += GameInfo.PlayerRecoveryRate * deltaTime;
+            }
+
             if (_playerGameObject.Velocity.Y < GameInfo.PlayerMaxYVelocity)
             {
                 _playerGameObject.UpdateOnlyVelocity(deltaTime, gameTime);
@@ -79,7 +88,7 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position += GameInfo.HorizontalVelocity * deltaTime;
+                _playerGameObject.Position += GameInfo.HorizontalVelocity * deltaTime * _velocityScaler;
             }
             else if (_playerController.State == PlayerController.ControllerState.Left)
             {
@@ -88,7 +97,7 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position -= GameInfo.HorizontalVelocity * deltaTime;
+                _playerGameObject.Position -= GameInfo.HorizontalVelocity * deltaTime * _velocityScaler;
             }
             else if (_playerController.State == PlayerController.ControllerState.Up)
             {
@@ -98,7 +107,7 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position -= GameInfo.VerticalVelocity * deltaTime;
+                _playerGameObject.Position -= GameInfo.VerticalVelocity * deltaTime * _velocityScaler;
                 _playerGameObject.Acceleration -= GameInfo.AccelerationChangeRate * deltaTime;
             }
             else if (_playerController.State == PlayerController.ControllerState.Down)
@@ -108,7 +117,7 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position += GameInfo.VerticalVelocity * deltaTime;
+                _playerGameObject.Position += GameInfo.VerticalVelocity * deltaTime * _velocityScaler;
                 _playerGameObject.Acceleration += GameInfo.AccelerationChangeRate * deltaTime;
             }
         }
@@ -124,6 +133,8 @@ namespace TeamRock.Src.GameObjects
             _spriteSheetPosition.Y = _playerGameObject.Position.Y - _playerGameObject.Sprite.Height / 2.0f;
             _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
         }
+
+        public void ReduceVelocity() => _velocityScaler = GameInfo.PlayerDamageVelocity;
 
         public GameObject GameObject => _playerGameObject;
 

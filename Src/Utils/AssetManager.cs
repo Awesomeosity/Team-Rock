@@ -48,6 +48,16 @@
         public const int EndExplosionTotalCount = 32;
         public const float EndExplosionAnimationSpeed = 0.03125F;
 
+        //Confetti 1
+        public const string ConfettiBase_1 = "SpriteSheets/Confetti1/confetti1_";
+        public const int ConfettiTotalCount_1 = 81;
+        public const float ConfettiAnimationSpeed_1 = 0.01235F;
+
+        //Confetti 2
+        public const string ConfettiBase_2 = "SpriteSheets/Confetti2/confetti2_";
+        public const int ConfettiTotalCount_2 = 81;
+        public const float ConfettiAnimationSpeed_2 = 0.01235F;
+
         #endregion
 
         #region Sounds
