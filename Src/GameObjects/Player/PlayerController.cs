@@ -16,6 +16,10 @@ namespace TeamRock.Src.GameObjects
             Down
         }
 
+        public bool IsDashing = false;
+
+        private bool _pressed = false;
+
         private ControllerState _controllerState;
 
         #region Update
@@ -24,6 +28,7 @@ namespace TeamRock.Src.GameObjects
         {
             KeyboardState keyboardState = Keyboard.GetState();
             GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+            bool holding = false;
 
             // Check if GamePad is connected else use the Keyboard
             if (gamePadCapabilities.IsConnected)
@@ -50,6 +55,9 @@ namespace TeamRock.Src.GameObjects
                 {
                     SetControllerState(ControllerState.None);
                 }
+
+                holding = gamePadState.IsButtonDown(Buttons.A);
+
             }
             else
             {
@@ -73,7 +81,19 @@ namespace TeamRock.Src.GameObjects
                 {
                     SetControllerState(ControllerState.None);
                 }
+
+                holding = keyboardState.IsKeyDown(Keys.Space);
             }
+
+
+            if(holding == false && _pressed == true)
+            {
+                IsDashing = true;
+            }
+
+            _pressed = holding;
+
+            
         }
 
         #endregion

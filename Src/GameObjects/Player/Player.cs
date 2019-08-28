@@ -13,6 +13,8 @@ namespace TeamRock.Src.GameObjects
         private SpriteSheetAnimationManager _playerFallingSpriteSheet;
 
         private float _velocityScaler;
+        private float _dashCooldown;
+        private float _dashDuration;
 
         private Vector2 _spriteSheetPosition;
 
@@ -45,6 +47,9 @@ namespace TeamRock.Src.GameObjects
             _playerController = new PlayerController();
 
             _velocityScaler = 1.0f;
+
+            _dashCooldown = 0;
+            _dashDuration = 0;
         }
 
         #endregion
@@ -66,15 +71,7 @@ namespace TeamRock.Src.GameObjects
 
         public void Update(float deltaTime, float gameTime)
         {
-            if(_velocityScaler < 1)
-            {
-                _velocityScaler += GameInfo.PlayerRecoveryRate * deltaTime;
-            }
-
-            if(_velocityScaler > 1)
-            {
-                _velocityScaler = 1.0f;
-            }
+            UpdateDurations(deltaTime);
 
             if (_playerGameObject.Velocity.Y < GameInfo.PlayerMaxYVelocity)
             {
@@ -89,6 +86,18 @@ namespace TeamRock.Src.GameObjects
 
         private void HandleInput(float deltaTime)
         {
+            int speedFactor = 1;
+            if(_playerController.IsDashing && _dashCooldown == 0)
+            {
+                _dashCooldown = GameInfo.PlayerDashCooldown;
+                _dashDuration = GameInfo.PlayerDashDuration;
+            }
+
+            if(_dashDuration > 0 && _velocityScaler == 1)
+            {
+                speedFactor = 3;
+            }
+
             if (_playerController.State == PlayerController.ControllerState.Right)
             {
                 if (_playerGameObject.Position.X > GameInfo.PlayerRightPosition)
@@ -96,7 +105,7 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position += GameInfo.HorizontalVelocity * deltaTime * _velocityScaler;
+                _playerGameObject.Position += GameInfo.HorizontalVelocity * deltaTime * _velocityScaler * speedFactor;
             }
             else if (_playerController.State == PlayerController.ControllerState.Left)
             {
@@ -105,7 +114,7 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position -= GameInfo.HorizontalVelocity * deltaTime * _velocityScaler;
+                _playerGameObject.Position -= GameInfo.HorizontalVelocity * deltaTime * _velocityScaler * speedFactor;
             }
             else if (_playerController.State == PlayerController.ControllerState.Up)
             {
@@ -115,7 +124,7 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position -= GameInfo.VerticalVelocity * deltaTime * _velocityScaler;
+                _playerGameObject.Position -= GameInfo.VerticalVelocity * deltaTime * _velocityScaler * speedFactor;
                 _playerGameObject.Acceleration -= GameInfo.AccelerationChangeRate * deltaTime;
             }
             else if (_playerController.State == PlayerController.ControllerState.Down)
@@ -125,9 +134,43 @@ namespace TeamRock.Src.GameObjects
                     return;
                 }
 
-                _playerGameObject.Position += GameInfo.VerticalVelocity * deltaTime * _velocityScaler;
+                _playerGameObject.Position += GameInfo.VerticalVelocity * deltaTime * _velocityScaler * speedFactor;
                 _playerGameObject.Acceleration += GameInfo.AccelerationChangeRate * deltaTime;
             }
+        }
+
+        private void UpdateDurations(float deltaTime)
+        {
+            if (_velocityScaler < 1)
+            {
+                _velocityScaler += GameInfo.PlayerRecoveryRate * deltaTime;
+            }
+
+            if (_velocityScaler > 1)
+            {
+                _velocityScaler = 1.0f;
+            }
+
+            if (_dashCooldown > 0)
+            {
+                _dashCooldown -= deltaTime;
+            }
+
+            if (_dashCooldown < 0)
+            {
+                _dashCooldown = 0;
+            }
+
+            if (_dashDuration > 0)
+            {
+                _dashDuration -= deltaTime;
+            }
+
+            if (_dashDuration < 0)
+            {
+                _dashDuration = 0;
+            }
+
         }
 
         #endregion

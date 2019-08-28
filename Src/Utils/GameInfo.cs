@@ -34,6 +34,8 @@ namespace TeamRock.Utils
 
         public const float PlayerDamageVelocity = 0.25f;
         public const float PlayerRecoveryRate = 0.5f;
+        public const float PlayerDashDuration = 2.0f;
+        public const float PlayerDashCooldown = 5.0f;
 
         // Stage
         public const float StageScale = 0.3f;
