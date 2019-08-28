@@ -68,6 +68,11 @@ namespace TeamRock.Src.GameObjects
                 _velocityScaler += GameInfo.PlayerRecoveryRate * deltaTime;
             }
 
+            if(_velocityScaler > 1)
+            {
+                _velocityScaler = 1.0f;
+            }
+
             if (_playerGameObject.Velocity.Y < GameInfo.PlayerMaxYVelocity)
             {
                 _playerGameObject.UpdateOnlyVelocity(deltaTime, gameTime);
@@ -135,6 +140,8 @@ namespace TeamRock.Src.GameObjects
         }
 
         public void ReduceVelocity() => _velocityScaler = GameInfo.PlayerDamageVelocity;
+
+        public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;
 
         public GameObject GameObject => _playerGameObject;
 

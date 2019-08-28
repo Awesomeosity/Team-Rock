@@ -293,7 +293,7 @@ namespace TeamRock.Scene
 
         private void UpdateGameObjectsBeforeTime(float deltaTime, float gameTime)
         {
-            _scrollingBackground.Update(deltaTime, _player.GameObject.Velocity.Y);
+            _scrollingBackground.Update(deltaTime, _player.GetScaledVelocity().Y);
             _player.Update(deltaTime, gameTime);
             _stage.Update(deltaTime, gameTime);
         }
