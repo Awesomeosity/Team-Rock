@@ -53,7 +53,10 @@ namespace TeamRock.Src.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _playerFallingSpriteSheet.Draw(spriteBatch);
+            if(_velocityScaler == 1)
+            {
+                _playerFallingSpriteSheet.Draw(spriteBatch);
+            }
             _playerGameObject.Draw(spriteBatch);
         }
 
