@@ -27,7 +27,7 @@ namespace TeamRock.Utils
         public static readonly Vector2 BaseAccelerationRate = new Vector2(0, 5);
         public static readonly Vector2 AccelerationChangeRate = new Vector2(0, 1);
         public static readonly Vector2 HorizontalVelocity = new Vector2(250, 0);
-        public static readonly Vector2 VerticalVelocity = new Vector2(0, 100);
+        public static readonly Vector2 VerticalVelocity = new Vector2(0, 250);
         public const int PlayerLeftPosition = AudienceWidth;
         public const int PlayerRightPosition = FixedWindowWidth - AudienceWidth;
         public const float PlayerGamePadAxisThreshold = 0.5f;
