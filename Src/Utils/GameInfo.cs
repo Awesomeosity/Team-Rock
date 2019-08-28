@@ -27,10 +27,13 @@ namespace TeamRock.Utils
         public static readonly Vector2 BaseAccelerationRate = new Vector2(0, 5);
         public static readonly Vector2 AccelerationChangeRate = new Vector2(0, 1);
         public static readonly Vector2 HorizontalVelocity = new Vector2(250, 0);
-        public static readonly Vector2 VerticalVelocity = new Vector2(0, 100);
+        public static readonly Vector2 VerticalVelocity = new Vector2(0, 250);
         public const int PlayerLeftPosition = AudienceWidth;
         public const int PlayerRightPosition = FixedWindowWidth - AudienceWidth;
         public const float PlayerGamePadAxisThreshold = 0.5f;
+
+        public const float PlayerDamageVelocity = 0.25f;
+        public const float PlayerRecoveryRate = 0.5f;
 
         // Stage
         public const float StageScale = 0.3f;
@@ -63,7 +66,7 @@ namespace TeamRock.Utils
         public const float DefaultAnimationSpeed = 0.01666667F;
 
         // Game Ending Control
-        public const float TotalGameTime = 30;
+        public const float TotalGameTime = 5;
         public const float StageMoveUpSpeed = 500;
     }
 }
