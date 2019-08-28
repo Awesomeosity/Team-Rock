@@ -58,7 +58,7 @@ namespace TeamRock.Src.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(_velocityScaler == 1)
+            if(_dashCooldown == 0)
             {
                 _playerFallingSpriteSheet.Draw(spriteBatch);
             }

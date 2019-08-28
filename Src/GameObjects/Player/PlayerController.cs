@@ -86,6 +86,7 @@ namespace TeamRock.Src.GameObjects
             }
 
 
+            IsDashing = false;
             if(holding == false && _pressed == true)
             {
                 IsDashing = true;
