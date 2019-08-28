@@ -32,6 +32,9 @@ namespace TeamRock.Utils
         public const int PlayerRightPosition = FixedWindowWidth - AudienceWidth;
         public const float PlayerGamePadAxisThreshold = 0.5f;
 
+        public const float PlayerDamageVelocity = 0.25f;
+        public const float PlayerRecoveryRate = 0.5f;
+
         // Stage
         public const float StageScale = 0.3f;
 
@@ -63,7 +66,7 @@ namespace TeamRock.Utils
         public const float DefaultAnimationSpeed = 0.01666667F;
 
         // Game Ending Control
-        public const float TotalGameTime = 30;
+        public const float TotalGameTime = 5;
         public const float StageMoveUpSpeed = 500;
     }
 }
