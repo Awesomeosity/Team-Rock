@@ -22,6 +22,9 @@
 
         public const string Player = "Textures/Player";
 
+        public const string WinWrestler = "Textures/Win";
+        public const string LoseWrestler = "Textures/Lose";
+
         #endregion
 
         #region Fonts

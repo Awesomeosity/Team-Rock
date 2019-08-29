@@ -3460,6 +3460,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Background Ropes Tiling.png
 
+#begin Textures/Fail.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Fail.png
+
 #begin Textures/GameOver.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -3591,6 +3603,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/White Pixel.png
+
+#begin Textures/Win.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Win.png
 
 #begin Textures/WrestlingBackground.png
 /importer:TextureImporter
