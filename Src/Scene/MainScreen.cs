@@ -158,7 +158,7 @@ namespace TeamRock.Scene
             Texture2D distanceBackground = _contentManager.Load<Texture2D>(AssetManager.DistanceBackground);
             Sprite backgroundSprite = new Sprite(distanceBackground)
             {
-                Scale = 0.1f
+                Scale = 1f
             };
             backgroundSprite.SetOriginCenter();
             _distanceBackground = new GameObject(backgroundSprite, backgroundSprite.Width, backgroundSprite.Height)
@@ -168,7 +168,7 @@ namespace TeamRock.Scene
             Texture2D distanceGradient = _contentManager.Load<Texture2D>(AssetManager.DistanceGradient);
             Sprite gradientSprite = new Sprite(distanceGradient)
             {
-                Scale = 0.1f
+                Scale = 1f
             };
             gradientSprite.SetOriginCenter();
             _distanceGradient = new GameObject(gradientSprite, gradientSprite.Width, gradientSprite.Height)
@@ -178,7 +178,7 @@ namespace TeamRock.Scene
             Texture2D distanceFrame = _contentManager.Load<Texture2D>(AssetManager.DistanceFrame);
             Sprite frameSprite = new Sprite(distanceFrame)
             {
-                Scale = 0.1f
+                Scale = 1f
             };
             frameSprite.SetOriginCenter();
 
@@ -190,7 +190,7 @@ namespace TeamRock.Scene
             Texture2D distanceIndicator = _contentManager.Load<Texture2D>(AssetManager.DistanceIndicator);
             Sprite indicatorSprite = new Sprite(distanceIndicator)
             {
-                Scale = 0.1f
+                Scale = 1f
             };
             indicatorSprite.SetOriginCenter();
 
@@ -211,6 +211,11 @@ namespace TeamRock.Scene
 
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);
+
+            _distanceBackground.Draw(spriteBatch);
+            _distanceFrame.Draw(spriteBatch);
+            _distanceGradient.Draw(spriteBatch);
+            _distanceIndicator.Draw(spriteBatch);
 
             switch (_gameState)
             {
