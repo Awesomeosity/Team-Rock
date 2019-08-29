@@ -38,6 +38,10 @@ namespace TeamRock.Scene
         private float _timeToImpact;
         private float _timeToGameOver;
 
+        private Sprite _fillBarPointer;
+        private Vector2 _fillBarInitialPosition;
+        private Vector2 _fillBarFinalPosition;
+
         private Sprite _fillBarGradient;
         private FillBarVertical _fillBarVertical;
 
@@ -183,6 +187,17 @@ namespace TeamRock.Scene
             fillBarFrame.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
             _fillBarGradient.Position = new Vector2(barXPosition,
                 GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f + 1);
+
+            Texture2D fillBarPointer = _contentManager.Load<Texture2D>(AssetManager.FillBarPointer);
+            _fillBarPointer = new Sprite(fillBarPointer);
+            _fillBarPointer.SetOriginCenter();
+            _fillBarPointer.Scale = 0.5f;
+            _fillBarPointer.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
+
+            _fillBarInitialPosition =
+                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height);
+            _fillBarFinalPosition =
+                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.Height);
         }
 
         #endregion
@@ -195,6 +210,7 @@ namespace TeamRock.Scene
             _scrollingBackground.Draw(spriteBatch);
 
             _fillBarVertical.Draw(spriteBatch);
+            _fillBarPointer.Draw(spriteBatch);
 
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);

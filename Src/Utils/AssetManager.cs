@@ -28,6 +28,7 @@
         public const string FillBarBackground = "Textures/Distance Bar Background";
         public const string FillBarFrame = "Textures/Distance Bar Frame";
         public const string FillBarGradient = "Textures/Distance Bar Gradient";
+        public const string FillBarPointer = "Textures/Distance Bar Indicator";
 
         #endregion
 
