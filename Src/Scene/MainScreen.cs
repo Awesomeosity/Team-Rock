@@ -23,6 +23,11 @@ namespace TeamRock.Scene
         private GameObject _stage;
         private GameObject _winWrestler;
         private Player _player;
+        private GameObject _distanceBackground;
+        private GameObject _distanceFrame;
+        private GameObject _distanceGradient;
+        private GameObject _distanceIndicator;
+
 
         private SpriteSheetAnimationManager _backgroundSpriteSheet;
         private ScrollingBackground _scrollingBackground;
@@ -150,6 +155,49 @@ namespace TeamRock.Scene
                 new Vector2(GameInfo.FixedWindowWidth / 4.0f * 3.0f, GameInfo.FixedWindowHeight + 300);
             _confetti2.FrameTime = AssetManager.ConfettiAnimationSpeed_2;
 
+            Texture2D distanceBackground = _contentManager.Load<Texture2D>(AssetManager.DistanceBackground);
+            Sprite backgroundSprite = new Sprite(distanceBackground)
+            {
+                Scale = 0.1f
+            };
+            backgroundSprite.SetOriginCenter();
+            _distanceBackground = new GameObject(backgroundSprite, backgroundSprite.Width, backgroundSprite.Height)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth - 20, GameInfo.FixedWindowHeight / 2)
+            };
+            Texture2D distanceGradient = _contentManager.Load<Texture2D>(AssetManager.DistanceGradient);
+            Sprite gradientSprite = new Sprite(distanceGradient)
+            {
+                Scale = 0.1f
+            };
+            gradientSprite.SetOriginCenter();
+            _distanceGradient = new GameObject(gradientSprite, gradientSprite.Width, gradientSprite.Height)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth - 20, GameInfo.FixedWindowHeight / 2)
+            };
+            Texture2D distanceFrame = _contentManager.Load<Texture2D>(AssetManager.DistanceFrame);
+            Sprite frameSprite = new Sprite(distanceFrame)
+            {
+                Scale = 0.1f
+            };
+            frameSprite.SetOriginCenter();
+
+            _distanceFrame = new GameObject(frameSprite, frameSprite.Width, frameSprite.Height)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth - 20, GameInfo.FixedWindowHeight / 2)
+            };
+
+            Texture2D distanceIndicator = _contentManager.Load<Texture2D>(AssetManager.DistanceIndicator);
+            Sprite indicatorSprite = new Sprite(distanceIndicator)
+            {
+                Scale = 0.1f
+            };
+            indicatorSprite.SetOriginCenter();
+
+            _distanceIndicator = new GameObject(indicatorSprite, indicatorSprite.Width, indicatorSprite.Height)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth - 20, GameInfo.FixedWindowHeight / 2)
+            };
         }
 
         #endregion
