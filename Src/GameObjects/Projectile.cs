@@ -60,8 +60,15 @@ namespace TeamRock.Src.GameObjects
             _positionToTarget = positionToTarget;
             _initialDistanceToTarget = Vector2.DistanceSquared(Position, _positionToTarget);
 
-            _rotationSpeed = ExtensionFunctions.RandomInRange(GameInfo.ProjectileMinRotationSpeed,
-                GameInfo.ProjectileMaxRotationSpeed);
+            if(_projSprite != ProjSprite.Girl)
+            {
+                _rotationSpeed = ExtensionFunctions.RandomInRange(GameInfo.ProjectileMinRotationSpeed,
+                    GameInfo.ProjectileMaxRotationSpeed);
+            }
+            else
+            {
+                _rotationSpeed = 0;
+            }
         }
 
         public bool IsProjectileDestroyed => _isProjectileDestroyed;
