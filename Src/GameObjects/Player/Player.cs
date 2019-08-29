@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TeamRock.Managers;
@@ -13,8 +14,10 @@ namespace TeamRock.Src.GameObjects
         private SpriteSheetAnimationManager _playerFallingSpriteSheet;
 
         private float _velocityScaler;
+
         private float _dashCooldown;
         private float _dashDuration;
+        private Vector2 _dashDirection;
 
         private Vector2 _spriteSheetPosition;
 
@@ -58,10 +61,11 @@ namespace TeamRock.Src.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(_dashCooldown == 0)
+            if (_dashCooldown <= 0)
             {
                 _playerFallingSpriteSheet.Draw(spriteBatch);
             }
+
             _playerGameObject.Draw(spriteBatch);
         }
 
@@ -87,15 +91,26 @@ namespace TeamRock.Src.GameObjects
         private void HandleInput(float deltaTime)
         {
             int speedFactor = 1;
-            if(_playerController.IsDashing && _dashCooldown == 0)
+            if (_playerController.DidPlayerPressDash && _dashCooldown <= 0)
             {
-                _dashCooldown = GameInfo.PlayerDashCooldown;
                 _dashDuration = GameInfo.PlayerDashDuration;
+                _dashDirection = _playerController.DashDirection;
             }
 
-            if(_dashDuration > 0 && _velocityScaler == 1)
+            if (_dashDuration > 0)
             {
-                speedFactor = 3;
+                if (_velocityScaler == 1)
+                {
+                    speedFactor = 3;
+                }
+
+                Console.WriteLine($"Dash Velocity: {_dashDirection}");
+                _playerGameObject.Position += _dashDirection * GameInfo.PlayerDashVelocity * deltaTime;
+            }
+
+            if (_dashDuration > 0)
+            {
+                return;
             }
 
             if (_playerController.State == PlayerController.ControllerState.Right)
@@ -156,21 +171,15 @@ namespace TeamRock.Src.GameObjects
                 _dashCooldown -= deltaTime;
             }
 
-            if (_dashCooldown < 0)
-            {
-                _dashCooldown = 0;
-            }
-
             if (_dashDuration > 0)
             {
                 _dashDuration -= deltaTime;
-            }
 
-            if (_dashDuration < 0)
-            {
-                _dashDuration = 0;
+                if (_dashDuration <= 0)
+                {
+                    _dashCooldown = GameInfo.PlayerDashCooldown;
+                }
             }
-
         }
 
         #endregion
@@ -188,7 +197,7 @@ namespace TeamRock.Src.GameObjects
         public void ReduceVelocity()
         {
             _velocityScaler = GameInfo.PlayerDamageVelocity;
-            _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockback);
+            _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockBack);
         }
 
         public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;

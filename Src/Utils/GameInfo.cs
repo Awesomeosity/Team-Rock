@@ -15,13 +15,12 @@ namespace TeamRock.Utils
         private const int CenterBoardWidth = 300;
 
         // Player State
-        public const float PlayerMinYPosition = 50;
-        public const float PlayerMaxYPosition = FixedWindowHeight - 300;
-        public const float PlayerAssetScale = 0.1f;
-
         public static readonly Vector2 PlayerInitialPosition =
             new Vector2(FixedWindowWidth / 2.0f, 70);
 
+        public const float PlayerMinYPosition = 50;
+        public const float PlayerMaxYPosition = FixedWindowHeight - 300;
+        public const float PlayerAssetScale = 0.1f;
         public const float PlayerMinYVelocity = 50;
         public const float PlayerMaxYVelocity = 500;
         public static readonly Vector2 BaseAccelerationRate = new Vector2(0, 5);
@@ -34,9 +33,12 @@ namespace TeamRock.Utils
 
         public const float PlayerDamageVelocity = 0.25f;
         public const float PlayerRecoveryRate = 0.5f;
-        public const float PlayerDashDuration = 2.0f;
+
+        public const float PlayerDashDuration = 0.2f;
         public const float PlayerDashCooldown = 5.0f;
-        public const float PlayerKnockback = 5;
+        public const float PlayerDashVelocity = 750;
+
+        public const float PlayerKnockBack = 5;
 
         // Stage
         public const float StageScale = 0.3f;
@@ -70,7 +72,7 @@ namespace TeamRock.Utils
         public const float DefaultAnimationSpeed = 0.01666667F;
 
         // Game Ending Control
-        public const float TotalGameTime = 5;
+        public const float TotalGameTime = 100;
         public const float EndGameTime = 2;
         public const float StageMoveUpSpeed = 500;
         public const float IncreasedItemPosition = FixedWindowHeight * 3 / 5;
