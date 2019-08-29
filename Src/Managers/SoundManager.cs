@@ -142,6 +142,23 @@ namespace TeamRock.Managers
 
         #endregion
 
+        public void CheckSound(int soundIndex)
+        {
+            SoundData soundData = GetEffectByIndex(soundIndex);
+            if(soundData == null)
+            {
+                Console.WriteLine("Invalid Sound Requested");
+                return;
+
+            }
+
+            if (soundData.SoundEffectInstance.State == SoundState.Stopped)
+            {
+                soundData.SoundEffectInstance.Play();
+            }
+
+        }
+
         #region Utility Functions
 
         private SoundData GetEmptySoundEffect(SoundEffect soundEffect)

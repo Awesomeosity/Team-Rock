@@ -13,6 +13,14 @@ namespace TeamRock.Src.GameObjects
 
         private float _rotationSpeed;
 
+        public enum ProjSprite
+        {
+            Popcorn,
+            Soda
+        }
+
+        private ProjSprite _projSprite;
+
         #region Constructor
 
         public Projectile(Sprite sprite, int collisionWidth, int collisionHeight) : base(sprite, collisionWidth,
@@ -57,6 +65,22 @@ namespace TeamRock.Src.GameObjects
 
         public bool IsProjectileDestroyed => _isProjectileDestroyed;
 
+        public void SetSprite(ProjSprite projSprite)
+        {
+            if (projSprite == _projSprite)
+            {
+                return;
+            }
+
+            _projSprite = projSprite;
+        }
+
+        public ProjSprite GetSprite()
+        {
+            return _projSprite;
+        }
+
+
         #endregion
 
         #region Utility Functions
@@ -75,6 +99,7 @@ namespace TeamRock.Src.GameObjects
         }
 
         private void UpdateRotation(float deltaTime) => Sprite.Rotation += _rotationSpeed * deltaTime;
+
 
         #endregion
     }

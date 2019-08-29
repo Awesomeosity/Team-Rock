@@ -107,7 +107,7 @@ namespace TeamRock.Scene
                 _oldState = keyboardState;
             }
 
-
+            SoundManager.Instance.CheckSound(_musicIndex);
             return _gameStarted;
         }
 
@@ -118,7 +118,7 @@ namespace TeamRock.Scene
         public void StartMusic()
         {
             _musicIndex = SoundManager.Instance.PlaySound(_music);
-            SoundManager.Instance.SetSoundLooping(_musicIndex, true);
+            SoundManager.Instance.SetSoundLooping(_musicIndex);
             SoundManager.Instance.SetSoundVolume(_musicIndex, 0.5f);
         }
 

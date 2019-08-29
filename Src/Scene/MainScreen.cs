@@ -21,6 +21,7 @@ namespace TeamRock.Scene
         private SoundEffect _explosionSound;
 
         private GameObject _stage;
+        private GameObject _winWrestler;
         private Player _player;
 
         private SpriteSheetAnimationManager _backgroundSpriteSheet;
@@ -92,6 +93,17 @@ namespace TeamRock.Scene
             {
                 Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300)
             };
+
+            Texture2D winWrestler = _contentManager.Load<Texture2D>(AssetManager.WinWrestler);
+            Sprite winSprite = new Sprite(winWrestler)
+            {
+                Scale = GameInfo.WrestlerScale
+            };
+            winSprite.SetOriginCenter();
+            _winWrestler = new GameObject(winSprite, winSprite.Width, winSprite.Height)
+            {
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300)
+            };
         }
 
         private void CreateAudiences()
@@ -150,7 +162,7 @@ namespace TeamRock.Scene
             _scrollingBackground.Draw(spriteBatch);
 
             _stage.Draw(spriteBatch);
-
+            _winWrestler.Draw(spriteBatch);
 
             switch (_gameState)
             {
@@ -230,6 +242,9 @@ namespace TeamRock.Scene
                 audience.Update(deltaTime, gameTime);
             }
 
+            SoundManager.Instance.CheckSound(_musicIndex);
+
+
             return _gameState == GameState.GameOver;
         }
 
@@ -246,6 +261,9 @@ namespace TeamRock.Scene
 
             _timeToImpact = GameInfo.TotalGameTime;
             _stage.Velocity = new Vector2(0, 0);
+
+            _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
+            _winWrestler.Velocity = new Vector2(0, 0);
 
 
             foreach (Audience audience in _audiences)
@@ -303,6 +321,8 @@ namespace TeamRock.Scene
             _scrollingBackground.Update(deltaTime, _player.GetScaledVelocity().Y);
             _player.Update(deltaTime, gameTime);
             _stage.Update(deltaTime, gameTime);
+            _winWrestler.Update(deltaTime, gameTime);
+
         }
 
         private void UpdateStageAndPlayerEndState(float deltaTime, float gameTime)
@@ -312,6 +332,8 @@ namespace TeamRock.Scene
             {
                 _stage.Velocity = -Vector2.UnitY * GameInfo.StageMoveUpSpeed;
                 _stage.Update(deltaTime, gameTime);
+                _winWrestler.Velocity = -Vector2.UnitY * GameInfo.StageMoveUpSpeed;
+                _winWrestler.Update(deltaTime, gameTime);
             }
 
             _player.GameObject.Velocity = Vector2.UnitY * GameInfo.PlayerMaxYVelocity;

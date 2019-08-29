@@ -24,6 +24,7 @@ namespace TeamRock.Src.GameObjects
         private RectangleF _audienceRectangle;
 
         private SoundEffect _hitSound;
+        private SoundEffect _hitSound2;
         private bool _isProjectileSpawningActive;
 
         #region Initialization
@@ -39,6 +40,7 @@ namespace TeamRock.Src.GameObjects
             _audienceRectangle = new RectangleF();
 
             _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
+            _hitSound2 = contentManager.Load<SoundEffect>(AssetManager.Boo);
 
             _isProjectileSpawningActive = true;
         }
@@ -76,7 +78,16 @@ namespace TeamRock.Src.GameObjects
                         }
 
                         CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 5);
-                        int soundIndex = SoundManager.Instance.PlaySound(_hitSound);
+                        int soundIndex = 0;
+                        if (_projectiles[i].GetSprite() == Projectile.ProjSprite.Soda)
+                        {
+                            soundIndex = SoundManager.Instance.PlaySound(_hitSound);
+                        }
+                        else
+                        {
+                            soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
+
+                        }
                         SoundManager.Instance.SetSoundVolume(soundIndex, 0.5f);
 
                         _player.ReduceVelocity();
@@ -164,10 +175,22 @@ namespace TeamRock.Src.GameObjects
             Vector2 launchDirection = offsetAim - launchPosition;
             launchDirection.Normalize();
 
+            float random = ExtensionFunctions.Random();
+            Projectile.ProjSprite projSprite;
+            if(random <= 0.5f)
+            {
+                projSprite = Projectile.ProjSprite.Soda;
+            }
+            else
+            {
+                projSprite = Projectile.ProjSprite.Popcorn;
+            }
+
             Texture2D projectileTexture =
-                _contentManager.Load<Texture2D>(ExtensionFunctions.Random() <= 0.5f
+                _contentManager.Load<Texture2D>(random <= 0.5f
                     ? AssetManager.Soda
                     : AssetManager.Popcorn);
+            
             Sprite projectileSprite = new Sprite(projectileTexture)
             {
                 Scale = GameInfo.ProjectileStartAssetScale
@@ -180,6 +203,7 @@ namespace TeamRock.Src.GameObjects
             {
                 Position = launchPosition
             };
+            projectile.SetSprite(projSprite);
             projectile.LaunchProjectile(launchDirection, _player.GameObject.Position);
 
             _projectiles.Add(projectile);

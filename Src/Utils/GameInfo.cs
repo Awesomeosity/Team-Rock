@@ -39,6 +39,7 @@ namespace TeamRock.Utils
 
         // Stage
         public const float StageScale = 0.3f;
+        public const float WrestlerScale = 0.2f;
 
         // Game Pad
         public const float GamePadVibrationTime = 0.3f;
@@ -69,7 +70,7 @@ namespace TeamRock.Utils
 
         // Game Ending Control
         public const float TotalGameTime = 30;
-        public const float EndGameTime = 5;
+        public const float EndGameTime = 2;
         public const float StageMoveUpSpeed = 500;
         public const float IncreasedItemPosition = FixedWindowHeight * 3 / 5;
         public const int IncreasedItemFrequency = 5;
