@@ -26,11 +26,10 @@
         public const string WinWrestler = "Textures/Win";
         public const string LoseWrestler = "Textures/Lose";
 
-        public const string DistanceBackground = "Textures/Distance Bar Background";
-        public const string DistanceFrame = "Textures/Distance Bar Frame";
-        public const string DistanceGradient = "Textures/Distance Bar Gradient";
-        public const string DistanceIndicator = "Textures/Distance Bar Indicator";
-
+        public const string FillBarBackground = "Textures/Distance Bar Background";
+        public const string FillBarFrame = "Textures/Distance Bar Frame";
+        public const string FillBarGradient = "Textures/Distance Bar Gradient";
+        public const string FillBarPointer = "Textures/Distance Bar Indicator";
 
         #endregion
 

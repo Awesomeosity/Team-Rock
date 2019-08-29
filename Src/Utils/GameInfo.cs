@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Linq.Expressions;
+using Microsoft.Xna.Framework;
 
 namespace TeamRock.Utils
 {
@@ -12,7 +13,7 @@ namespace TeamRock.Utils
         public const int MaxBackgroundElements = 3;
 
         // Center Board
-        private const int CenterBoardWidth = 300;
+        public const int CenterBoardWidth = 300;
 
         // Player State
         public static readonly Vector2 PlayerInitialPosition =
@@ -35,7 +36,7 @@ namespace TeamRock.Utils
         public const float PlayerRecoveryRate = 0.5f;
 
         public const float PlayerDashDuration = 0.2f;
-        public const float PlayerDashCooldown = 5.0f;
+        public const float PlayerDashCooldown = 1;
         public const float PlayerDashVelocity = 750;
 
         public const float PlayerKnockBack = 5;
@@ -71,11 +72,17 @@ namespace TeamRock.Utils
         // SpriteSheet Animations
         public const float DefaultAnimationSpeed = 0.01666667F;
 
+        // Timer Bar
+        public static readonly Color InitialTimerBarColor = Color.White;
+        public static readonly Color FinalTimerBarColor = new Color(120, 89, 169);
+        public const float TimerChangeRate = 1.5f;
+        public const float PlayerHitTimerChangeRate = 0.5f;
+
         // Game Ending Control
         public const float TotalGameTime = 30;
         public const float EndGameTime = 2;
         public const float StageMoveUpSpeed = 500;
-        public const float IncreasedItemPosition = FixedWindowHeight * 3 / 5;
+        public const float IncreasedItemPosition = 480F;
         public const int IncreasedItemFrequency = 5;
     }
 }
