@@ -88,6 +88,12 @@
 /processorParam:Quality=Best
 /build:Sounds/Explosion.mp3
 
+#begin Sounds/Girl.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Girl.wav
+
 #begin Sounds/Hand_Claps.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
@@ -3531,6 +3537,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/GameOver.png
+
+#begin Textures/Girl.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Girl.png
 
 #begin Textures/Header.png
 /importer:TextureImporter

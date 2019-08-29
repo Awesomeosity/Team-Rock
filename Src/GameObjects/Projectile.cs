@@ -16,7 +16,8 @@ namespace TeamRock.Src.GameObjects
         public enum ProjSprite
         {
             Popcorn,
-            Soda
+            Soda,
+            Girl
         }
 
         private ProjSprite _projSprite;

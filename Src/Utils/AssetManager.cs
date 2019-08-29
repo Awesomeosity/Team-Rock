@@ -21,6 +21,7 @@
         public const string Popcorn = "Textures/PopCorn";
 
         public const string Player = "Textures/Player";
+        public const string Girl = "Textures/Girl";
 
         public const string WinWrestler = "Textures/Win";
         public const string LoseWrestler = "Textures/Lose";
@@ -80,6 +81,7 @@
         public const string CottonCandy = "Sounds/Cotton_Candy";
         public const string Hit = "Sounds/Hit_Hurt";
         public const string Explosion = "Sounds/Explosion";
+        public const string Oof_Girl = "Sounds/Girl";
 
         #endregion
 

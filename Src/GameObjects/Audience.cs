@@ -25,6 +25,7 @@ namespace TeamRock.Src.GameObjects
 
         private SoundEffect _hitSound;
         private SoundEffect _hitSound2;
+        private SoundEffect _hitSound3;
         private bool _isProjectileSpawningActive;
 
         #region Initialization
@@ -41,6 +42,7 @@ namespace TeamRock.Src.GameObjects
 
             _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
             _hitSound2 = contentManager.Load<SoundEffect>(AssetManager.Boo);
+            _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.Oof_Girl);
 
             _isProjectileSpawningActive = true;
         }
@@ -79,14 +81,19 @@ namespace TeamRock.Src.GameObjects
 
                         CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 5);
                         int soundIndex = 0;
-                        if (_projectiles[i].GetSprite() == Projectile.ProjSprite.Soda)
+                        switch (_projectiles[i].GetSprite())
                         {
-                            soundIndex = SoundManager.Instance.PlaySound(_hitSound);
-                        }
-                        else
-                        {
-                            soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
-
+                            case Projectile.ProjSprite.Popcorn:
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound);
+                                break;
+                            case Projectile.ProjSprite.Soda:
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
+                                break;
+                            case Projectile.ProjSprite.Girl:
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
+                                break;
+                            default:
+                                break;
                         }
                         SoundManager.Instance.SetSoundVolume(soundIndex, 0.5f);
 
@@ -176,20 +183,25 @@ namespace TeamRock.Src.GameObjects
             launchDirection.Normalize();
 
             float random = ExtensionFunctions.Random();
+            int randResult = (int)Math.Floor(random * 3);
             Projectile.ProjSprite projSprite;
-            if(random <= 0.5f)
+            string textureLoad;
+            switch (randResult)
             {
-                projSprite = Projectile.ProjSprite.Soda;
+                case 0:
+                    projSprite = Projectile.ProjSprite.Soda;
+                    textureLoad = AssetManager.Soda;
+                    break;
+                case 1:
+                    projSprite = Projectile.ProjSprite.Popcorn;
+                    textureLoad = AssetManager.Popcorn;
+                    break;
+                default:
+                    projSprite = Projectile.ProjSprite.Girl;
+                    textureLoad = AssetManager.Girl;
+                    break;
             }
-            else
-            {
-                projSprite = Projectile.ProjSprite.Popcorn;
-            }
-
-            Texture2D projectileTexture =
-                _contentManager.Load<Texture2D>(random <= 0.5f
-                    ? AssetManager.Soda
-                    : AssetManager.Popcorn);
+            Texture2D projectileTexture = _contentManager.Load<Texture2D>(textureLoad);
             
             Sprite projectileSprite = new Sprite(projectileTexture)
             {
