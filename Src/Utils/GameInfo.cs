@@ -79,7 +79,7 @@ namespace TeamRock.Utils
         public const float PlayerHitTimerChangeRate = 0.5f;
 
         // Game Ending Control
-        public const float TotalGameTime = 30;
+        public const float TotalGameTime = 5;
         public const float EndGameTime = 2;
         public const float StageMoveUpSpeed = 500;
         public const float IncreasedItemPosition = 480F;
