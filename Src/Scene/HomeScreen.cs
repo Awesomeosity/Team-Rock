@@ -45,7 +45,7 @@ namespace TeamRock.Scene
             _luchadorSprite = new Sprite(luchadorTexture)
             {
                 Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f),
-                Scale = 0.2f
+                Scale = 0.20f
             };
             _luchadorSprite.SetOriginCenter();
 

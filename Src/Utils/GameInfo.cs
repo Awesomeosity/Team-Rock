@@ -52,8 +52,8 @@ namespace TeamRock.Utils
         public const float RightAudiencePos = 480;
 
         // Projectile
-        public const float MinProjectileVelocity = 400;
-        public const float MaxProjectileVelocity = 500;
+        public const float MinProjectileVelocity = 200;
+        public const float MaxProjectileVelocity = 400;
         public const float ProjectileLifeTime = 5f;
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;
@@ -69,6 +69,9 @@ namespace TeamRock.Utils
 
         // Game Ending Control
         public const float TotalGameTime = 30;
+        public const float EndGameTime = 5;
         public const float StageMoveUpSpeed = 500;
+        public const float IncreasedItemPosition = FixedWindowHeight * 3 / 5;
+        public const int IncreasedItemFrequency = 5;
     }
 }

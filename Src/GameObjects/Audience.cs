@@ -49,7 +49,8 @@ namespace TeamRock.Src.GameObjects
 
         public void Update(float deltaTime, float gameTime)
         {
-            _randomTimer -= deltaTime;
+            
+            _randomTimer -= deltaTime * (_player.GameObject.Position.Y > GameInfo.IncreasedItemPosition ? GameInfo.IncreasedItemFrequency : 1) ;
             if (_randomTimer <= 0)
             {
                 SpawnProjectileAndResetTimer();

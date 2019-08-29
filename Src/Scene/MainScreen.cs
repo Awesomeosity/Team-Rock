@@ -35,6 +35,7 @@ namespace TeamRock.Scene
         private UiTextNode _timerText;
         private SpriteFont _defaultFont;
         private float _timeToImpact;
+        private float _timeToGameOver;
 
         private enum GameState
         {
@@ -105,6 +106,7 @@ namespace TeamRock.Scene
         private void CreateOtherSceneItems()
         {
             _timeToImpact = GameInfo.TotalGameTime;
+            _timeToGameOver = GameInfo.EndGameTime;
             _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
 
             _timerText = new UiTextNode()
@@ -158,7 +160,10 @@ namespace TeamRock.Scene
                     break;
 
                 case GameState.EndAnimations:
-                    _endExplosion.Draw(spriteBatch);
+                    if(_endExplosion.IsAnimationActive == true)
+                    {
+                        _endExplosion.Draw(spriteBatch);
+                    }
                     _confetti1.Draw(spriteBatch);
                     _confetti2.Draw(spriteBatch);
                     break;
@@ -252,6 +257,8 @@ namespace TeamRock.Scene
             _endExplosion.StopSpriteAnimation();
             _confetti1.StopSpriteAnimation();
             _confetti2.StopSpriteAnimation();
+
+            _timeToGameOver = GameInfo.EndGameTime;
             
             SetGameState(GameState.IsRunning);
         }
@@ -337,6 +344,11 @@ namespace TeamRock.Scene
             _confetti1.Update(deltaTime);
             _confetti2.Update(deltaTime);
             if (!_endExplosion.IsAnimationActive)
+            {
+                _timeToGameOver -= deltaTime;
+            }
+
+            if(_timeToGameOver <= 0)
             {
                 SetGameState(GameState.GameOver);
             }
