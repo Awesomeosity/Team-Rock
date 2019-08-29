@@ -220,11 +220,6 @@ namespace TeamRock.Scene
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);
 
-            _distanceBackground.Draw(spriteBatch);
-            _distanceFrame.Draw(spriteBatch);
-            _distanceGradient.Draw(spriteBatch);
-            _distanceIndicator.Draw(spriteBatch);
-
             switch (_gameState)
             {
                 case GameState.IsRunning:
