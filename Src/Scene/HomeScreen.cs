@@ -21,9 +21,8 @@ namespace TeamRock.Scene
         private UiTextNode _pressToPlayText;
         private Sprite _headerImage;
         private Sprite _luchadorSprite;
-        private KeyboardState _oldState;
-        private GamePadState _oldControl;
-
+        private KeyboardState _oldKeyboardState;
+        private GamePadState _oldGamePadState;
 
         private bool _gameStarted;
 
@@ -56,7 +55,36 @@ namespace TeamRock.Scene
                 new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100);
 
             _music = _contentManager.Load<SoundEffect>(AssetManager.HomeScreenMusic);
-            KeyboardState _oldState = Keyboard.GetState();
+        }
+
+        private void CreateFillBar()
+        {
+            Texture2D fillBarBackgroundTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarBackground);
+            Texture2D fillBarFrameTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarFrame);
+            Texture2D fillBarGradientTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarGradient);
+
+            Sprite fillBarBackground = new Sprite(fillBarBackgroundTexture);
+            Sprite fillBarFrame = new Sprite(fillBarFrameTexture);
+            Sprite fillBarGradient = new Sprite(fillBarGradientTexture);
+
+            fillBarBackground.SetOriginCenter();
+            fillBarFrame.SetOriginCenter();
+            fillBarGradient.Origin = new Vector2(fillBarGradient.TextureWidth / 2.0f, 0);
+
+            fillBarFrame.Scale = 0.5f;
+            fillBarBackground.Scale = 0.5f;
+            fillBarGradient.Scale = 0.5f;
+
+            FillBarVertical _fillBarVertical = new FillBarVertical();
+            _fillBarVertical.Initialize(fillBarFrame, fillBarBackground, fillBarGradient, 100);
+            _fillBarVertical.CurrentValue = 50;
+
+            fillBarBackground.Position =
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
+            fillBarFrame.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
+            fillBarGradient.Position =
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f,
+                    GameInfo.FixedWindowHeight / 2.0f - fillBarGradient.Height / 2.0f);
         }
 
         #endregion
@@ -80,6 +108,14 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
+            UpdateControls();
+            SoundManager.Instance.CheckSound(_musicIndex);
+
+            return _gameStarted;
+        }
+
+        private void UpdateControls()
+        {
             KeyboardState keyboardState = Keyboard.GetState();
             GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
 
@@ -88,27 +124,24 @@ namespace TeamRock.Scene
                 _pressToPlayText.Text = "PRESS <A> TO START";
 
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
+                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldGamePadState.Buttons.A == ButtonState.Pressed)
                 {
                     _gameStarted = true;
                 }
 
-                _oldControl = gamePadState;
+                _oldGamePadState = gamePadState;
             }
             else
             {
                 _pressToPlayText.Text = "PRESS <SPACE> TO START";
 
-                if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
+                if (keyboardState.IsKeyUp(Keys.Space) && _oldKeyboardState.IsKeyDown(Keys.Space))
                 {
                     _gameStarted = true;
                 }
 
-                _oldState = keyboardState;
+                _oldKeyboardState = keyboardState;
             }
-
-            SoundManager.Instance.CheckSound(_musicIndex);
-            return _gameStarted;
         }
 
         #endregion

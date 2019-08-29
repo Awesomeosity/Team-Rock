@@ -25,6 +25,10 @@
         public const string WinWrestler = "Textures/Win";
         public const string LoseWrestler = "Textures/Lose";
 
+        public const string FillBarBackground = "Textures/Distance Bar Background";
+        public const string FillBarFrame = "Textures/Distance Bar Frame";
+        public const string FillBarGradient = "Textures/Distance Bar Gradient";
+
         #endregion
 
         #region Fonts
