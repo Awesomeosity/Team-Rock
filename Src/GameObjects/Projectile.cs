@@ -68,6 +68,7 @@ namespace TeamRock.Src.GameObjects
             else
             {
                 _rotationSpeed = 0;
+                Sprite.Rotation = (float)System.Math.Atan2((double)directionNormalized.Y, (double)directionNormalized.X) + 90;
             }
         }
 
