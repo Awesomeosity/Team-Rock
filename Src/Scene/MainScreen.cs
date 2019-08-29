@@ -256,6 +256,7 @@ namespace TeamRock.Scene
         {
             _player.GameObject.Position = GameInfo.PlayerInitialPosition;
             _player.GameObject.Acceleration = GameInfo.BaseAccelerationRate;
+            _player.ResetPlayer();
 
             _stage.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
 

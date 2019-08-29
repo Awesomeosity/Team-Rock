@@ -193,7 +193,14 @@ namespace TeamRock.Src.GameObjects
 
         public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;
 
-        public GameObject GameObject => _playerGameObject;
+        public void ResetPlayer()
+        {
+            _velocityScaler = 1.0f;
+            _dashCooldown = 0;
+            _dashDuration = 0;
+        }
+
+    public GameObject GameObject => _playerGameObject;
 
         #endregion
     }
