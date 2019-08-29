@@ -201,13 +201,27 @@ namespace TeamRock.Src.GameObjects
                     textureLoad = AssetManager.Girl;
                     break;
             }
-            Texture2D projectileTexture = _contentManager.Load<Texture2D>(textureLoad);
-            
-            Sprite projectileSprite = new Sprite(projectileTexture)
+            Texture2D projectileTexture;
+            Sprite projectileSprite;
+            if (textureLoad == AssetManager.Girl && launchDirection.X < 0)
             {
-                Scale = GameInfo.ProjectileStartAssetScale
-            };
-            projectileSprite.SetOriginCenter();
+                projectileTexture = _contentManager.Load<Texture2D>(AssetManager.FlipGirl);
+                projectileSprite = new Sprite(projectileTexture)
+                {
+                    Scale = GameInfo.ProjectileStartAssetScale
+                };
+                projectileSprite.SetOriginCenter();
+            }
+            else
+            {
+                projectileTexture = _contentManager.Load<Texture2D>(textureLoad);
+                projectileSprite = new Sprite(projectileTexture)
+                {
+                    Scale = GameInfo.ProjectileStartAssetScale
+                };
+                projectileSprite.SetOriginCenter();
+
+            }
 
             Projectile projectile = new Projectile(projectileSprite,
                 (int) (projectileTexture.Width * GameInfo.ProjectileFinalAssetScale),
@@ -215,6 +229,7 @@ namespace TeamRock.Src.GameObjects
             {
                 Position = launchPosition
             };
+
             projectile.SetSprite(projSprite);
             projectile.LaunchProjectile(launchDirection, _player.GameObject.Position);
 

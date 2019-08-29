@@ -22,6 +22,7 @@
 
         public const string Player = "Textures/Player";
         public const string Girl = "Textures/Girl";
+        public const string FlipGirl = "Textures/FlipGirl";
 
         public const string WinWrestler = "Textures/Win";
         public const string LoseWrestler = "Textures/Lose";
