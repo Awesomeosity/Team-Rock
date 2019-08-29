@@ -69,6 +69,10 @@ namespace TeamRock.Src.GameObjects
             {
                 _rotationSpeed = 0;
                 Sprite.Rotation = (float)System.Math.Atan2((double)directionNormalized.Y, (double)directionNormalized.X) + 90;
+                if(Sprite.Rotation < 0)
+                {
+                    //TODO: Add sprite flip
+                }
             }
         }
 
