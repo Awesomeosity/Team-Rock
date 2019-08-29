@@ -185,7 +185,11 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
         }
 
-        public void ReduceVelocity() => _velocityScaler = GameInfo.PlayerDamageVelocity;
+        public void ReduceVelocity()
+        {
+            _velocityScaler = GameInfo.PlayerDamageVelocity;
+            _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockback);
+        }
 
         public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;
 

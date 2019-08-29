@@ -102,7 +102,7 @@ namespace TeamRock.Scene
             winSprite.SetOriginCenter();
             _winWrestler = new GameObject(winSprite, winSprite.Width, winSprite.Height)
             {
-                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300)
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250)
             };
         }
 
@@ -262,7 +262,7 @@ namespace TeamRock.Scene
             _timeToImpact = GameInfo.TotalGameTime;
             _stage.Velocity = new Vector2(0, 0);
 
-            _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
+            _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250);
             _winWrestler.Velocity = new Vector2(0, 0);
 
 
@@ -304,6 +304,7 @@ namespace TeamRock.Scene
             else if (_timeToImpact <= 0)
             {
                 SetGameState(GameState.EndStarted);
+                _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2, 0);
                 _timerText.Text = "Smack Down!!!";
 
                 foreach (Audience audience in _audiences)

@@ -36,6 +36,7 @@ namespace TeamRock.Utils
         public const float PlayerRecoveryRate = 0.5f;
         public const float PlayerDashDuration = 2.0f;
         public const float PlayerDashCooldown = 5.0f;
+        public const float PlayerKnockback = 5;
 
         // Stage
         public const float StageScale = 0.3f;
@@ -69,7 +70,7 @@ namespace TeamRock.Utils
         public const float DefaultAnimationSpeed = 0.01666667F;
 
         // Game Ending Control
-        public const float TotalGameTime = 30;
+        public const float TotalGameTime = 5;
         public const float EndGameTime = 2;
         public const float StageMoveUpSpeed = 500;
         public const float IncreasedItemPosition = FixedWindowHeight * 3 / 5;
