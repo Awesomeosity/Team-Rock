@@ -23,10 +23,6 @@ namespace TeamRock.Scene
         private GameObject _stage;
         private GameObject _winWrestler;
         private Player _player;
-        private GameObject _distanceBackground;
-        private GameObject _distanceFrame;
-        private GameObject _distanceGradient;
-        private GameObject _distanceIndicator;
 
 
         private SpriteSheetAnimationManager _backgroundSpriteSheet;

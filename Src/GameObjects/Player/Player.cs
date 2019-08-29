@@ -197,6 +197,10 @@ namespace TeamRock.Src.GameObjects
         public void ReduceVelocity()
         {
             _velocityScaler = GameInfo.PlayerDamageVelocity;
+            if(_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
+            {
+                return;
+            }
             _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockBack);
         }
 
