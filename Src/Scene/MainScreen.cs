@@ -38,6 +38,9 @@ namespace TeamRock.Scene
         private float _timeToImpact;
         private float _timeToGameOver;
 
+        private Sprite _fillBarGradient;
+        private FillBarVertical _fillBarVertical;
+
         private enum GameState
         {
             IsRunning,
@@ -58,6 +61,7 @@ namespace TeamRock.Scene
             CreatePlayerAndBackground();
             CreateAudiences();
             CreateOtherSceneItems();
+            CreateFillBarGradient();
         }
 
         private void CreateSounds()
@@ -149,7 +153,36 @@ namespace TeamRock.Scene
             _confetti2.Sprite.Position =
                 new Vector2(GameInfo.FixedWindowWidth / 4.0f * 3.0f, GameInfo.FixedWindowHeight + 300);
             _confetti2.FrameTime = AssetManager.ConfettiAnimationSpeed_2;
+        }
 
+        private void CreateFillBarGradient()
+        {
+            Texture2D fillBarBackgroundTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarBackground);
+            Texture2D fillBarFrameTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarFrame);
+            Texture2D fillBarGradientTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarGradient);
+
+            Sprite fillBarBackground = new Sprite(fillBarBackgroundTexture);
+            Sprite fillBarFrame = new Sprite(fillBarFrameTexture);
+            _fillBarGradient = new Sprite(fillBarGradientTexture);
+
+            fillBarBackground.SetOriginCenter();
+            fillBarFrame.SetOriginCenter();
+            _fillBarGradient.Origin = new Vector2(_fillBarGradient.TextureWidth / 2.0f, 0);
+
+            fillBarFrame.Scale = 0.5f;
+            fillBarBackground.Scale = 0.5f;
+            _fillBarGradient.Scale = 0.5f;
+
+            _fillBarVertical = new FillBarVertical();
+            _fillBarVertical.Initialize(fillBarFrame, fillBarBackground, _fillBarGradient, GameInfo.TotalGameTime);
+            _fillBarVertical.CurrentValue = 50;
+
+            float barXPosition = GameInfo.FixedWindowWidth / 2.0f + GameInfo.CenterBoardWidth / 2.0f;
+
+            fillBarBackground.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
+            fillBarFrame.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
+            _fillBarGradient.Position = new Vector2(barXPosition,
+                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f + 1);
         }
 
         #endregion
@@ -160,6 +193,8 @@ namespace TeamRock.Scene
         {
             _backgroundSpriteSheet.Draw(spriteBatch);
             _scrollingBackground.Draw(spriteBatch);
+
+            _fillBarVertical.Draw(spriteBatch);
 
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);
@@ -172,10 +207,11 @@ namespace TeamRock.Scene
                     break;
 
                 case GameState.EndAnimations:
-                    if(_endExplosion.IsAnimationActive == true)
+                    if (_endExplosion.IsAnimationActive == true)
                     {
                         _endExplosion.Draw(spriteBatch);
                     }
+
                     _confetti1.Draw(spriteBatch);
                     _confetti2.Draw(spriteBatch);
                     break;
@@ -213,6 +249,7 @@ namespace TeamRock.Scene
         public override bool Update(float deltaTime, float gameTime)
         {
             _backgroundSpriteSheet.Update(deltaTime);
+            UpdateFillBarColor(deltaTime);
 
             switch (_gameState)
             {
@@ -277,7 +314,7 @@ namespace TeamRock.Scene
             _confetti2.StopSpriteAnimation();
 
             _timeToGameOver = GameInfo.EndGameTime;
-            
+
             SetGameState(GameState.IsRunning);
         }
 
@@ -293,6 +330,16 @@ namespace TeamRock.Scene
         #endregion
 
         #region Utility Functions
+
+        private void UpdateFillBarColor(float deltaTime)
+        {
+            _fillBarVertical.Update(deltaTime);
+            _fillBarVertical.CurrentValue = GameInfo.TotalGameTime - _timeToImpact;
+
+            float reachedRatio = (GameInfo.TotalGameTime - _timeToImpact) / GameInfo.TotalGameTime;
+            Color lerpedColor = Color.Lerp(GameInfo.InitialTimerBarColor, GameInfo.FinalTimerBarColor, reachedRatio);
+            _fillBarGradient.SpriteColor = lerpedColor;
+        }
 
         private void UpdateGameEndTimer(float deltaTime)
         {
@@ -323,7 +370,6 @@ namespace TeamRock.Scene
             _player.Update(deltaTime, gameTime);
             _stage.Update(deltaTime, gameTime);
             _winWrestler.Update(deltaTime, gameTime);
-
         }
 
         private void UpdateStageAndPlayerEndState(float deltaTime, float gameTime)
@@ -352,7 +398,8 @@ namespace TeamRock.Scene
                 _confetti2.Sprite.Position = _player.GameObject.Position + new Vector2(-100, 0);
 
 
-                GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity, GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
+                GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity,
+                    GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
 
                 CameraShaker.Instance.StartShake(1, 5);
                 SoundManager.Instance.PlaySound(_explosionSound);
@@ -371,7 +418,7 @@ namespace TeamRock.Scene
                 _timeToGameOver -= deltaTime;
             }
 
-            if(_timeToGameOver <= 0)
+            if (_timeToGameOver <= 0)
             {
                 SetGameState(GameState.GameOver);
             }

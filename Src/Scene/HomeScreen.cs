@@ -57,36 +57,6 @@ namespace TeamRock.Scene
             _music = _contentManager.Load<SoundEffect>(AssetManager.HomeScreenMusic);
         }
 
-        private void CreateFillBar()
-        {
-            Texture2D fillBarBackgroundTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarBackground);
-            Texture2D fillBarFrameTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarFrame);
-            Texture2D fillBarGradientTexture = _contentManager.Load<Texture2D>(AssetManager.FillBarGradient);
-
-            Sprite fillBarBackground = new Sprite(fillBarBackgroundTexture);
-            Sprite fillBarFrame = new Sprite(fillBarFrameTexture);
-            Sprite fillBarGradient = new Sprite(fillBarGradientTexture);
-
-            fillBarBackground.SetOriginCenter();
-            fillBarFrame.SetOriginCenter();
-            fillBarGradient.Origin = new Vector2(fillBarGradient.TextureWidth / 2.0f, 0);
-
-            fillBarFrame.Scale = 0.5f;
-            fillBarBackground.Scale = 0.5f;
-            fillBarGradient.Scale = 0.5f;
-
-            FillBarVertical _fillBarVertical = new FillBarVertical();
-            _fillBarVertical.Initialize(fillBarFrame, fillBarBackground, fillBarGradient, 100);
-            _fillBarVertical.CurrentValue = 50;
-
-            fillBarBackground.Position =
-                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
-            fillBarFrame.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
-            fillBarGradient.Position =
-                new Vector2(GameInfo.FixedWindowWidth / 2.0f,
-                    GameInfo.FixedWindowHeight / 2.0f - fillBarGradient.Height / 2.0f);
-        }
-
         #endregion
 
         #region Render
