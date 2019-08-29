@@ -23,6 +23,11 @@ namespace TeamRock.Scene
         private GameObject _stage;
         private GameObject _winWrestler;
         private Player _player;
+        private GameObject _distanceBackground;
+        private GameObject _distanceFrame;
+        private GameObject _distanceGradient;
+        private GameObject _distanceIndicator;
+
 
         private SpriteSheetAnimationManager _backgroundSpriteSheet;
         private ScrollingBackground _scrollingBackground;
@@ -215,6 +220,11 @@ namespace TeamRock.Scene
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);
 
+            _distanceBackground.Draw(spriteBatch);
+            _distanceFrame.Draw(spriteBatch);
+            _distanceGradient.Draw(spriteBatch);
+            _distanceIndicator.Draw(spriteBatch);
+
             switch (_gameState)
             {
                 case GameState.IsRunning:
@@ -309,6 +319,7 @@ namespace TeamRock.Scene
         {
             _player.GameObject.Position = GameInfo.PlayerInitialPosition;
             _player.GameObject.Acceleration = GameInfo.BaseAccelerationRate;
+            _player.ResetPlayer();
 
             _stage.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
 
