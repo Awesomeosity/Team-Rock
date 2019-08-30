@@ -104,7 +104,7 @@ namespace TeamRock.Src.GameObjects
         private void HandleInput(float deltaTime)
         {
             int speedFactor = 1;
-            if (_playerController.DidPlayerPressDash && _dashCooldown <= 0 && _poseDuration <= 0)
+            if (_playerController.DidPlayerPressDash && _dashCooldown <= 0 && ExtensionFunctions.FloatCompare(1, _velocityScaler))
             {
                 if (_currPose)
                 {
@@ -242,7 +242,7 @@ namespace TeamRock.Src.GameObjects
             }
 
             _velocityScaler = 1;
-            if (_poseDuration > 0)
+            if (_poseDuration > 0 && _boostDuration <= 0)
             {
                 _velocityScaler = GameInfo.PlayerIncreasedVelocity;
                 _boostDuration = GameInfo.PlayerBoostDuration;
