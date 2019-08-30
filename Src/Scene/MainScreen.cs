@@ -416,6 +416,7 @@ namespace TeamRock.Scene
                     foreach (Audience audience in _audiences)
                     {
                         audience.IsProjectileSPawningActive = false;
+                        audience.ClearProjectiles();
                     }
 
                     _player.GameObject.Acceleration = Vector2.Zero;
@@ -442,6 +443,7 @@ namespace TeamRock.Scene
                 foreach (Audience audience in _audiences)
                 {
                     audience.IsProjectileSPawningActive = false;
+                    audience.ClearProjectiles();
                 }
 
                 _player.GameObject.Acceleration = Vector2.Zero;
@@ -515,7 +517,6 @@ namespace TeamRock.Scene
             {
                 return;
             }
-
             _gameState = gameState;
         }
 
