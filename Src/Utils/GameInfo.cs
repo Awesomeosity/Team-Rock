@@ -78,11 +78,14 @@ namespace TeamRock.Utils
         // Timer Bar
         public static readonly Color InitialTimerBarColor = Color.White;
         public static readonly Color FinalTimerBarColor = new Color(120, 89, 169);
-        public const float TimerChangeRate = 1.5f;
+        public const float PlayerTimerChangeRate = 1.5f;
         public const float PlayerHitTimerChangeRate = 0.5f;
+        public const float PlayerHitTimerAffectTime = 0.5f;
+        public const float PlayerDashTimerChangeRate = 1.7f;
+        public const float PlayerDashAffectTime = 0.3f;
 
         // Game Ending Control
-        public const float TotalGameTime = 100;
+        public const float TotalGameTime = 30;
         public const float EndGameTime = 2;
         public const float StageMoveUpSpeed = 500;
         public const float IncreasedItemPosition = 480F;

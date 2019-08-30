@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TeamRock.Managers;
+using TeamRock.Scene;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
@@ -63,14 +64,13 @@ namespace TeamRock.Src.GameObjects
             _dashCooldown = 0;
             _dashDuration = 0;
             _poseDuration = 0;
+        }
 
-    }
+        #endregion
 
-    #endregion
+        #region Draw
 
-    #region Draw
-
-    public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             if (_dashCooldown <= 0 && _poseDuration <= 0)
             {
@@ -104,7 +104,7 @@ namespace TeamRock.Src.GameObjects
             int speedFactor = 1;
             if (_playerController.DidPlayerPressDash && _dashCooldown <= 0)
             {
-                if(_currPose)
+                if (_currPose)
                 {
                     GameObject.Sprite.UpdateTexture(_pose1);
                     _currPose = !_currPose;
@@ -114,6 +114,9 @@ namespace TeamRock.Src.GameObjects
                     GameObject.Sprite.UpdateTexture(_pose2);
                     _currPose = !_currPose;
                 }
+
+                MainScreen.Instance.PlayerDashed();
+
                 _dashDuration = GameInfo.PlayerDashDuration;
                 _dashDirection = _playerController.DashDirection;
                 _poseDuration = GameInfo.PlayerPoseDuration;
@@ -121,13 +124,11 @@ namespace TeamRock.Src.GameObjects
 
             if (_dashDuration > 0)
             {
-
                 if (_velocityScaler == 1)
                 {
                     speedFactor = 3;
                 }
-
-                Console.WriteLine($"Dash Velocity: {_dashDirection}");
+                
                 _playerGameObject.Position += _dashDirection * GameInfo.PlayerDashVelocity * deltaTime;
             }
 
@@ -192,19 +193,19 @@ namespace TeamRock.Src.GameObjects
             if (_dashDuration > 0)
             {
                 _dashDuration -= deltaTime;
-
             }
 
-            if(_poseDuration > 0)
+            if (_poseDuration > 0)
             {
                 _poseDuration -= deltaTime;
 
-                if(_poseDuration <= 0)
+                if (_poseDuration <= 0)
                 {
-                    if(_velocityScaler <= 1)
+                    if (_velocityScaler <= 1)
                     {
                         _velocityScaler = GameInfo.PlayerDamageVelocity;
                     }
+
                     GameObject.Sprite.UpdateTexture(_playerPose);
                     _dashCooldown = GameInfo.PlayerDashCooldown;
                 }
@@ -226,22 +227,24 @@ namespace TeamRock.Src.GameObjects
         public void ReduceVelocity()
         {
             //Prevent player from slowing down/speeding up while speed is different.
-            if(!ExtensionFunctions.FloatCompare(_velocityScaler, 1))
+            if (!ExtensionFunctions.FloatCompare(_velocityScaler, 1))
             {
                 return;
             }
+
             _velocityScaler = 1;
-            if(_poseDuration > 0)
+            if (_poseDuration > 0)
             {
                 _velocityScaler = GameInfo.PlayerIncreasedVelocity;
             }
             else
             {
                 _velocityScaler = GameInfo.PlayerDamageVelocity;
-                if(_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
+                if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
                 {
                     return;
                 }
+
                 _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockBack);
             }
         }
@@ -261,7 +264,7 @@ namespace TeamRock.Src.GameObjects
             _currPose = false;
         }
 
-    public GameObject GameObject => _playerGameObject;
+        public GameObject GameObject => _playerGameObject;
 
         #endregion
     }

@@ -36,12 +36,17 @@ namespace TeamRock.Scene
 
         private UiTextNode _timerText;
         private SpriteFont _defaultFont;
-        private float _timeToImpact;
+
+        private float _hinderedPlayerTimer;
+        private float _currentIncrementModifierTimer;
+        private float _playerCollisionTimerRate;
+
+        private float _unhinderedTimeToImpact;
         private float _timeToGameOver;
 
         private Sprite _fillBarPointer;
-        private Vector2 _fillBarInitialPosition;
-        private Vector2 _fillBarFinalPosition;
+        private Vector2 _fillBarPointerInitialPosition;
+        private Vector2 _fillBarPointerFinalPosition;
 
         private Sprite _fillBarGradient;
         private FillBarVertical _fillBarVertical;
@@ -80,6 +85,8 @@ namespace TeamRock.Scene
         {
             _player = new Player();
             _player.Initialize(_contentManager);
+
+            _playerCollisionTimerRate = GameInfo.PlayerTimerChangeRate;
 
             _backgroundSpriteSheet = new SpriteSheetAnimationManager();
             _backgroundSpriteSheet.Initialize(_contentManager, AssetManager.WrestlingBackgroundBase,
@@ -126,7 +133,9 @@ namespace TeamRock.Scene
 
         private void CreateOtherSceneItems()
         {
-            _timeToImpact = GameInfo.TotalGameTime;
+            _unhinderedTimeToImpact = GameInfo.TotalGameTime;
+            _hinderedPlayerTimer = GameInfo.TotalGameTime;
+
             _timeToGameOver = GameInfo.EndGameTime;
             _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
 
@@ -187,7 +196,7 @@ namespace TeamRock.Scene
             fillBarBackground.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
             fillBarFrame.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
             _fillBarGradient.Position = new Vector2(barXPosition,
-                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f + 1);
+                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
 
             Texture2D fillBarPointer = _contentManager.Load<Texture2D>(AssetManager.FillBarPointer);
             _fillBarPointer = new Sprite(fillBarPointer);
@@ -195,10 +204,10 @@ namespace TeamRock.Scene
             _fillBarPointer.Scale = 0.5f;
             _fillBarPointer.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
 
-            _fillBarInitialPosition =
-                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height);
-            _fillBarFinalPosition =
-                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.Height);
+            _fillBarPointerInitialPosition =
+                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+            _fillBarPointerFinalPosition =
+                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.Height / 2.0f);
         }
 
         #endregion
@@ -272,6 +281,7 @@ namespace TeamRock.Scene
             {
                 case GameState.IsRunning:
                     UpdateGameEndTimer(deltaTime);
+                    UpdatePlayerRacingTimer(deltaTime);
                     UpdateGameObjectsBeforeTime(deltaTime, gameTime);
                     break;
 
@@ -298,7 +308,6 @@ namespace TeamRock.Scene
 
             SoundManager.Instance.CheckSound(_musicIndex);
 
-
             return _gameState == GameState.GameOver;
         }
 
@@ -312,9 +321,13 @@ namespace TeamRock.Scene
             _player.GameObject.Acceleration = GameInfo.BaseAccelerationRate;
             _player.ResetPlayer();
 
+            _playerCollisionTimerRate = GameInfo.PlayerTimerChangeRate;
+
             _stage.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 300);
 
-            _timeToImpact = GameInfo.TotalGameTime;
+            _unhinderedTimeToImpact = GameInfo.TotalGameTime;
+            _hinderedPlayerTimer = GameInfo.TotalGameTime;
+
             _stage.Velocity = new Vector2(0, 0);
 
             _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250);
@@ -345,6 +358,18 @@ namespace TeamRock.Scene
 
         public void StopMusic() => SoundManager.Instance.StopSound(_musicIndex);
 
+        public void PlayerCollided()
+        {
+            _currentIncrementModifierTimer = GameInfo.PlayerHitTimerAffectTime;
+            _playerCollisionTimerRate = GameInfo.PlayerHitTimerChangeRate;
+        }
+
+        public void PlayerDashed()
+        {
+            _currentIncrementModifierTimer = GameInfo.PlayerDashAffectTime;
+            _playerCollisionTimerRate = GameInfo.PlayerDashTimerChangeRate;
+        }
+
         #endregion
 
         #region Utility Functions
@@ -352,25 +377,64 @@ namespace TeamRock.Scene
         private void UpdateFillBarColor(float deltaTime)
         {
             _fillBarVertical.Update(deltaTime);
-            _fillBarVertical.CurrentValue = GameInfo.TotalGameTime - _timeToImpact;
+            _fillBarVertical.CurrentValue = GameInfo.TotalGameTime - _unhinderedTimeToImpact;
 
-            float reachedRatio = (GameInfo.TotalGameTime - _timeToImpact) / GameInfo.TotalGameTime;
+            float reachedRatio = (GameInfo.TotalGameTime - _unhinderedTimeToImpact) / GameInfo.TotalGameTime;
             Color lerpedColor = Color.Lerp(GameInfo.InitialTimerBarColor, GameInfo.FinalTimerBarColor, reachedRatio);
             _fillBarGradient.SpriteColor = lerpedColor;
         }
 
+        private void UpdatePlayerRacingTimer(float deltaTime)
+        {
+            if (_currentIncrementModifierTimer > 0)
+            {
+                _currentIncrementModifierTimer -= deltaTime;
+
+                if (_currentIncrementModifierTimer <= 0)
+                {
+                    _playerCollisionTimerRate = GameInfo.PlayerTimerChangeRate;
+                }
+            }
+
+            if (_hinderedPlayerTimer > 0)
+            {
+                _hinderedPlayerTimer -= _playerCollisionTimerRate * deltaTime;
+
+                float ratio = ExtensionFunctions.Map(_hinderedPlayerTimer, 0, GameInfo.TotalGameTime, 1, 0);
+                Vector2 playerMarkerPosition =
+                    Vector2.Lerp(_fillBarPointerInitialPosition, _fillBarPointerFinalPosition, ratio);
+                _fillBarPointer.Position = playerMarkerPosition;
+
+                if (_hinderedPlayerTimer <= 0)
+                {
+                    // TODO: Change this later on...
+                    SetGameState(GameState.EndStarted);
+                    _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
+                    _timerText.Text = "Win State!!!";
+
+                    foreach (Audience audience in _audiences)
+                    {
+                        audience.IsProjectileSPawningActive = false;
+                    }
+
+                    _player.GameObject.Acceleration = Vector2.Zero;
+                    _player.GameObject.Velocity = Vector2.Zero;
+                }
+            }
+        }
+
         private void UpdateGameEndTimer(float deltaTime)
         {
-            if (_timeToImpact > 0)
+            if (_unhinderedTimeToImpact > 0)
             {
-                _timeToImpact -= deltaTime;
-                _timerText.Text = $"Time To Impact: {ExtensionFunctions.Format2DecimalPlace(_timeToImpact)}";
+                _unhinderedTimeToImpact -= deltaTime;
+                _timerText.Text = $"Time To Impact: {ExtensionFunctions.Format2DecimalPlace(_unhinderedTimeToImpact)}";
             }
-            else if (_timeToImpact <= 0)
+            else if (_unhinderedTimeToImpact <= 0)
             {
                 SetGameState(GameState.EndStarted);
-                _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2, 0);
-                _timerText.Text = "Smack Down!!!";
+                _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
+                _timerText.Text = "Fail State!!!";
 
                 foreach (Audience audience in _audiences)
                 {
