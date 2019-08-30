@@ -25,6 +25,8 @@
         public const string Pose2 = "Textures/pose02";
         public const string Girl = "Textures/Girl";
         public const string FlipGirl = "Textures/FlipGirl";
+        public const string Jordan = "Textures/jordan";
+        public const string JordanFlip = "Textures/jordanFlip";
 
         public const string WinWrestler = "Textures/Win";
         public const string LoseWrestler = "Textures/Fail";

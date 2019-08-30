@@ -17,7 +17,8 @@ namespace TeamRock.Src.GameObjects
         {
             Popcorn,
             Soda,
-            Girl
+            Girl,
+            Jordan
         }
 
         private ProjSprite _projSprite;
@@ -60,7 +61,7 @@ namespace TeamRock.Src.GameObjects
             _positionToTarget = positionToTarget;
             _initialDistanceToTarget = Vector2.DistanceSquared(Position, _positionToTarget);
 
-            if(_projSprite != ProjSprite.Girl)
+            if(_projSprite != ProjSprite.Girl && _projSprite != ProjSprite.Jordan)
             {
                 _rotationSpeed = ExtensionFunctions.RandomInRange(GameInfo.ProjectileMinRotationSpeed,
                     GameInfo.ProjectileMaxRotationSpeed);

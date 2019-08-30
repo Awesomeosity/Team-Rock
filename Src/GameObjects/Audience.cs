@@ -100,6 +100,7 @@ namespace TeamRock.Src.GameObjects
                                 break;
 
                             case Projectile.ProjSprite.Girl:
+                            case Projectile.ProjSprite.Jordan:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
                                 break;
 
@@ -220,8 +221,17 @@ namespace TeamRock.Src.GameObjects
             }
             else
             {
-                projSprite = Projectile.ProjSprite.Girl;
-                textureLoad = AssetManager.Girl;
+                random = ExtensionFunctions.Random();
+                if(random <= 0.5)
+                {
+                    projSprite = Projectile.ProjSprite.Girl;
+                    textureLoad = AssetManager.Girl;
+                }
+                else
+                {
+                    projSprite = Projectile.ProjSprite.Jordan;
+                    textureLoad = AssetManager.Jordan;
+                }
             }
 
             Texture2D projectileTexture;
@@ -229,6 +239,15 @@ namespace TeamRock.Src.GameObjects
             if (textureLoad == AssetManager.Girl && launchDirection.X < 0)
             {
                 projectileTexture = _contentManager.Load<Texture2D>(AssetManager.FlipGirl);
+                projectileSprite = new Sprite(projectileTexture)
+                {
+                    Scale = GameInfo.ProjectileStartAssetScale
+                };
+                projectileSprite.SetOriginCenter();
+            }
+            else if(textureLoad == AssetManager.Jordan && launchDirection.X < 0)
+            {
+                projectileTexture = _contentManager.Load<Texture2D>(AssetManager.JordanFlip);
                 projectileSprite = new Sprite(projectileTexture)
                 {
                     Scale = GameInfo.ProjectileStartAssetScale
