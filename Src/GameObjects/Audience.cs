@@ -28,6 +28,7 @@ namespace TeamRock.Src.GameObjects
         private SoundEffect _hitSound;
         private SoundEffect _hitSound2;
         private SoundEffect _hitSound3;
+        private SoundEffect _hitSound4;
 
         private bool _isProjectileSpawningActive;
 
@@ -48,6 +49,7 @@ namespace TeamRock.Src.GameObjects
             _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
             _hitSound2 = contentManager.Load<SoundEffect>(AssetManager.Boo);
             _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.Oof_Girl);
+            _hitSound4 = contentManager.Load<SoundEffect>(AssetManager.Boy);
 
             _isProjectileSpawningActive = true;
         }
@@ -100,8 +102,10 @@ namespace TeamRock.Src.GameObjects
                                 break;
 
                             case Projectile.ProjSprite.Girl:
-                            case Projectile.ProjSprite.Jordan:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
+                                break;
+                            case Projectile.ProjSprite.Jordan:
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound4);
                                 break;
 
                             default:
@@ -209,12 +213,12 @@ namespace TeamRock.Src.GameObjects
             float random = ExtensionFunctions.Random();
             Projectile.ProjSprite projSprite;
             string textureLoad;
-            if(random < 0.5)
+            if(random < 0.0)
             {
                 projSprite = Projectile.ProjSprite.Soda;
                 textureLoad = AssetManager.Soda;
             }
-            else if(random >= 0.5 && random < 0.9)
+            else if(random >= 0.0 && random < 0.0)
             {
                 projSprite = Projectile.ProjSprite.Popcorn;
                 textureLoad = AssetManager.Popcorn;
@@ -222,7 +226,7 @@ namespace TeamRock.Src.GameObjects
             else
             {
                 random = ExtensionFunctions.Random();
-                if(random <= 0.5)
+                if(random <= 0.0)
                 {
                     projSprite = Projectile.ProjSprite.Girl;
                     textureLoad = AssetManager.Girl;

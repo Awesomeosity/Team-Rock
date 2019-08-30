@@ -87,6 +87,7 @@
         public const string Explosion = "Sounds/Explosion";
         public const string Oof_Girl = "Sounds/Girl";
         public const string Cheer = "Sounds/NewClap";
+        public const string Boy = "Sounds/Boy";
 
         #endregion
 
