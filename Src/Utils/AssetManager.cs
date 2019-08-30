@@ -27,7 +27,7 @@
         public const string FlipGirl = "Textures/FlipGirl";
 
         public const string WinWrestler = "Textures/Win";
-        public const string LoseWrestler = "Textures/Lose";
+        public const string LoseWrestler = "Textures/Fail";
 
         public const string FillBarBackground = "Textures/Distance Bar Background";
         public const string FillBarFrame = "Textures/Distance Bar Frame";

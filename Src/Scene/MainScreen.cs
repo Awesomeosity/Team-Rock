@@ -330,6 +330,7 @@ namespace TeamRock.Scene
 
             _stage.Velocity = new Vector2(0, 0);
 
+            _winWrestler.Sprite.UpdateTexture(_contentManager.Load<Texture2D>(AssetManager.WinWrestler));
             _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250);
             _winWrestler.Velocity = new Vector2(0, 0);
 
@@ -433,6 +434,8 @@ namespace TeamRock.Scene
             else if (_unhinderedTimeToImpact <= 0)
             {
                 SetGameState(GameState.EndStarted);
+                _winWrestler.Sprite.UpdateTexture(_contentManager.Load<Texture2D>(AssetManager.LoseWrestler));
+                _winWrestler.Position += new Vector2(100, -100);
                 _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
                 _timerText.Text = "Fail State!!!";
 
