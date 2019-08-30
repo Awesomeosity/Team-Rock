@@ -213,12 +213,12 @@ namespace TeamRock.Src.GameObjects
             float random = ExtensionFunctions.Random();
             Projectile.ProjSprite projSprite;
             string textureLoad;
-            if(random < 0.0)
+            if(random < 0.5)
             {
                 projSprite = Projectile.ProjSprite.Soda;
                 textureLoad = AssetManager.Soda;
             }
-            else if(random >= 0.0 && random < 0.0)
+            else if(random >= 0.5 && random < 0.9)
             {
                 projSprite = Projectile.ProjSprite.Popcorn;
                 textureLoad = AssetManager.Popcorn;
@@ -226,7 +226,7 @@ namespace TeamRock.Src.GameObjects
             else
             {
                 random = ExtensionFunctions.Random();
-                if(random <= 0.0)
+                if(random <= 0.5)
                 {
                     projSprite = Projectile.ProjSprite.Girl;
                     textureLoad = AssetManager.Girl;
