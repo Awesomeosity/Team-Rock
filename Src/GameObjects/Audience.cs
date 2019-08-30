@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
+using TeamRock.Scene;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
@@ -27,6 +28,7 @@ namespace TeamRock.Src.GameObjects
         private SoundEffect _hitSound;
         private SoundEffect _hitSound2;
         private SoundEffect _hitSound3;
+
         private bool _isProjectileSpawningActive;
 
         #region Initialization
@@ -56,8 +58,10 @@ namespace TeamRock.Src.GameObjects
 
         public void Update(float deltaTime, float gameTime)
         {
-            
-            _randomTimer -= deltaTime * (_player.GameObject.Position.Y > GameInfo.IncreasedItemPosition ? GameInfo.IncreasedItemFrequency : 1) ;
+            _randomTimer -= deltaTime * (_player.GameObject.Position.Y > GameInfo.IncreasedItemPosition
+                                ? GameInfo.IncreasedItemFrequency
+                                : 1);
+
             if (_randomTimer <= 0)
             {
                 SpawnProjectileAndResetTimer();
@@ -71,6 +75,8 @@ namespace TeamRock.Src.GameObjects
                 {
                     if (_projectiles[i].DidCollide(_player.GameObject))
                     {
+                        MainScreen.Instance.PlayerCollided();
+
                         if (_projectiles[i].Position.X < _player.GameObject.Position.X)
                         {
                             GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity,
@@ -89,28 +95,34 @@ namespace TeamRock.Src.GameObjects
                             case Projectile.ProjSprite.Popcorn:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound);
                                 break;
+
                             case Projectile.ProjSprite.Soda:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound);
                                 break;
+
                             case Projectile.ProjSprite.Girl:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
                                 break;
+
                             default:
                                 break;
                         }
+
                         SoundManager.Instance.SetSoundVolume(soundIndex, 0.25f);
-                        if(_player.IsPosing())
+
+                        if (_player.IsPosing())
                         {
                             soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
                             SoundManager.Instance.SetSoundVolume(soundIndex, 0.3f);
-
                         }
                         else
                         {
                             soundIndex = SoundManager.Instance.PlaySound(_cheer);
                         }
+
                         _player.ReduceVelocity();
                     }
+
                     _projectiles.RemoveAt(i);
                 }
             }
@@ -166,9 +178,9 @@ namespace TeamRock.Src.GameObjects
 
         #endregion
 
-    #region Utility Functions
+        #region Utility Functions
 
-    private void SpawnProjectileAndResetTimer()
+        private void SpawnProjectileAndResetTimer()
         {
             if (!_isProjectileSpawningActive)
             {
@@ -195,7 +207,7 @@ namespace TeamRock.Src.GameObjects
             launchDirection.Normalize();
 
             float random = ExtensionFunctions.Random();
-            int randResult = (int)Math.Floor(random * 3);
+            int randResult = (int) Math.Floor(random * 3);
             Projectile.ProjSprite projSprite;
             string textureLoad;
             switch (randResult)
@@ -213,6 +225,7 @@ namespace TeamRock.Src.GameObjects
                     textureLoad = AssetManager.Girl;
                     break;
             }
+
             Texture2D projectileTexture;
             Sprite projectileSprite;
             if (textureLoad == AssetManager.Girl && launchDirection.X < 0)
@@ -232,7 +245,6 @@ namespace TeamRock.Src.GameObjects
                     Scale = GameInfo.ProjectileStartAssetScale
                 };
                 projectileSprite.SetOriginCenter();
-
             }
 
             Projectile projectile = new Projectile(projectileSprite,
