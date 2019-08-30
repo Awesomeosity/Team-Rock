@@ -23,6 +23,7 @@ namespace TeamRock.Src.GameObjects
 
         private RectangleF _audienceRectangle;
 
+        private SoundEffect _cheer;
         private SoundEffect _hitSound;
         private SoundEffect _hitSound2;
         private SoundEffect _hitSound3;

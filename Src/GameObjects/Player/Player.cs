@@ -18,19 +18,28 @@ namespace TeamRock.Src.GameObjects
         private float _dashCooldown;
         private float _dashDuration;
         private Vector2 _dashDirection;
+        private float _poseDuration;
 
         private Vector2 _spriteSheetPosition;
+
+        private bool _currPose = false;
+        private Texture2D _playerPose;
+        private Texture2D _pose1;
+        private Texture2D _pose2;
 
         #region Initialization
 
         public void Initialize(ContentManager contentManager)
         {
-            Texture2D playerTexture = contentManager.Load<Texture2D>(AssetManager.Player);
-            Sprite playerSprite = new Sprite(playerTexture)
+            _playerPose = contentManager.Load<Texture2D>(AssetManager.Player);
+            Sprite playerSprite = new Sprite(_playerPose)
             {
                 Scale = GameInfo.PlayerAssetScale,
             };
             playerSprite.SetOriginCenter();
+
+            _pose1 = contentManager.Load<Texture2D>(AssetManager.Pose1);
+            _pose2 = contentManager.Load<Texture2D>(AssetManager.Pose2);
 
             _playerFallingSpriteSheet = new SpriteSheetAnimationManager();
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
@@ -40,8 +49,8 @@ namespace TeamRock.Src.GameObjects
             _spriteSheetPosition = Vector2.Zero;
 
             _playerGameObject = new GameObject(playerSprite,
-                playerTexture.Width * GameInfo.PlayerAssetScale,
-                playerTexture.Height * GameInfo.PlayerAssetScale)
+                _playerPose.Width * GameInfo.PlayerAssetScale,
+                _playerPose.Height * GameInfo.PlayerAssetScale)
             {
                 Acceleration = GameInfo.BaseAccelerationRate,
                 Position = GameInfo.PlayerInitialPosition,
@@ -53,15 +62,17 @@ namespace TeamRock.Src.GameObjects
 
             _dashCooldown = 0;
             _dashDuration = 0;
-        }
+            _poseDuration = 0;
 
-        #endregion
+    }
 
-        #region Draw
+    #endregion
 
-        public void Draw(SpriteBatch spriteBatch)
+    #region Draw
+
+    public void Draw(SpriteBatch spriteBatch)
         {
-            if (_dashCooldown <= 0)
+            if (_dashCooldown <= 0 && _poseDuration <= 0)
             {
                 _playerFallingSpriteSheet.Draw(spriteBatch);
             }
@@ -93,12 +104,24 @@ namespace TeamRock.Src.GameObjects
             int speedFactor = 1;
             if (_playerController.DidPlayerPressDash && _dashCooldown <= 0)
             {
+                if(_currPose)
+                {
+                    GameObject.Sprite.UpdateTexture(_pose1);
+                    _currPose = !_currPose;
+                }
+                else
+                {
+                    GameObject.Sprite.UpdateTexture(_pose2);
+                    _currPose = !_currPose;
+                }
                 _dashDuration = GameInfo.PlayerDashDuration;
                 _dashDirection = _playerController.DashDirection;
+                _poseDuration = GameInfo.PlayerPoseDuration;
             }
 
             if (_dashDuration > 0)
             {
+
                 if (_velocityScaler == 1)
                 {
                     speedFactor = 3;
@@ -106,11 +129,6 @@ namespace TeamRock.Src.GameObjects
 
                 Console.WriteLine($"Dash Velocity: {_dashDirection}");
                 _playerGameObject.Position += _dashDirection * GameInfo.PlayerDashVelocity * deltaTime;
-            }
-
-            if (_dashDuration > 0)
-            {
-                return;
             }
 
             if (_playerController.State == PlayerController.ControllerState.Right)
@@ -175,8 +193,15 @@ namespace TeamRock.Src.GameObjects
             {
                 _dashDuration -= deltaTime;
 
-                if (_dashDuration <= 0)
+            }
+
+            if(_poseDuration > 0)
+            {
+                _poseDuration -= deltaTime;
+
+                if(_poseDuration <= 0)
                 {
+                    GameObject.Sprite.UpdateTexture(_playerPose);
                     _dashCooldown = GameInfo.PlayerDashCooldown;
                 }
             }
@@ -211,6 +236,7 @@ namespace TeamRock.Src.GameObjects
             _velocityScaler = 1.0f;
             _dashCooldown = 0;
             _dashDuration = 0;
+            _currPose = false;
         }
 
     public GameObject GameObject => _playerGameObject;

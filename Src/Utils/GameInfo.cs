@@ -38,6 +38,7 @@ namespace TeamRock.Utils
         public const float PlayerDashDuration = 0.2f;
         public const float PlayerDashCooldown = 1;
         public const float PlayerDashVelocity = 750;
+        public const float PlayerPoseDuration = 2;
 
         public const float PlayerKnockBack = 5;
 

@@ -21,6 +21,8 @@
         public const string Popcorn = "Textures/PopCorn";
 
         public const string Player = "Textures/Player";
+        public const string Pose1 = "Textures/pose01";
+        public const string Pose2 = "Textures/pose02";
         public const string Girl = "Textures/Girl";
         public const string FlipGirl = "Textures/FlipGirl";
 
