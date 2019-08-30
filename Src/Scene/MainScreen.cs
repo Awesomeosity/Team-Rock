@@ -238,8 +238,11 @@ namespace TeamRock.Scene
                         _endExplosion.Draw(spriteBatch);
                     }
 
-                    _confetti1.Draw(spriteBatch);
-                    _confetti2.Draw(spriteBatch);
+                    if(_hinderedPlayerTimer <= 0)
+                    {
+                        _confetti1.Draw(spriteBatch);
+                        _confetti2.Draw(spriteBatch);
+                    }
                     break;
 
                 case GameState.GameOver:
