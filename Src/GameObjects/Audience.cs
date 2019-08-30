@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
+using TeamRock.Scene;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
@@ -23,8 +24,11 @@ namespace TeamRock.Src.GameObjects
 
         private RectangleF _audienceRectangle;
 
+        private SoundEffect _cheer;
         private SoundEffect _hitSound;
         private SoundEffect _hitSound2;
+        private SoundEffect _hitSound3;
+
         private bool _isProjectileSpawningActive;
 
         #region Initialization
@@ -39,8 +43,11 @@ namespace TeamRock.Src.GameObjects
             _projectiles = new List<Projectile>();
             _audienceRectangle = new RectangleF();
 
+
+            _cheer = contentManager.Load<SoundEffect>(AssetManager.Cheer);
             _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
             _hitSound2 = contentManager.Load<SoundEffect>(AssetManager.Boo);
+            _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.Oof_Girl);
 
             _isProjectileSpawningActive = true;
         }
@@ -51,8 +58,10 @@ namespace TeamRock.Src.GameObjects
 
         public void Update(float deltaTime, float gameTime)
         {
-            
-            _randomTimer -= deltaTime * (_player.GameObject.Position.Y > GameInfo.IncreasedItemPosition ? GameInfo.IncreasedItemFrequency : 1) ;
+            _randomTimer -= deltaTime * (_player.GameObject.Position.Y > GameInfo.IncreasedItemPosition
+                                ? GameInfo.IncreasedItemFrequency
+                                : 1);
+
             if (_randomTimer <= 0)
             {
                 SpawnProjectileAndResetTimer();
@@ -66,6 +75,8 @@ namespace TeamRock.Src.GameObjects
                 {
                     if (_projectiles[i].DidCollide(_player.GameObject))
                     {
+                        MainScreen.Instance.PlayerCollided();
+
                         if (_projectiles[i].Position.X < _player.GameObject.Position.X)
                         {
                             GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity,
@@ -79,19 +90,39 @@ namespace TeamRock.Src.GameObjects
 
                         CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 5);
                         int soundIndex = 0;
-                        if (_projectiles[i].GetSprite() == Projectile.ProjSprite.Soda)
+                        switch (_projectiles[i].GetSprite())
                         {
-                            soundIndex = SoundManager.Instance.PlaySound(_hitSound);
+                            case Projectile.ProjSprite.Popcorn:
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound);
+                                break;
+
+                            case Projectile.ProjSprite.Soda:
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound);
+                                break;
+
+                            case Projectile.ProjSprite.Girl:
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        SoundManager.Instance.SetSoundVolume(soundIndex, 0.25f);
+
+                        if (_player.IsPosing())
+                        {
+                            soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
+                            SoundManager.Instance.SetSoundVolume(soundIndex, 0.3f);
                         }
                         else
                         {
-                            soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
-
+                            soundIndex = SoundManager.Instance.PlaySound(_cheer);
                         }
-                        SoundManager.Instance.SetSoundVolume(soundIndex, 0.5f);
 
                         _player.ReduceVelocity();
                     }
+
                     _projectiles.RemoveAt(i);
                 }
             }
@@ -147,9 +178,9 @@ namespace TeamRock.Src.GameObjects
 
         #endregion
 
-    #region Utility Functions
+        #region Utility Functions
 
-    private void SpawnProjectileAndResetTimer()
+        private void SpawnProjectileAndResetTimer()
         {
             if (!_isProjectileSpawningActive)
             {
@@ -176,26 +207,45 @@ namespace TeamRock.Src.GameObjects
             launchDirection.Normalize();
 
             float random = ExtensionFunctions.Random();
+            int randResult = (int) Math.Floor(random * 3);
             Projectile.ProjSprite projSprite;
-            if(random <= 0.5f)
+            string textureLoad;
+            switch (randResult)
             {
-                projSprite = Projectile.ProjSprite.Soda;
+                case 0:
+                    projSprite = Projectile.ProjSprite.Soda;
+                    textureLoad = AssetManager.Soda;
+                    break;
+                case 1:
+                    projSprite = Projectile.ProjSprite.Popcorn;
+                    textureLoad = AssetManager.Popcorn;
+                    break;
+                default:
+                    projSprite = Projectile.ProjSprite.Girl;
+                    textureLoad = AssetManager.Girl;
+                    break;
+            }
+
+            Texture2D projectileTexture;
+            Sprite projectileSprite;
+            if (textureLoad == AssetManager.Girl && launchDirection.X < 0)
+            {
+                projectileTexture = _contentManager.Load<Texture2D>(AssetManager.FlipGirl);
+                projectileSprite = new Sprite(projectileTexture)
+                {
+                    Scale = GameInfo.ProjectileStartAssetScale
+                };
+                projectileSprite.SetOriginCenter();
             }
             else
             {
-                projSprite = Projectile.ProjSprite.Popcorn;
+                projectileTexture = _contentManager.Load<Texture2D>(textureLoad);
+                projectileSprite = new Sprite(projectileTexture)
+                {
+                    Scale = GameInfo.ProjectileStartAssetScale
+                };
+                projectileSprite.SetOriginCenter();
             }
-
-            Texture2D projectileTexture =
-                _contentManager.Load<Texture2D>(random <= 0.5f
-                    ? AssetManager.Soda
-                    : AssetManager.Popcorn);
-            
-            Sprite projectileSprite = new Sprite(projectileTexture)
-            {
-                Scale = GameInfo.ProjectileStartAssetScale
-            };
-            projectileSprite.SetOriginCenter();
 
             Projectile projectile = new Projectile(projectileSprite,
                 (int) (projectileTexture.Width * GameInfo.ProjectileFinalAssetScale),
@@ -203,6 +253,7 @@ namespace TeamRock.Src.GameObjects
             {
                 Position = launchPosition
             };
+
             projectile.SetSprite(projSprite);
             projectile.LaunchProjectile(launchDirection, _player.GameObject.Position);
 

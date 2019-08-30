@@ -21,9 +21,8 @@ namespace TeamRock.Scene
         private UiTextNode _pressToPlayText;
         private Sprite _headerImage;
         private Sprite _luchadorSprite;
-        private KeyboardState _oldState;
-        private GamePadState _oldControl;
-
+        private KeyboardState _oldKeyboardState;
+        private GamePadState _oldGamePadState;
 
         private bool _gameStarted;
 
@@ -56,7 +55,6 @@ namespace TeamRock.Scene
                 new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100);
 
             _music = _contentManager.Load<SoundEffect>(AssetManager.HomeScreenMusic);
-            KeyboardState _oldState = Keyboard.GetState();
         }
 
         #endregion
@@ -80,6 +78,14 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
+            UpdateControls();
+            SoundManager.Instance.CheckSound(_musicIndex);
+
+            return _gameStarted;
+        }
+
+        private void UpdateControls()
+        {
             KeyboardState keyboardState = Keyboard.GetState();
             GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
 
@@ -88,27 +94,24 @@ namespace TeamRock.Scene
                 _pressToPlayText.Text = "PRESS <A> TO START";
 
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
+                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldGamePadState.Buttons.A == ButtonState.Pressed)
                 {
                     _gameStarted = true;
                 }
 
-                _oldControl = gamePadState;
+                _oldGamePadState = gamePadState;
             }
             else
             {
                 _pressToPlayText.Text = "PRESS <SPACE> TO START";
 
-                if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
+                if (keyboardState.IsKeyUp(Keys.Space) && _oldKeyboardState.IsKeyDown(Keys.Space))
                 {
                     _gameStarted = true;
                 }
 
-                _oldState = keyboardState;
+                _oldKeyboardState = keyboardState;
             }
-
-            SoundManager.Instance.CheckSound(_musicIndex);
-            return _gameStarted;
         }
 
         #endregion

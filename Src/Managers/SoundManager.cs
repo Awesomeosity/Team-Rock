@@ -100,6 +100,8 @@ namespace TeamRock.Managers
 
         public void SetSoundLooping(int soundIndex, bool looping = true)
         {
+            // TODO: Fix Sound Looping State
+            // TODO: Pause and ReStart Sound and then set looping state
             SoundData soundData = GetEffectByIndex(soundIndex);
             if (soundData == null)
             {
@@ -145,18 +147,16 @@ namespace TeamRock.Managers
         public void CheckSound(int soundIndex)
         {
             SoundData soundData = GetEffectByIndex(soundIndex);
-            if(soundData == null)
+            if (soundData == null)
             {
                 Console.WriteLine("Invalid Sound Requested");
                 return;
-
             }
 
             if (soundData.SoundEffectInstance.State == SoundState.Stopped)
             {
                 soundData.SoundEffectInstance.Play();
             }
-
         }
 
         #region Utility Functions

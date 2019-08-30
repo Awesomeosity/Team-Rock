@@ -21,15 +21,18 @@
         public const string Popcorn = "Textures/PopCorn";
 
         public const string Player = "Textures/Player";
+        public const string Pose1 = "Textures/pose01";
+        public const string Pose2 = "Textures/pose02";
+        public const string Girl = "Textures/Girl";
+        public const string FlipGirl = "Textures/FlipGirl";
 
         public const string WinWrestler = "Textures/Win";
         public const string LoseWrestler = "Textures/Lose";
 
-        public const string DistanceBackground = "Textures/Distance Bar Background";
-        public const string DistanceFrame = "Textures/Distance Bar Frame";
-        public const string DistanceGradient = "Textures/Distance Bar Gradient";
-        public const string DistanceIndicator = "Textures/Distance Bar Indicator";
-
+        public const string FillBarBackground = "Textures/Distance Bar Background";
+        public const string FillBarFrame = "Textures/Distance Bar Frame";
+        public const string FillBarGradient = "Textures/Distance Bar Gradient";
+        public const string FillBarPointer = "Textures/Distance Bar Indicator";
 
         #endregion
 
@@ -80,6 +83,8 @@
         public const string CottonCandy = "Sounds/Cotton_Candy";
         public const string Hit = "Sounds/Hit_Hurt";
         public const string Explosion = "Sounds/Explosion";
+        public const string Oof_Girl = "Sounds/Girl";
+        public const string Cheer = "Sounds/NewClap";
 
         #endregion
 

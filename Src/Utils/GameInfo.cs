@@ -12,31 +12,36 @@ namespace TeamRock.Utils
         public const int MaxBackgroundElements = 3;
 
         // Center Board
-        private const int CenterBoardWidth = 300;
+        public const int CenterBoardWidth = 300;
 
         // Player State
-        public const float PlayerMinYPosition = 50;
-        public const float PlayerMaxYPosition = FixedWindowHeight - 300;
-        public const float PlayerAssetScale = 0.1f;
-
         public static readonly Vector2 PlayerInitialPosition =
             new Vector2(FixedWindowWidth / 2.0f, 70);
 
+        public const float PlayerMinYPosition = 50;
+        public const float PlayerMaxYPosition = FixedWindowHeight - 300;
+        public const float PlayerAssetScale = 0.1f;
         public const float PlayerMinYVelocity = 50;
         public const float PlayerMaxYVelocity = 500;
         public static readonly Vector2 BaseAccelerationRate = new Vector2(0, 5);
         public static readonly Vector2 AccelerationChangeRate = new Vector2(0, 1);
-        public static readonly Vector2 HorizontalVelocity = new Vector2(250, 0);
-        public static readonly Vector2 VerticalVelocity = new Vector2(0, 250);
+        public static readonly Vector2 HorizontalVelocity = new Vector2(200, 0);
+        public static readonly Vector2 VerticalVelocity = new Vector2(0, 200);
         public const int PlayerLeftPosition = AudienceWidth;
         public const int PlayerRightPosition = FixedWindowWidth - AudienceWidth;
         public const float PlayerGamePadAxisThreshold = 0.5f;
 
         public const float PlayerDamageVelocity = 0.25f;
         public const float PlayerRecoveryRate = 0.5f;
-        public const float PlayerDashDuration = 2.0f;
-        public const float PlayerDashCooldown = 5.0f;
-        public const float PlayerKnockback = 5;
+        public const float PlayerIncreasedVelocity = 3;
+        public const float PlayerSlowdownRate = 0.5f;
+
+        public const float PlayerDashDuration = 0.2f;
+        public const float PlayerDashCooldown = 1;
+        public const float PlayerDashVelocity = 750;
+        public const float PlayerPoseDuration = 2;
+
+        public const float PlayerKnockBack = 5;
 
         // Stage
         public const float StageScale = 0.3f;
@@ -69,11 +74,20 @@ namespace TeamRock.Utils
         // SpriteSheet Animations
         public const float DefaultAnimationSpeed = 0.01666667F;
 
+        // Timer Bar
+        public static readonly Color InitialTimerBarColor = Color.White;
+        public static readonly Color FinalTimerBarColor = new Color(120, 89, 169);
+        public const float PlayerTimerChangeRate = 1.2f;
+        public const float PlayerHitTimerChangeRate = 0.5f;
+        public const float PlayerHitTimerAffectTime = 2f;
+        public const float PlayerDashTimerChangeRate = 1.5f;
+        public const float PlayerDashAffectTime = 0.3f;
+
         // Game Ending Control
         public const float TotalGameTime = 30;
         public const float EndGameTime = 2;
         public const float StageMoveUpSpeed = 500;
-        public const float IncreasedItemPosition = FixedWindowHeight * 3 / 5;
+        public const float IncreasedItemPosition = 480F;
         public const int IncreasedItemFrequency = 5;
     }
 }

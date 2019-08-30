@@ -88,6 +88,12 @@
 /processorParam:Quality=Best
 /build:Sounds/Explosion.mp3
 
+#begin Sounds/Girl.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Girl.wav
+
 #begin Sounds/Hand_Claps.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
@@ -99,6 +105,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Hit_Hurt.mp3
+
+#begin Sounds/NewClap.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/NewClap.wav
 
 #begin SpriteSheets/Confetti1/confetti1_1.png
 /importer:TextureImporter
@@ -3520,6 +3532,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Fail.png
 
+#begin Textures/FlipGirl.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/FlipGirl.png
+
 #begin Textures/GameOver.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -3531,6 +3555,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/GameOver.png
+
+#begin Textures/Girl.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Girl.png
 
 #begin Textures/Header.png
 /importer:TextureImporter
@@ -3603,6 +3639,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/PopCorn.png
+
+#begin Textures/pose01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pose01.png
+
+#begin Textures/pose02.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pose02.png
 
 #begin Textures/Soda.png
 /importer:TextureImporter
