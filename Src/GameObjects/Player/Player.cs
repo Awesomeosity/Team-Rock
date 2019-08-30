@@ -10,6 +10,13 @@ namespace TeamRock.Src.GameObjects
 {
     public class Player
     {
+        public enum Poses
+        {
+            Normal,
+            Pose_1,
+            Pose_2
+        }
+
         private PlayerController _playerController;
         private GameObject _playerGameObject;
         private SpriteSheetAnimationManager _playerFallingSpriteSheet;
@@ -274,6 +281,25 @@ namespace TeamRock.Src.GameObjects
             _dashCooldown = 0;
             _dashDuration = 0;
             _currPose = false;
+            _playerGameObject.Sprite.UpdateTexture(_playerPose);
+        }
+
+        public void setPose(Poses pose)
+        {
+            switch (pose)
+            {
+                case Poses.Normal:
+                    _playerGameObject.Sprite.UpdateTexture(_playerPose);
+                    break;
+                case Poses.Pose_1:
+                    _playerGameObject.Sprite.UpdateTexture(_pose1);
+                    break;
+                case Poses.Pose_2:
+                    _playerGameObject.Sprite.UpdateTexture(_pose2);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public GameObject GameObject => _playerGameObject;

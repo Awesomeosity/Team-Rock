@@ -412,6 +412,15 @@ namespace TeamRock.Scene
                     SetGameState(GameState.EndStarted);
                     _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
                     _timerText.Text = "Win State!!!";
+                    float random = ExtensionFunctions.Random();
+                    if (random <= 0.5f)
+                    {
+                        _player.setPose(Player.Poses.Pose_1);
+                    }
+                    else
+                    {
+                        _player.setPose(Player.Poses.Pose_1);
+                    }
 
                     foreach (Audience audience in _audiences)
                     {
@@ -438,6 +447,7 @@ namespace TeamRock.Scene
                 _winWrestler.Sprite.UpdateTexture(_contentManager.Load<Texture2D>(AssetManager.LoseWrestler));
                 _winWrestler.Position += new Vector2(100, -100);
                 _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
+                _player.setPose(Player.Poses.Normal);
                 _timerText.Text = "Fail State!!!";
 
                 foreach (Audience audience in _audiences)
