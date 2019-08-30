@@ -16,7 +16,8 @@ namespace TeamRock.Src.GameObjects
         public enum ProjSprite
         {
             Popcorn,
-            Soda
+            Soda,
+            Girl
         }
 
         private ProjSprite _projSprite;
@@ -59,8 +60,16 @@ namespace TeamRock.Src.GameObjects
             _positionToTarget = positionToTarget;
             _initialDistanceToTarget = Vector2.DistanceSquared(Position, _positionToTarget);
 
-            _rotationSpeed = ExtensionFunctions.RandomInRange(GameInfo.ProjectileMinRotationSpeed,
-                GameInfo.ProjectileMaxRotationSpeed);
+            if(_projSprite != ProjSprite.Girl)
+            {
+                _rotationSpeed = ExtensionFunctions.RandomInRange(GameInfo.ProjectileMinRotationSpeed,
+                    GameInfo.ProjectileMaxRotationSpeed);
+            }
+            else
+            {
+                _rotationSpeed = 0;
+                Sprite.Rotation = (float)System.Math.Atan2((double)directionNormalized.Y, (double)directionNormalized.X) + 90;
+            }
         }
 
         public bool IsProjectileDestroyed => _isProjectileDestroyed;

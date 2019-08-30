@@ -53,6 +53,7 @@
     <Compile Include="Src\GameObjects\Player\PlayerController.cs" />
     <Compile Include="Src\GameObjects\Projectile.cs" />
     <Compile Include="Src\GameObjects\Sprite.cs" />
+    <Compile Include="Src\Managers\FillBarVertical.cs" />
     <Compile Include="Src\Managers\GamePadVibrationController.cs" />
     <Compile Include="Src\Managers\MouseController.cs" />
     <Compile Include="Src\Managers\ScrollingBackground.cs" />

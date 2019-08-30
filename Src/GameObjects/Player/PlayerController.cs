@@ -16,19 +16,22 @@ namespace TeamRock.Src.GameObjects
             Down
         }
 
-        public bool IsDashing = false;
-
-        private bool _pressed = false;
-
+        private bool _didPlayerPressDash;
+        private Vector2 _dashDirection = Vector2.Zero;
         private ControllerState _controllerState;
+
+        private GamePadState _oldGamePadState;
+        private KeyboardState _oldKeyboardState;
+
 
         #region Update
 
         public void Update()
         {
-            KeyboardState keyboardState = Keyboard.GetState();
+            _didPlayerPressDash = false;
+            _dashDirection = Vector2.Zero;
+
             GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
-            bool holding = false;
 
             // Check if GamePad is connected else use the Keyboard
             if (gamePadCapabilities.IsConnected)
@@ -37,18 +40,22 @@ namespace TeamRock.Src.GameObjects
 
                 if (gamePadState.ThumbSticks.Left.X < -GameInfo.PlayerGamePadAxisThreshold)
                 {
+                    _dashDirection.X = -1;
                     SetControllerState(ControllerState.Left);
                 }
                 else if (gamePadState.ThumbSticks.Left.X > GameInfo.PlayerGamePadAxisThreshold)
                 {
+                    _dashDirection.X = 1;
                     SetControllerState(ControllerState.Right);
                 }
                 else if (gamePadState.ThumbSticks.Left.Y < -GameInfo.PlayerGamePadAxisThreshold)
                 {
+                    _dashDirection.Y = 1;
                     SetControllerState(ControllerState.Down);
                 }
                 else if (gamePadState.ThumbSticks.Left.Y > GameInfo.PlayerGamePadAxisThreshold)
                 {
+                    _dashDirection.Y = -1;
                     SetControllerState(ControllerState.Up);
                 }
                 else
@@ -56,25 +63,35 @@ namespace TeamRock.Src.GameObjects
                     SetControllerState(ControllerState.None);
                 }
 
-                holding = gamePadState.IsButtonDown(Buttons.A);
+                if (gamePadState.IsButtonDown(Buttons.A) && !_oldGamePadState.IsButtonDown(Buttons.A))
+                {
+                    _didPlayerPressDash = true;
+                }
 
+                _oldGamePadState = gamePadState;
             }
             else
             {
+                KeyboardState keyboardState = Keyboard.GetState();
+
                 if (keyboardState.IsKeyDown(Keys.Left))
                 {
+                    _dashDirection.X = -1;
                     SetControllerState(ControllerState.Left);
                 }
                 else if (keyboardState.IsKeyDown(Keys.Right))
                 {
+                    _dashDirection.X = 1;
                     SetControllerState(ControllerState.Right);
                 }
                 else if (keyboardState.IsKeyDown(Keys.Up))
                 {
+                    _dashDirection.Y = -1;
                     SetControllerState(ControllerState.Up);
                 }
                 else if (keyboardState.IsKeyDown(Keys.Down))
                 {
+                    _dashDirection.Y = 1;
                     SetControllerState(ControllerState.Down);
                 }
                 else
@@ -82,19 +99,13 @@ namespace TeamRock.Src.GameObjects
                     SetControllerState(ControllerState.None);
                 }
 
-                holding = keyboardState.IsKeyDown(Keys.Space);
+                if (keyboardState.IsKeyDown(Keys.Space) && !_oldKeyboardState.IsKeyDown(Keys.Space))
+                {
+                    _didPlayerPressDash = true;
+                }
+
+                _oldKeyboardState = keyboardState;
             }
-
-
-            IsDashing = false;
-            if(holding == false && _pressed == true)
-            {
-                IsDashing = true;
-            }
-
-            _pressed = holding;
-
-            
         }
 
         #endregion
@@ -102,6 +113,10 @@ namespace TeamRock.Src.GameObjects
         #region External Functions
 
         public ControllerState State => _controllerState;
+
+        public bool DidPlayerPressDash => _didPlayerPressDash;
+
+        public Vector2 DashDirection => _dashDirection;
 
         #endregion
 
