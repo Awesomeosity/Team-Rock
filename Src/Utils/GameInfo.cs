@@ -26,14 +26,16 @@ namespace TeamRock.Utils
         public const float PlayerMaxYVelocity = 500;
         public static readonly Vector2 BaseAccelerationRate = new Vector2(0, 5);
         public static readonly Vector2 AccelerationChangeRate = new Vector2(0, 1);
-        public static readonly Vector2 HorizontalVelocity = new Vector2(250, 0);
-        public static readonly Vector2 VerticalVelocity = new Vector2(0, 250);
+        public static readonly Vector2 HorizontalVelocity = new Vector2(200, 0);
+        public static readonly Vector2 VerticalVelocity = new Vector2(0, 200);
         public const int PlayerLeftPosition = AudienceWidth;
         public const int PlayerRightPosition = FixedWindowWidth - AudienceWidth;
         public const float PlayerGamePadAxisThreshold = 0.5f;
 
         public const float PlayerDamageVelocity = 0.25f;
         public const float PlayerRecoveryRate = 0.5f;
+        public const float PlayerIncreasedVelocity = 3;
+        public const float PlayerSlowdownRate = 0.5f;
 
         public const float PlayerDashDuration = 0.2f;
         public const float PlayerDashCooldown = 1;

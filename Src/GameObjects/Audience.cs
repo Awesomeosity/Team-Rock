@@ -41,6 +41,8 @@ namespace TeamRock.Src.GameObjects
             _projectiles = new List<Projectile>();
             _audienceRectangle = new RectangleF();
 
+
+            _cheer = contentManager.Load<SoundEffect>(AssetManager.Cheer);
             _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
             _hitSound2 = contentManager.Load<SoundEffect>(AssetManager.Boo);
             _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.Oof_Girl);
@@ -88,7 +90,7 @@ namespace TeamRock.Src.GameObjects
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound);
                                 break;
                             case Projectile.ProjSprite.Soda:
-                                soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
+                                soundIndex = SoundManager.Instance.PlaySound(_hitSound);
                                 break;
                             case Projectile.ProjSprite.Girl:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
@@ -96,8 +98,17 @@ namespace TeamRock.Src.GameObjects
                             default:
                                 break;
                         }
-                        SoundManager.Instance.SetSoundVolume(soundIndex, 0.5f);
+                        SoundManager.Instance.SetSoundVolume(soundIndex, 0.25f);
+                        if(_player.IsPosing())
+                        {
+                            soundIndex = SoundManager.Instance.PlaySound(_hitSound2);
+                            SoundManager.Instance.SetSoundVolume(soundIndex, 0.3f);
 
+                        }
+                        else
+                        {
+                            soundIndex = SoundManager.Instance.PlaySound(_cheer);
+                        }
                         _player.ReduceVelocity();
                     }
                     _projectiles.RemoveAt(i);

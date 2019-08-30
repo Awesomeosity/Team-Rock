@@ -181,7 +181,7 @@ namespace TeamRock.Src.GameObjects
 
             if (_velocityScaler > 1)
             {
-                _velocityScaler = 1.0f;
+                _velocityScaler -= GameInfo.PlayerSlowdownRate * deltaTime;
             }
 
             if (_dashCooldown > 0)
@@ -201,6 +201,10 @@ namespace TeamRock.Src.GameObjects
 
                 if(_poseDuration <= 0)
                 {
+                    if(_velocityScaler <= 1)
+                    {
+                        _velocityScaler = GameInfo.PlayerDamageVelocity;
+                    }
                     GameObject.Sprite.UpdateTexture(_playerPose);
                     _dashCooldown = GameInfo.PlayerDashCooldown;
                 }
@@ -221,12 +225,30 @@ namespace TeamRock.Src.GameObjects
 
         public void ReduceVelocity()
         {
-            _velocityScaler = GameInfo.PlayerDamageVelocity;
-            if(_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
+            //Prevent player from slowing down/speeding up while speed is different.
+            if(!ExtensionFunctions.FloatCompare(_velocityScaler, 1))
             {
                 return;
             }
-            _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockBack);
+            _velocityScaler = 1;
+            if(_poseDuration > 0)
+            {
+                _velocityScaler = GameInfo.PlayerIncreasedVelocity;
+            }
+            else
+            {
+                _velocityScaler = GameInfo.PlayerDamageVelocity;
+                if(_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
+                {
+                    return;
+                }
+                _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockBack);
+            }
+        }
+
+        public bool IsPosing()
+        {
+            return (_poseDuration > 0);
         }
 
         public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;

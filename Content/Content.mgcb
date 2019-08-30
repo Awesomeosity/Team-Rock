@@ -106,6 +106,12 @@
 /processorParam:Quality=Best
 /build:Sounds/Hit_Hurt.mp3
 
+#begin Sounds/NewClap.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/NewClap.wav
+
 #begin SpriteSheets/Confetti1/confetti1_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
