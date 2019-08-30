@@ -75,7 +75,6 @@ namespace TeamRock.Src.GameObjects
                 {
                     if (_projectiles[i].DidCollide(_player.GameObject))
                     {
-                        MainScreen.Instance.PlayerCollided();
 
                         if (_projectiles[i].Position.X < _player.GameObject.Position.X)
                         {

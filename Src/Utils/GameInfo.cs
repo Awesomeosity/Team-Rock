@@ -40,6 +40,7 @@ namespace TeamRock.Utils
         public const float PlayerDashCooldown = 1;
         public const float PlayerDashVelocity = 750;
         public const float PlayerPoseDuration = 2;
+        public const float PlayerBoostDuration = 3;
 
         public const float PlayerKnockBack = 5;
 
@@ -59,8 +60,8 @@ namespace TeamRock.Utils
         public const float RightAudiencePos = 480;
 
         // Projectile
-        public const float MinProjectileVelocity = 200;
-        public const float MaxProjectileVelocity = 400;
+        public const float MinProjectileVelocity = 150;
+        public const float MaxProjectileVelocity = 300;
         public const float ProjectileLifeTime = 5f;
         public const float MinProjectileSpawnTimer = 1;
         public const float MaxProjectileSpawnTimer = 5;

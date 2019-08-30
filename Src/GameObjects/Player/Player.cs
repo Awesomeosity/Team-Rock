@@ -20,6 +20,7 @@ namespace TeamRock.Src.GameObjects
         private float _dashDuration;
         private Vector2 _dashDirection;
         private float _poseDuration;
+        private float _boostDuration;
 
         private Vector2 _spriteSheetPosition;
 
@@ -64,6 +65,7 @@ namespace TeamRock.Src.GameObjects
             _dashCooldown = 0;
             _dashDuration = 0;
             _poseDuration = 0;
+            _boostDuration = 0;
         }
 
         #endregion
@@ -114,8 +116,6 @@ namespace TeamRock.Src.GameObjects
                     GameObject.Sprite.UpdateTexture(_pose2);
                     _currPose = !_currPose;
                 }
-
-                MainScreen.Instance.PlayerDashed();
 
                 _dashDuration = GameInfo.PlayerDashDuration;
                 _dashDirection = _playerController.DashDirection;
@@ -195,13 +195,22 @@ namespace TeamRock.Src.GameObjects
                 _dashDuration -= deltaTime;
             }
 
+            if(_boostDuration > 0)
+            {
+                _boostDuration -= deltaTime;
+                if(_boostDuration <= 0)
+                {
+                    _velocityScaler = 1;
+                }
+            }
+
             if (_poseDuration > 0)
             {
                 _poseDuration -= deltaTime;
 
                 if (_poseDuration <= 0)
                 {
-                    if (_velocityScaler <= 1)
+                    if (_velocityScaler <= 1 && _boostDuration <= 0)
                     {
                         _velocityScaler = GameInfo.PlayerDamageVelocity;
                     }
@@ -236,6 +245,8 @@ namespace TeamRock.Src.GameObjects
             if (_poseDuration > 0)
             {
                 _velocityScaler = GameInfo.PlayerIncreasedVelocity;
+                _boostDuration = GameInfo.PlayerBoostDuration;
+                MainScreen.Instance.PlayerDashed();
             }
             else
             {
@@ -246,6 +257,7 @@ namespace TeamRock.Src.GameObjects
                 }
 
                 _playerGameObject.Position -= new Vector2(0, GameInfo.PlayerKnockBack);
+                MainScreen.Instance.PlayerCollided();
             }
         }
 
