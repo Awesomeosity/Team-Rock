@@ -206,23 +206,23 @@ namespace TeamRock.Src.GameObjects
             launchDirection.Normalize();
 
             float random = ExtensionFunctions.Random();
-            int randResult = (int) Math.Floor(random * 3);
             Projectile.ProjSprite projSprite;
             string textureLoad;
-            switch (randResult)
+            if(random < 0.33)
             {
-                case 0:
-                    projSprite = Projectile.ProjSprite.Soda;
-                    textureLoad = AssetManager.Soda;
-                    break;
-                case 1:
-                    projSprite = Projectile.ProjSprite.Popcorn;
-                    textureLoad = AssetManager.Popcorn;
-                    break;
-                default:
-                    projSprite = Projectile.ProjSprite.Girl;
-                    textureLoad = AssetManager.Girl;
-                    break;
+                projSprite = Projectile.ProjSprite.Soda;
+                textureLoad = AssetManager.Soda;
+            }
+            else if(random >= 0.33 && random < 0.66)
+            {
+                projSprite = Projectile.ProjSprite.Popcorn;
+                textureLoad = AssetManager.Popcorn;
+            }
+            else
+            {
+                projSprite = Projectile.ProjSprite.Girl;
+                textureLoad = AssetManager.Girl;
+
             }
 
             Texture2D projectileTexture;
