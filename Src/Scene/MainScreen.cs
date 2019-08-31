@@ -202,12 +202,12 @@ namespace TeamRock.Scene
             _fillBarPointer = new Sprite(fillBarPointer);
             _fillBarPointer.SetOriginCenter();
             _fillBarPointer.Scale = 0.5f;
-            _fillBarPointer.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
+            _fillBarPointer.Position = new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f);
 
             _fillBarPointerInitialPosition =
-                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+                new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
             _fillBarPointerFinalPosition =
-                new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.Height / 2.0f);
+                new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.Height / 2.0f);
         }
 
         #endregion
