@@ -78,6 +78,13 @@ namespace TeamRock.Utils
         // Timer Bar
         public static readonly Color InitialTimerBarColor = Color.White;
         public static readonly Color FinalTimerBarColor = new Color(120, 89, 169);
+
+        public const float FlashBarMinAlpha = 0;
+        public const float FlashBarMaxAlpha = 0.3f;
+        public const float InitialBarFlashRate = 0;
+        public const float MaxBarFlashRate = 7;
+        public static readonly Color FlashBarColor = new Color(204, 0, 0);
+
         public const float PlayerTimerChangeRate = 1.2f;
         public const float PlayerHitTimerChangeRate = 0.5f;
         public const float PlayerHitTimerAffectTime = 2f;

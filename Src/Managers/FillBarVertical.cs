@@ -16,6 +16,8 @@ namespace TeamRock.Managers
         private float _maxValue;
         private float _currentValue;
 
+        private float _barHeight;
+
         #region Initialization
 
         public void Initialize(Sprite background, Sprite unFilledBar, Sprite topBar,
@@ -53,9 +55,9 @@ namespace TeamRock.Managers
         public void Update(float deltaTime)
         {
             float ratio = _currentValue / _maxValue;
-            float barHeight = ExtensionFunctions.Map(ratio, 0, 1, 0, _maxTopBarHeight);
+            _barHeight = ExtensionFunctions.Map(ratio, 0, 1, 0, _maxTopBarHeight);
 
-            _topBar.SetSize((int) _topBar.Width, (int) barHeight);
+            _topBar.SetSize((int) _topBar.Width, (int) _barHeight);
         }
 
         #endregion
@@ -105,6 +107,8 @@ namespace TeamRock.Managers
             get => _unFilledBar;
             set => _unFilledBar = value;
         }
+
+        public float BarHeight => _barHeight;
 
         #endregion
     }

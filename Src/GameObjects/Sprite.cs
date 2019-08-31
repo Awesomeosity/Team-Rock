@@ -16,6 +16,7 @@ namespace TeamRock.Src.GameObjects
         private float _scale;
         private float _rotation;
 
+        private SpriteEffects _spriteEffects;
         private Color _spriteColor;
 
         #region Constructor
@@ -25,6 +26,8 @@ namespace TeamRock.Src.GameObjects
             _texture2D = texture2D;
             _useSize = useSize;
 
+            _spriteEffects = SpriteEffects.None;
+
             Initialize(_useSize);
         }
 
@@ -32,7 +35,7 @@ namespace TeamRock.Src.GameObjects
 
         #region Render
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (!_useSize)
             {
@@ -44,7 +47,7 @@ namespace TeamRock.Src.GameObjects
                     _rotation,
                     _origin,
                     _scale,
-                    SpriteEffects.None,
+                    _spriteEffects,
                     0
                 );
             }
@@ -129,6 +132,12 @@ namespace TeamRock.Src.GameObjects
         public float TextureWidth => _texture2D.Width;
 
         public float TextureHeight => _texture2D.Height;
+
+        public SpriteEffects SpriteEffects
+        {
+            get => _spriteEffects;
+            set => _spriteEffects = value;
+        }
 
         #endregion
 

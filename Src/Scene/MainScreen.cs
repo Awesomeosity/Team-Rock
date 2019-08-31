@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
 using TeamRock.Src.GameObjects;
-using TeamRock.UI;
 using TeamRock.Utils;
 
 namespace TeamRock.Scene
@@ -34,7 +33,6 @@ namespace TeamRock.Scene
 
         private List<Audience> _audiences;
 
-        private UiTextNode _timerText;
         private SpriteFont _defaultFont;
 
         private float _hinderedPlayerTimer;
@@ -48,6 +46,7 @@ namespace TeamRock.Scene
         private Vector2 _fillBarPointerInitialPosition;
         private Vector2 _fillBarPointerFinalPosition;
 
+        private SpriteFlasher _fillBarFlasher;
         private Sprite _fillBarGradient;
         private FillBarVertical _fillBarVertical;
 
@@ -139,12 +138,6 @@ namespace TeamRock.Scene
             _timeToGameOver = GameInfo.EndGameTime;
             _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
 
-            _timerText = new UiTextNode()
-            {
-                Position = new Vector2(GameInfo.FixedWindowWidth / 4.0f, 50)
-            };
-            _timerText.Initialize(_defaultFont, "");
-
             _endExplosion = new SpriteSheetAnimationManager();
             _endExplosion.Initialize(_contentManager, AssetManager.EndExplosionBase,
                 AssetManager.EndExplosionTotalCount, 1, false, false);
@@ -198,6 +191,16 @@ namespace TeamRock.Scene
             _fillBarGradient.Position = new Vector2(barXPosition,
                 GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
 
+            Texture2D whitePixel = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
+            _fillBarFlasher = new SpriteFlasher(whitePixel, true);
+            _fillBarFlasher.Origin = new Vector2(_fillBarFlasher.TextureWidth / 2.0f, 0);
+            _fillBarFlasher.SetSize((int) _fillBarGradient.Width, 0);
+            _fillBarFlasher.StartFlashing(GameInfo.InitialBarFlashRate, GameInfo.FlashBarMinAlpha,
+                GameInfo.FlashBarMaxAlpha);
+            _fillBarFlasher.Position = new Vector2(barXPosition,
+                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+            _fillBarFlasher.SetSpriteColor(GameInfo.FlashBarColor);
+
             Texture2D fillBarPointer = _contentManager.Load<Texture2D>(AssetManager.FillBarPointer);
             _fillBarPointer = new Sprite(fillBarPointer);
             _fillBarPointer.SetOriginCenter();
@@ -220,6 +223,7 @@ namespace TeamRock.Scene
             _scrollingBackground.Draw(spriteBatch);
 
             _fillBarVertical.Draw(spriteBatch);
+            _fillBarFlasher.Draw(spriteBatch);
             _fillBarPointer.Draw(spriteBatch);
 
             _stage.Draw(spriteBatch);
@@ -238,11 +242,12 @@ namespace TeamRock.Scene
                         _endExplosion.Draw(spriteBatch);
                     }
 
-                    if(_hinderedPlayerTimer <= 0)
+                    if (_hinderedPlayerTimer <= 0)
                     {
                         _confetti1.Draw(spriteBatch);
                         _confetti2.Draw(spriteBatch);
                     }
+
                     break;
 
                 case GameState.GameOver:
@@ -256,8 +261,6 @@ namespace TeamRock.Scene
             {
                 audience.DrawProjectiles(spriteBatch);
             }
-
-            _timerText.Draw(spriteBatch);
         }
 
         public override void DrawDebug(SpriteBatch spriteBatch)
@@ -383,6 +386,14 @@ namespace TeamRock.Scene
             _fillBarVertical.Update(deltaTime);
             _fillBarVertical.CurrentValue = GameInfo.TotalGameTime - _unhinderedTimeToImpact;
 
+            float barHeight = _fillBarVertical.BarHeight;
+            _fillBarFlasher.SetSize((int) _fillBarGradient.Width, (int) barHeight);
+
+            float mappedFlashRate = ExtensionFunctions.Map(_unhinderedTimeToImpact, 0, 30, GameInfo.MaxBarFlashRate,
+                GameInfo.InitialBarFlashRate);
+            _fillBarFlasher.FlashingRate = mappedFlashRate;
+            _fillBarFlasher.Update(deltaTime);
+
             float reachedRatio = (GameInfo.TotalGameTime - _unhinderedTimeToImpact) / GameInfo.TotalGameTime;
             Color lerpedColor = Color.Lerp(GameInfo.InitialTimerBarColor, GameInfo.FinalTimerBarColor, reachedRatio);
             _fillBarGradient.SpriteColor = lerpedColor;
@@ -411,19 +422,10 @@ namespace TeamRock.Scene
 
                 if (_hinderedPlayerTimer <= 0)
                 {
-                    // TODO: Change this later on...
                     SetGameState(GameState.EndStarted);
+
                     _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
-                    _timerText.Text = "Win State!!!";
-                    float random = ExtensionFunctions.Random();
-                    if (random <= 0.5f)
-                    {
-                        _player.setPose(Player.Poses.Pose_1);
-                    }
-                    else
-                    {
-                        _player.setPose(Player.Poses.Pose_1);
-                    }
+                    _player.setPose(Player.Poses.Pose_1);
 
                     foreach (Audience audience in _audiences)
                     {
@@ -442,16 +444,15 @@ namespace TeamRock.Scene
             if (_unhinderedTimeToImpact > 0)
             {
                 _unhinderedTimeToImpact -= deltaTime;
-                _timerText.Text = $"Time To Impact: {ExtensionFunctions.Format2DecimalPlace(_unhinderedTimeToImpact)}";
             }
             else if (_unhinderedTimeToImpact <= 0)
             {
                 SetGameState(GameState.EndStarted);
                 _winWrestler.Sprite.UpdateTexture(_contentManager.Load<Texture2D>(AssetManager.LoseWrestler));
                 _winWrestler.Position += new Vector2(100, -100);
+
                 _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
                 _player.setPose(Player.Poses.Normal);
-                _timerText.Text = "Fail State!!!";
 
                 foreach (Audience audience in _audiences)
                 {
@@ -530,6 +531,7 @@ namespace TeamRock.Scene
             {
                 return;
             }
+
             _gameState = gameState;
         }
 
