@@ -46,6 +46,7 @@
     <Compile Include="GameMain.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\Common\ColorFlashSwitcher.cs" />
     <Compile Include="Src\CustomCamera\CameraShaker.cs" />
     <Compile Include="Src\GameObjects\Audience.cs" />
     <Compile Include="Src\GameObjects\GameObject.cs" />

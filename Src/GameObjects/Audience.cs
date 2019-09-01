@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended;
+using TeamRock.Common;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
-using TeamRock.Scene;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
@@ -77,7 +77,6 @@ namespace TeamRock.Src.GameObjects
                 {
                     if (_projectiles[i].DidCollide(_player.GameObject))
                     {
-
                         if (_projectiles[i].Position.X < _player.GameObject.Position.X)
                         {
                             GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity,
@@ -213,12 +212,12 @@ namespace TeamRock.Src.GameObjects
             float random = ExtensionFunctions.Random();
             Projectile.ProjSprite projSprite;
             string textureLoad;
-            if(random < 0.5)
+            if (random < 0.5)
             {
                 projSprite = Projectile.ProjSprite.Soda;
                 textureLoad = AssetManager.Soda;
             }
-            else if(random >= 0.5 && random < 0.9)
+            else if (random >= 0.5 && random < 0.9)
             {
                 projSprite = Projectile.ProjSprite.Popcorn;
                 textureLoad = AssetManager.Popcorn;
@@ -226,7 +225,7 @@ namespace TeamRock.Src.GameObjects
             else
             {
                 random = ExtensionFunctions.Random();
-                if(random <= 0.5)
+                if (random <= 0.5)
                 {
                     projSprite = Projectile.ProjSprite.Girl;
                     textureLoad = AssetManager.Girl;
@@ -240,6 +239,7 @@ namespace TeamRock.Src.GameObjects
 
             Texture2D projectileTexture;
             Sprite projectileSprite;
+
             if (textureLoad == AssetManager.Girl && launchDirection.X < 0)
             {
                 projectileTexture = _contentManager.Load<Texture2D>(AssetManager.FlipGirl);
@@ -249,7 +249,7 @@ namespace TeamRock.Src.GameObjects
                 };
                 projectileSprite.SetOriginCenter();
             }
-            else if(textureLoad == AssetManager.Jordan && launchDirection.X < 0)
+            else if (textureLoad == AssetManager.Jordan && launchDirection.X < 0)
             {
                 projectileTexture = _contentManager.Load<Texture2D>(AssetManager.JordanFlip);
                 projectileSprite = new Sprite(projectileTexture)
@@ -274,6 +274,15 @@ namespace TeamRock.Src.GameObjects
             {
                 Position = launchPosition
             };
+            ColorFlashSwitcher colorFlashSwitcher = new ColorFlashSwitcher()
+            {
+                StartColor = GameInfo.ProjectileFlashStartColor,
+                EndColor = GameInfo.ProjectileFlashEndColor,
+                LerpRate = GameInfo.ProjectileFlashRate,
+                StartFlash = true
+            };
+            projectile.ColorFlashSwitcher = colorFlashSwitcher;
+
 
             projectile.SetSprite(projSprite);
             projectile.LaunchProjectile(launchDirection, _player.GameObject.Position);

@@ -71,6 +71,9 @@ namespace TeamRock.Utils
         public const float ProjectileAimRadius = 100;
         public const float ProjectileMinRotationSpeed = 3;
         public const float ProjectileMaxRotationSpeed = 10;
+        public const float ProjectileFlashRate = 5;
+        public static readonly Color ProjectileFlashStartColor = Color.White;
+        public static readonly Color ProjectileFlashEndColor = Color.Red;
 
         // SpriteSheet Animations
         public const float DefaultAnimationSpeed = 0.01666667F;
