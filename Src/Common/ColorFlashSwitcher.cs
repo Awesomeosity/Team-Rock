@@ -13,10 +13,19 @@ namespace TeamRock.Common
         private bool _isIncreasing;
         private bool _startFlash;
 
+        private int _flashCount = -1;
+        private int _currentFlashCount;
+        private bool _resetAutomatically;
+
         #region Update
 
         public Color Update(float deltaTime)
         {
+            if (!_startFlash)
+            {
+                return _startColor;
+            }
+
             if (_isIncreasing)
             {
                 _currentLerpAmount += _lerpRate * deltaTime;
@@ -24,6 +33,21 @@ namespace TeamRock.Common
                 if (_currentLerpAmount >= 1)
                 {
                     _isIncreasing = false;
+                }
+
+                if (_flashCount != -1)
+                {
+                    _currentFlashCount -= 1;
+
+                    if (_currentFlashCount <= 0)
+                    {
+                        if (_resetAutomatically)
+                        {
+                            _currentFlashCount = _flashCount;
+                        }
+
+                        _startFlash = false;
+                    }
                 }
             }
             else
@@ -65,6 +89,22 @@ namespace TeamRock.Common
         {
             get => _startFlash;
             set => _startFlash = value;
+        }
+
+        public int FlashCount
+        {
+            get => _flashCount;
+            set
+            {
+                _currentFlashCount = value;
+                _flashCount = value;
+            }
+        }
+
+        public bool ResetAutomatically
+        {
+            get => _resetAutomatically;
+            set => _resetAutomatically = value;
         }
 
         #endregion

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TeamRock.Common;
 using TeamRock.Managers;
 using TeamRock.Scene;
 using TeamRock.Utils;
@@ -26,7 +27,9 @@ namespace TeamRock.Src.GameObjects
         private float _dashCooldown;
         private float _dashDuration;
         private Vector2 _dashDirection;
+
         private float _poseDuration;
+        private int _consecutivePoseCount;
         private float _boostDuration;
 
         private Vector2 _spriteSheetPosition;
@@ -35,6 +38,8 @@ namespace TeamRock.Src.GameObjects
         private Texture2D _playerPose;
         private Texture2D _pose1;
         private Texture2D _pose2;
+
+        private ColorFlashSwitcher _playerColorFlasher;
 
         private bool _useAsDummy; // This is a very hacky method that handles Custom Player Hiding and Collision Boxes
 
@@ -74,7 +79,18 @@ namespace TeamRock.Src.GameObjects
             _dashCooldown = 0;
             _dashDuration = 0;
             _poseDuration = 0;
+            _consecutivePoseCount = 0;
             _boostDuration = 0;
+
+            _playerColorFlasher = new ColorFlashSwitcher()
+            {
+                StartFlash = false,
+                StartColor = Color.White * 1,
+                EndColor = Color.White * 0,
+                FlashCount = GameInfo.PlayerFlashCount,
+                LerpRate = GameInfo.PlayerFlashRate,
+                ResetAutomatically = true
+            };
         }
 
         #endregion
@@ -116,6 +132,8 @@ namespace TeamRock.Src.GameObjects
                 _playerGameObject.UpdateOnlyVelocity(deltaTime, gameTime);
             }
 
+            _playerGameObject.Sprite.SpriteColor = _playerColorFlasher.Update(deltaTime);
+
             _playerController.Update();
 
             HandleInput(deltaTime);
@@ -126,7 +144,7 @@ namespace TeamRock.Src.GameObjects
         {
             int speedFactor = 1;
             if (_playerController.DidPlayerPressDash && _dashCooldown <= 0 &&
-                ExtensionFunctions.FloatCompare(1, _velocityScaler))
+                ExtensionFunctions.FloatCompare(1, _velocityScaler) && _consecutivePoseCount < GameInfo.MaxPoseCount)
             {
                 if (_currentPose)
                 {
@@ -142,6 +160,7 @@ namespace TeamRock.Src.GameObjects
                 _dashDuration = GameInfo.PlayerDashDuration;
                 _dashDirection = _playerController.DashDirection;
                 _poseDuration = GameInfo.PlayerPoseDuration;
+                _consecutivePoseCount += 1;
             }
 
             if (_dashDuration > 0)
@@ -238,6 +257,8 @@ namespace TeamRock.Src.GameObjects
                     }
 
                     GameObject.Sprite.UpdateTexture(_playerPose);
+
+                    _consecutivePoseCount = 0;
                     _dashCooldown = GameInfo.PlayerDashCooldown;
                 }
             }
@@ -257,7 +278,7 @@ namespace TeamRock.Src.GameObjects
 
         public void ReduceVelocity()
         {
-            //Prevent player from slowing down/speeding up while speed is different.
+            // Prevent player from slowing down/speeding up while speed is different.
             if (!ExtensionFunctions.FloatCompare(_velocityScaler, 1))
             {
                 return;
@@ -283,6 +304,11 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
+        public void PlayerHit()
+        {
+            _playerColorFlasher.StartFlash = true;
+        }
+
         public bool IsPosing() => _poseDuration > 0;
 
         public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;
@@ -294,6 +320,7 @@ namespace TeamRock.Src.GameObjects
             _dashDuration = 0;
             _currentPose = false;
             _playerGameObject.Sprite.UpdateTexture(_playerPose);
+            _consecutivePoseCount = 0;
         }
 
         public void SetPose(Poses pose)

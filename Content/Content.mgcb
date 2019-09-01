@@ -3802,3 +3802,39 @@
 /processorParam:TextureFormat=Color
 /build:Textures/WrestlingBackground.png
 
+#begin VoiceOvers/VO-1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:VoiceOvers/VO-1.wav
+
+#begin VoiceOvers/VO-2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:VoiceOvers/VO-2.wav
+
+#begin VoiceOvers/VO-3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:VoiceOvers/VO-3.wav
+
+#begin VoiceOvers/VO-4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:VoiceOvers/VO-4.wav
+
+#begin VoiceOvers/VO-5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:VoiceOvers/VO-5.wav
+
+#begin VoiceOvers/VO-6.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:VoiceOvers/VO-6.wav
+

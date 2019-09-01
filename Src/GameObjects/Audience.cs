@@ -91,6 +91,8 @@ namespace TeamRock.Src.GameObjects
                                 GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
                         }
 
+                        _player.PlayerHit();
+
                         CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 5);
                         int soundIndex = 0;
                         switch (_projectiles[i].GetSprite())
@@ -106,12 +108,13 @@ namespace TeamRock.Src.GameObjects
                             case Projectile.ProjSprite.Girl:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
                                 break;
+
                             case Projectile.ProjSprite.Jordan:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound4);
                                 break;
 
                             default:
-                                break;
+                                throw new ArgumentOutOfRangeException();
                         }
 
                         SoundManager.Instance.SetSoundVolume(soundIndex, 0.25f);

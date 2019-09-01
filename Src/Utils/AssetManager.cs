@@ -100,5 +100,16 @@
         public const string MainScreenMusic = "Music/Mariachiando";
 
         #endregion
+
+        #region Voice Overs
+
+        public const string VOScene1 = "VoiceOvers/VO-1";
+        public const string VOScene2 = "VoiceOvers/VO-2";
+        public const string VOScene3 = "VoiceOvers/VO-3";
+        public const string VOScene4 = "VoiceOvers/VO-4";
+        public const string VOScene5 = "VoiceOvers/VO-5";
+        public const string VOScene6 = "VoiceOvers/VO-6";
+        
+        #endregion
     }
 }

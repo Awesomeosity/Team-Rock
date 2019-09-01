@@ -480,7 +480,6 @@ namespace TeamRock.Scene
 
         private void UpdateStageAndPlayerEndState(float deltaTime, float gameTime)
         {
-            // TODO: Change this. It is super hacky
             if (_stage.Position.Y > GameInfo.FixedWindowHeight - 100)
             {
                 _stage.Velocity = -Vector2.UnitY * GameInfo.StageMoveUpSpeed;
