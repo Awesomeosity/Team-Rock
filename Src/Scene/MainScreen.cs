@@ -23,8 +23,8 @@ namespace TeamRock.Scene
         private GameObject _winWrestler;
         private Player _player;
 
-
-        private SpriteSheetAnimationManager _backgroundSpriteSheet;
+        private Sprite _backgroundSprite;
+        private ScrollingBackground _backgroundAudience;
         private ScrollingBackground _scrollingBackground;
 
         private SpriteSheetAnimationManager _endExplosion;
@@ -32,7 +32,7 @@ namespace TeamRock.Scene
         private SpriteSheetAnimationManager _confetti2;
 
         private List<Audience> _audiences;
-        
+
         private float _hinderedPlayerTimer;
         private float _currentIncrementModifierTimer;
         private float _playerCollisionTimerRate;
@@ -85,16 +85,24 @@ namespace TeamRock.Scene
 
             _playerCollisionTimerRate = GameInfo.PlayerTimerChangeRate;
 
-            _backgroundSpriteSheet = new SpriteSheetAnimationManager();
-            _backgroundSpriteSheet.Initialize(_contentManager, AssetManager.WrestlingBackgroundBase,
-                AssetManager.WrestlingBackgroundTotalCount, 0, true);
-            _backgroundSpriteSheet.Sprite.UseSize = true;
-            _backgroundSpriteSheet.Sprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
-            _backgroundSpriteSheet.FrameTime = AssetManager.WrestlingBackgroundAnimationSpeed;
+            Texture2D backgroundTexture = _contentManager.Load<Texture2D>(AssetManager.GameBG);
+            Texture2D wrestlingBackground = _contentManager.Load<Texture2D>(AssetManager.WrestingBackground);
+
+            _backgroundSprite = new Sprite(backgroundTexture, true);
+            _backgroundSprite.SetOriginCenter();
+            _backgroundSprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
+            _backgroundSprite.Position =
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
+
+            _backgroundAudience = new ScrollingBackground();
+            _backgroundAudience.Initialize(wrestlingBackground, GameInfo.MaxBackgroundElements,
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight), 1, true);
+            _backgroundAudience.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
 
             Texture2D scrollingBackgroundTexture = _contentManager.Load<Texture2D>(AssetManager.BackgroundRopes);
             _scrollingBackground = new ScrollingBackground();
-            _scrollingBackground.Initialization(scrollingBackgroundTexture, GameInfo.FixedWindowWidth);
+            _scrollingBackground.Initialize(scrollingBackgroundTexture, GameInfo.MaxBackgroundElements,
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight), 0.5f);
 
             Texture2D stage = _contentManager.Load<Texture2D>(AssetManager.Stage);
             Sprite stageSprite = new Sprite(stage)
@@ -216,7 +224,7 @@ namespace TeamRock.Scene
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _backgroundSpriteSheet.Draw(spriteBatch);
+            _backgroundAudience.Draw(spriteBatch);
             _scrollingBackground.Draw(spriteBatch);
 
             _fillBarVertical.Draw(spriteBatch);
@@ -277,7 +285,6 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            _backgroundSpriteSheet.Update(deltaTime);
             UpdateFillBarColor(deltaTime);
 
             switch (_gameState)
@@ -464,6 +471,7 @@ namespace TeamRock.Scene
 
         private void UpdateGameObjectsBeforeTime(float deltaTime, float gameTime)
         {
+            _backgroundAudience.Update(deltaTime, _player.GetScaledVelocity().Y);
             _scrollingBackground.Update(deltaTime, _player.GetScaledVelocity().Y);
             _player.Update(deltaTime, gameTime);
             _stage.Update(deltaTime, gameTime);

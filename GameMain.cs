@@ -28,7 +28,7 @@ namespace TeamRock
         private SoundManager _soundManager;
         private CameraShaker _cameraShaker;
 
-        private bool _drawDebug = false; // TODO: Change this later on...
+        private bool _drawDebug = true; // TODO: Change this later on...
 
         #region Screen Management
 

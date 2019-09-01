@@ -125,9 +125,35 @@ namespace TeamRock.Src.GameObjects
             _destinationRectangle.Height = height;
         }
 
-        public float Width => _texture2D.Width * _scale;
+        public float Width
+        {
+            get
+            {
+                if (_useSize)
+                {
+                    return _destinationRectangle.Width;
+                }
+                else
+                {
+                    return _texture2D.Width * _scale;
+                }
+            }
+        }
 
-        public float Height => _texture2D.Height * _scale;
+        public float Height
+        {
+            get
+            {
+                if (_useSize)
+                {
+                    return _destinationRectangle.Height;
+                }
+                else
+                {
+                    return _texture2D.Height * _scale;
+                }
+            }
+        }
 
         public float TextureWidth => _texture2D.Width;
 

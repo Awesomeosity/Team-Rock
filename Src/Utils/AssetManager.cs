@@ -15,7 +15,8 @@
 
         public const string Stage = "Textures/Stage Prop";
         public const string BackgroundRopes = "Textures/Background Ropes Tiling";
-        public const string WrestingBackground = "Textures/WrestlingBackground";
+        public const string WrestingBackground = "Textures/Scrollable Crowd BG";
+        public const string GameBG = "Textures/Game BG";
 
         public const string Soda = "Textures/Soda";
         public const string Popcorn = "Textures/PopCorn";

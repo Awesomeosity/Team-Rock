@@ -1,46 +1,51 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TeamRock.Src.GameObjects;
 using TeamRock.Utils;
 
 namespace TeamRock.Managers
 {
     public class ScrollingBackground
     {
-        private Texture2D _backgroundTexture;
-        private int _textureHeight;
-        private Vector2 _origin;
-
-        private List<Rectangle> _backgroundRectangles;
+        private Vector2 _initialPosition;
+        private List<Sprite> _scrollingSprites;
 
         private bool _isScrollingActive;
 
         #region Initialization
 
-        public void Initialization(Texture2D backgroundTexture, int textureWidth)
+        public void Initialize(Texture2D scrollingTexture, int totalElementsCount,
+            Vector2 initialPosition, float textureScale, bool useSize = false)
         {
-            _backgroundTexture = backgroundTexture;
-            float widthRatio = textureWidth / (float) _backgroundTexture.Width;
-            _textureHeight = (int) (widthRatio * backgroundTexture.Height);
+            _scrollingSprites = new List<Sprite>();
 
-            int xPosition = (int) (GameInfo.FixedWindowWidth / 2.0f);
-
-            _backgroundRectangles = new List<Rectangle>();
-            for (int i = 0; i < GameInfo.MaxBackgroundElements; i++)
+            for (int i = 0; i < totalElementsCount; i++)
             {
-                Rectangle backgroundRectangle = new Rectangle
+                Sprite scrollingSprite = new Sprite(scrollingTexture, useSize);
+                if (!useSize)
                 {
-                    X = xPosition,
-                    Y = i * _textureHeight,
-                    Width = textureWidth,
-                    Height = _textureHeight
-                };
+                    scrollingSprite.Scale = textureScale;
+                }
 
-                _backgroundRectangles.Add(backgroundRectangle);
+                scrollingSprite.Origin =
+                    new Vector2(scrollingSprite.TextureWidth / 2.0f, scrollingSprite.TextureHeight);
+                scrollingSprite.Position = GetInitialPositionBasedOnIndex(i, initialPosition, scrollingSprite.Height);
+
+                _scrollingSprites.Add(scrollingSprite);
             }
 
-            _origin = new Vector2(_backgroundTexture.Width / 2.0f, 0);
+            _initialPosition = initialPosition;
             _isScrollingActive = true;
+        }
+
+        public void SetSize(int width, int height)
+        {
+            for (int i = 0; i < _scrollingSprites.Count; i++)
+            {
+                _scrollingSprites[i].SetSize(width, height);
+                _scrollingSprites[i].Position = GetInitialPositionBasedOnIndex(i, _initialPosition, _scrollingSprites[i].Height);
+            }
         }
 
         #endregion
@@ -49,10 +54,9 @@ namespace TeamRock.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var destinationRectangle in _backgroundRectangles)
+            foreach (Sprite scrollingSprite in _scrollingSprites)
             {
-                spriteBatch.Draw(_backgroundTexture, destinationRectangle, null, Color.White, 0, _origin,
-                    SpriteEffects.None, 0);
+                scrollingSprite.Draw(spriteBatch);
             }
         }
 
@@ -84,15 +88,12 @@ namespace TeamRock.Managers
 
         private void UpdateScrolling(float deltaTime, float playerSpeed)
         {
-            for (int i = 0; i < _backgroundRectangles.Count; i++)
+            foreach (var scrollingSprite in _scrollingSprites)
             {
-                Rectangle backgroundPosition = _backgroundRectangles[i];
-                backgroundPosition.Y -= (int) (playerSpeed * deltaTime);
-
-                _backgroundRectangles[i] = backgroundPosition;
+                scrollingSprite.Position -= Vector2.UnitY * playerSpeed * deltaTime;
             }
 
-            for (int i = 0; i < _backgroundRectangles.Count; i++)
+            for (int i = 0; i < _scrollingSprites.Count; i++)
             {
                 RePositionScrollingBackground();
             }
@@ -100,21 +101,29 @@ namespace TeamRock.Managers
 
         private void RePositionScrollingBackground()
         {
-            Rectangle firstPosition = _backgroundRectangles[0];
-            Rectangle lastPosition = _backgroundRectangles[_backgroundRectangles.Count - 1];
+            Sprite firstElement = _scrollingSprites[0];
+            Sprite lastElement = _scrollingSprites[_scrollingSprites.Count - 1];
 
-            if (firstPosition.Y <= -_textureHeight)
+            if (firstElement.Position.Y < GameInfo.FixedWindowHeight)
             {
-                _backgroundRectangles.RemoveAt(0);
-                firstPosition.Y = lastPosition.Y + _textureHeight;
-                _backgroundRectangles.Add(firstPosition);
+                _scrollingSprites.RemoveAt(_scrollingSprites.Count - 1);
+                lastElement.Position = firstElement.Position + Vector2.UnitY * firstElement.Height;
+                _scrollingSprites.Insert(0, lastElement);
             }
-            else if (lastPosition.Y > GameInfo.FixedWindowHeight)
+            else if (lastElement.Position.Y > lastElement.Height)
             {
-                _backgroundRectangles.RemoveAt(_backgroundRectangles.Count - 1);
-                lastPosition.Y = firstPosition.Y - _textureHeight;
-                _backgroundRectangles.Insert(0, lastPosition);
+                _scrollingSprites.RemoveAt(0);
+                firstElement.Position = lastElement.Position - Vector2.UnitY * lastElement.Height;
+                _scrollingSprites.Add(firstElement);
             }
+        }
+
+        private Vector2 GetInitialPositionBasedOnIndex(int index, Vector2 initialPosition, float spriteHeight)
+        {
+            float yHeight = initialPosition.Y - spriteHeight * index;
+            Vector2 position = new Vector2(initialPosition.X, yHeight);
+
+            return position;
         }
 
         #endregion

@@ -3550,6 +3550,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/FlipGirl.png
 
+#begin Textures/Game BG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Game BG.png
+
 #begin Textures/GameOver.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -3705,6 +3717,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/pose02.png
+
+#begin Textures/Scrollable Crowd BG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Scrollable Crowd BG.png
 
 #begin Textures/Soda.png
 /importer:TextureImporter
