@@ -33,12 +33,14 @@ namespace TeamRock
         #region Screen Management
 
         private HomeScreen _homeScreen;
+        private CinematicScreen _cinematicScreen;
         private MainScreen _mainScreen;
         private GameOverScreen _gameOverScreen;
 
         private enum GameScreen
         {
             HomeScreen,
+            CinematicScreen,
             MainScreen,
             GameOverScreen
         }
@@ -125,6 +127,9 @@ namespace TeamRock
             _homeScreen = HomeScreen.Instance;
             _homeScreen.Initialize(Content);
 
+            _cinematicScreen = CinematicScreen.Instance;
+            _cinematicScreen.Initialize(Content);
+
             _mainScreen = MainScreen.Instance;
             _mainScreen.Initialize(Content);
 
@@ -160,6 +165,10 @@ namespace TeamRock
                     _homeScreen.Draw(_spriteBatch);
                     break;
 
+                case GameScreen.CinematicScreen:
+                    _cinematicScreen.Draw(_spriteBatch);
+                    break;
+
                 case GameScreen.MainScreen:
                     _mainScreen.Draw(_spriteBatch);
                     break;
@@ -188,6 +197,10 @@ namespace TeamRock
             {
                 case GameScreen.HomeScreen:
                     _homeScreen.DrawDebug(_spriteBatch);
+                    break;
+
+                case GameScreen.CinematicScreen:
+                    _cinematicScreen.DrawDebug(_spriteBatch);
                     break;
 
                 case GameScreen.MainScreen:
@@ -240,6 +253,23 @@ namespace TeamRock
                         if (switchScreen)
                         {
                             _homeScreen.StopMusic();
+
+                            _mainScreen.ResetScreen();
+                            SetGameScreen(GameScreen.MainScreen);
+                            _mainScreen.StartMusic();
+
+//                                _cinematicScreen.ResetScreen();
+//                            SetGameScreen(GameScreen.CinematicScreen);
+                        }
+                    }
+                        break;
+
+                    case GameScreen.CinematicScreen:
+                    {
+                        bool switchScreen = _cinematicScreen.Update(deltaTime, totalGameTime);
+
+                        if (switchScreen)
+                        {
                             _mainScreen.ResetScreen();
                             SetGameScreen(GameScreen.MainScreen);
                             _mainScreen.StartMusic();

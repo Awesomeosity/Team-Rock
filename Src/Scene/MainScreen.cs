@@ -32,9 +32,7 @@ namespace TeamRock.Scene
         private SpriteSheetAnimationManager _confetti2;
 
         private List<Audience> _audiences;
-
-        private SpriteFont _defaultFont;
-
+        
         private float _hinderedPlayerTimer;
         private float _currentIncrementModifierTimer;
         private float _playerCollisionTimerRate;
@@ -136,7 +134,6 @@ namespace TeamRock.Scene
             _hinderedPlayerTimer = GameInfo.TotalGameTime;
 
             _timeToGameOver = GameInfo.EndGameTime;
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
 
             _endExplosion = new SpriteSheetAnimationManager();
             _endExplosion.Initialize(_contentManager, AssetManager.EndExplosionBase,

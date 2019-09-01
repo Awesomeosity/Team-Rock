@@ -60,10 +60,12 @@
     <Compile Include="Src\Managers\ScrollingBackground.cs" />
     <Compile Include="Src\Managers\SoundManager.cs" />
     <Compile Include="Src\Managers\SpriteSheetAnimationManager.cs" />
+    <Compile Include="Src\Scene\CinematicScreen.cs" />
     <Compile Include="Src\Scene\CustomScreen.cs" />
     <Compile Include="Src\Scene\GameOverScreen.cs" />
     <Compile Include="Src\Scene\HomeScreen.cs" />
     <Compile Include="Src\Scene\MainScreen.cs" />
+    <Compile Include="Src\Scene\Screen Items\Cinematics\CinematicBackgroundScroller.cs" />
     <Compile Include="Src\UI\UiImageButton.cs" />
     <Compile Include="Src\UI\UiTextNode.cs" />
     <Compile Include="Src\Utils\AssetManager.cs" />
@@ -91,6 +93,7 @@
       <Name>MonoGame.Extended</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

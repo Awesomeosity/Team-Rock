@@ -5,7 +5,7 @@ namespace TeamRock.Utils
     public static class GameInfo
     {
         // Window Size
-        public const int FixedWindowWidth = 600;
+        public const int FixedWindowWidth = 1334;
         public const int FixedWindowHeight = 800;
 
         // Background
@@ -97,5 +97,22 @@ namespace TeamRock.Utils
         public const float StageMoveUpSpeed = 500;
         public const float IncreasedItemPosition = 480F;
         public const int IncreasedItemFrequency = 5;
+
+        // Cinematics
+        public const int TotalCinematicRopes = 5;
+        public const float CinematicScrollMoveSpeed = 250;
+        public const float PlayerMoveToRopePosition = FixedWindowHeight / 2.0f;
+        public const float PlayerSpriteFlipRate = 0.125F;
+        public const float PlayerInitialClimbSpeed = 250;
+
+        public static readonly Vector2 CinematicStageInitialPosition =
+            new Vector2(FixedWindowWidth / 2.0f, FixedWindowHeight - 100);
+
+        public static readonly Vector2 CinematicRowFinalPosition =
+            new Vector2(FixedWindowWidth / 2.0f, FixedWindowHeight + 300);
+
+        public const float InitialStageDisplayWaitTimer = 3f;
+        public const float StageTopWaitTimer = 3f;
+        public const float StageDivingWaitTimer = 3f;
     }
 }
