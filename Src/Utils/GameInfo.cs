@@ -12,7 +12,7 @@ namespace TeamRock.Utils
         public const int MaxBackgroundElements = 3;
 
         // Center Board
-        public const int CenterBoardWidth = 300;
+        public const int CenterBoardWidth = 400;
 
         // Player State
         public static readonly Vector2 PlayerInitialPosition =
@@ -57,7 +57,7 @@ namespace TeamRock.Utils
         public const int AudienceWidth = (FixedWindowWidth - CenterBoardWidth) / 2;
         public const float AudienceTopBuffer = 300;
         public const float LeftAudiencePos = 0;
-        public const float RightAudiencePos = 480;
+        public const float RightAudiencePos = FixedWindowWidth - AudienceWidth;
 
         // Projectile
         public const float MinProjectileVelocity = 150;
