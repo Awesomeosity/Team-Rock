@@ -155,6 +155,10 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
+        public float ScaledHeight => _texture2D.Height * _scale;
+
+        public float ScaledWidth => _texture2D.Width * _scale;
+
         public float TextureWidth => _texture2D.Width;
 
         public float TextureHeight => _texture2D.Height;

@@ -187,14 +187,13 @@ namespace TeamRock.Scene
 
             _fillBarVertical = new FillBarVertical();
             _fillBarVertical.Initialize(fillBarFrame, fillBarBackground, _fillBarGradient, GameInfo.TotalGameTime);
-            _fillBarVertical.CurrentValue = 50;
-
+            
             float barXPosition = GameInfo.FixedWindowWidth / 2.0f + GameInfo.CenterBoardWidth / 2.0f;
 
             fillBarBackground.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
             fillBarFrame.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
             _fillBarGradient.Position = new Vector2(barXPosition,
-                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.ScaledHeight / 2.0f);
 
             Texture2D whitePixel = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
             _fillBarFlasher = new SpriteFlasher(whitePixel, true);
@@ -203,7 +202,7 @@ namespace TeamRock.Scene
             _fillBarFlasher.StartFlashing(GameInfo.InitialBarFlashRate, GameInfo.FlashBarMinAlpha,
                 GameInfo.FlashBarMaxAlpha);
             _fillBarFlasher.Position = new Vector2(barXPosition,
-                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.ScaledHeight / 2.0f);
             _fillBarFlasher.SetSpriteColor(GameInfo.FlashBarColor);
 
             Texture2D fillBarPointer = _contentManager.Load<Texture2D>(AssetManager.FillBarPointer);
@@ -213,9 +212,11 @@ namespace TeamRock.Scene
             _fillBarPointer.Position = new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f);
 
             _fillBarPointerInitialPosition =
-                new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+                new Vector2(barXPosition + 35,
+                    GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.ScaledHeight / 2.0f);
             _fillBarPointerFinalPosition =
-                new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.Height / 2.0f);
+                new Vector2(barXPosition + 35,
+                    GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.ScaledHeight / 2.0f);
         }
 
         #endregion
@@ -242,7 +243,7 @@ namespace TeamRock.Scene
                     break;
 
                 case GameState.EndAnimations:
-                    if (_endExplosion.IsAnimationActive == true)
+                    if (_endExplosion.IsAnimationActive)
                     {
                         _endExplosion.Draw(spriteBatch);
                     }
@@ -430,6 +431,8 @@ namespace TeamRock.Scene
 
                     _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
                     _player.SetPose(Player.Poses.Pose_1);
+                    _player.PlayerSpriteSheet.StopSpriteAnimation();
+                    _player.PlayerSetEndState();
 
                     foreach (Audience audience in _audiences)
                     {
@@ -457,6 +460,7 @@ namespace TeamRock.Scene
 
                 _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
                 _player.SetPose(Player.Poses.Normal);
+                _player.PlayerSetEndState();
 
                 foreach (Audience audience in _audiences)
                 {

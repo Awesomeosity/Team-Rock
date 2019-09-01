@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace TeamRock.Common
 {
@@ -33,20 +34,20 @@ namespace TeamRock.Common
                 if (_currentLerpAmount >= 1)
                 {
                     _isIncreasing = false;
-                }
 
-                if (_flashCount != -1)
-                {
-                    _currentFlashCount -= 1;
-
-                    if (_currentFlashCount <= 0)
+                    if (_flashCount != -1)
                     {
-                        if (_resetAutomatically)
-                        {
-                            _currentFlashCount = _flashCount;
-                        }
+                        _currentFlashCount -= 1;
 
-                        _startFlash = false;
+                        if (_currentFlashCount <= 0)
+                        {
+                            if (_resetAutomatically)
+                            {
+                                _currentFlashCount = _flashCount;
+                            }
+
+                            _startFlash = false;
+                        }
                     }
                 }
             }
@@ -105,6 +106,12 @@ namespace TeamRock.Common
         {
             get => _resetAutomatically;
             set => _resetAutomatically = value;
+        }
+
+        public void StopAndReset()
+        {
+            _startFlash = false;
+            _currentLerpAmount = 0;
         }
 
         #endregion

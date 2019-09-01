@@ -253,9 +253,14 @@ namespace TeamRock
                         if (switchScreen)
                         {
                             _homeScreen.StopMusic();
-                            _cinematicScreen.ResetScreen();
+//                            _cinematicScreen.ResetScreen();
+//
+//                            SetGameScreen(GameScreen.CinematicScreen);
 
-                            SetGameScreen(GameScreen.CinematicScreen);
+                            _mainScreen.ResetScreen();
+                            _mainScreen.StartMusic();
+
+                            SetGameScreen(GameScreen.MainScreen);
                         }
                     }
                         break;

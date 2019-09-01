@@ -61,6 +61,7 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
                 AssetManager.FireFallingTotalCount, 1, true);
             _playerFallingSpriteSheet.FrameTime = 0.01666667F;
+            _playerFallingSpriteSheet.RenderOnStopped = false;
             _playerFallingSpriteSheet.Sprite.SetOriginCenter();
             _spriteSheetPosition = Vector2.Zero;
 
@@ -136,6 +137,23 @@ namespace TeamRock.Src.GameObjects
 
             _playerController.Update();
 
+            if (_playerGameObject.Position.X < GameInfo.PlayerLeftPosition)
+            {
+                _playerGameObject.Position = new Vector2(GameInfo.PlayerLeftPosition, _playerGameObject.Position.Y);
+            }
+            else if (_playerGameObject.Position.X > GameInfo.PlayerRightPosition)
+            {
+                _playerGameObject.Position = new Vector2(GameInfo.PlayerRightPosition, _playerGameObject.Position.Y);
+            }
+            else if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
+            {
+                _playerGameObject.Position = new Vector2(_playerGameObject.Position.X, GameInfo.PlayerMinYPosition);
+            }
+            else if (_playerGameObject.Position.Y > GameInfo.PlayerMaxYPosition)
+            {
+                _playerGameObject.Position = new Vector2(_playerGameObject.Position.X, GameInfo.PlayerMaxYPosition);
+            }
+
             HandleInput(deltaTime);
             UpdateSpriteSheet(deltaTime);
         }
@@ -175,26 +193,15 @@ namespace TeamRock.Src.GameObjects
 
             if (_playerController.State == PlayerController.ControllerState.Right)
             {
-                if (_playerGameObject.Position.X > GameInfo.PlayerRightPosition)
-                {
-                    return;
-                }
-
                 _playerGameObject.Position += GameInfo.HorizontalVelocity * deltaTime * _velocityScaler * speedFactor;
             }
             else if (_playerController.State == PlayerController.ControllerState.Left)
             {
-                if (_playerGameObject.Position.X < GameInfo.PlayerLeftPosition)
-                {
-                    return;
-                }
-
                 _playerGameObject.Position -= GameInfo.HorizontalVelocity * deltaTime * _velocityScaler * speedFactor;
             }
             else if (_playerController.State == PlayerController.ControllerState.Up)
             {
-                if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition ||
-                    _playerGameObject.Velocity.Y < GameInfo.PlayerMinYVelocity)
+                if (_playerGameObject.Velocity.Y < GameInfo.PlayerMinYVelocity)
                 {
                     return;
                 }
@@ -204,11 +211,6 @@ namespace TeamRock.Src.GameObjects
             }
             else if (_playerController.State == PlayerController.ControllerState.Down)
             {
-                if (_playerGameObject.Position.Y > GameInfo.PlayerMaxYPosition)
-                {
-                    return;
-                }
-
                 _playerGameObject.Position += GameInfo.VerticalVelocity * deltaTime * _velocityScaler * speedFactor;
                 _playerGameObject.Acceleration += GameInfo.AccelerationChangeRate * deltaTime;
             }
@@ -316,11 +318,22 @@ namespace TeamRock.Src.GameObjects
         public void ResetPlayer()
         {
             _velocityScaler = 1.0f;
+
             _dashCooldown = 0;
             _dashDuration = 0;
+
+            _poseDuration = 0;
             _currentPose = false;
-            _playerGameObject.Sprite.UpdateTexture(_playerPose);
             _consecutivePoseCount = 0;
+
+            _playerGameObject.Sprite.UpdateTexture(_playerPose);
+
+            _playerFallingSpriteSheet.StartSpriteAnimation();
+        }
+
+        public void PlayerSetEndState()
+        {
+            _playerColorFlasher.StopAndReset();
         }
 
         public void SetPose(Poses pose)
@@ -348,6 +361,12 @@ namespace TeamRock.Src.GameObjects
         {
             get => _useAsDummy;
             set => _useAsDummy = value;
+        }
+
+        public SpriteSheetAnimationManager PlayerSpriteSheet
+        {
+            get => _playerFallingSpriteSheet;
+            set => _playerFallingSpriteSheet = value;
         }
 
         public GameObject GameObject => _playerGameObject;

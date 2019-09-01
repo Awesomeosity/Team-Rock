@@ -19,7 +19,7 @@ namespace TeamRock.Utils
             new Vector2(FixedWindowWidth / 2.0f, 70);
 
         public const float PlayerMinYPosition = 50;
-        public const float PlayerMaxYPosition = FixedWindowHeight - 300;
+        public const float PlayerMaxYPosition = FixedWindowHeight - 50;
         public const float PlayerAssetScale = 0.1f;
         public const float PlayerMinYVelocity = 50;
         public const float PlayerMaxYVelocity = 500;
@@ -44,7 +44,7 @@ namespace TeamRock.Utils
         public const float PlayerBoostDuration = 3;
 
         public const float PlayerKnockBack = 5;
-        public const float PlayerFlashRate = 7;
+        public const float PlayerFlashRate = 14;
         public const int PlayerFlashCount = 5;
 
         // Stage
@@ -67,7 +67,7 @@ namespace TeamRock.Utils
         public const float MaxProjectileVelocity = 300;
         public const float ProjectileLifeTime = 5f;
         public const float MinProjectileSpawnTimer = 1;
-        public const float MaxProjectileSpawnTimer = 5;
+        public const float MaxProjectileSpawnTimer = 3;
         public const float MaxProjectileAssetScaleDistanceSq = 400;
         public const float ProjectileStartAssetScale = 0.05f;
         public const float ProjectileFinalAssetScale = 0.2f;
@@ -91,10 +91,10 @@ namespace TeamRock.Utils
         public const float MaxBarFlashRate = 7;
         public static readonly Color FlashBarColor = new Color(204, 0, 0);
 
-        public const float PlayerTimerChangeRate = 1.2f;
+        public const float PlayerTimerChangeRate = 1.15f;
         public const float PlayerHitTimerChangeRate = 0.5f;
         public const float PlayerHitTimerAffectTime = 2f;
-        public const float PlayerDashTimerChangeRate = 1.5f;
+        public const float PlayerDashTimerChangeRate = 1.3f;
         public const float PlayerDashAffectTime = 0.3f;
 
         // Game Ending Control
