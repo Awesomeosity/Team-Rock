@@ -309,7 +309,11 @@ namespace TeamRock.Scene
                 audience.ClearProjectiles();
             }
 
+            _exitScreen = false;
+
+            _cinematicBackgroundScroller.Reset();
             _genericTimer = GameInfo.InitialStageDisplayWaitTimer;
+
             SetCinematicState(CinematicState.StageDisplay);
         }
 
