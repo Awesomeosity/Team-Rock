@@ -88,7 +88,7 @@
         public const string CottonCandy = "Sounds/Cotton_Candy";
         public const string Hit = "Sounds/Hit_Hurt";
         public const string Explosion = "Sounds/Explosion";
-        public const string Oof_Girl = "Sounds/Girl";
+        public const string OofGirl = "Sounds/Girl";
         public const string Cheer = "Sounds/NewClap";
         public const string Boy = "Sounds/Boy";
 

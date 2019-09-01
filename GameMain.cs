@@ -253,13 +253,9 @@ namespace TeamRock
                         if (switchScreen)
                         {
                             _homeScreen.StopMusic();
+                            _cinematicScreen.ResetScreen();
 
-                            _mainScreen.ResetScreen();
-                            SetGameScreen(GameScreen.MainScreen);
-                            _mainScreen.StartMusic();
-
-//                                _cinematicScreen.ResetScreen();
-//                            SetGameScreen(GameScreen.CinematicScreen);
+                            SetGameScreen(GameScreen.CinematicScreen);
                         }
                     }
                         break;
@@ -271,8 +267,9 @@ namespace TeamRock
                         if (switchScreen)
                         {
                             _mainScreen.ResetScreen();
-                            SetGameScreen(GameScreen.MainScreen);
                             _mainScreen.StartMusic();
+
+                            SetGameScreen(GameScreen.MainScreen);
                         }
                     }
                         break;
@@ -284,6 +281,7 @@ namespace TeamRock
                         {
                             _mainScreen.StopMusic();
                             _gameOverScreen.ResetScreen();
+
                             SetGameScreen(GameScreen.GameOverScreen);
                         }
                     }
@@ -296,6 +294,7 @@ namespace TeamRock
                         {
                             _homeScreen.StartMusic();
                             _homeScreen.ResetScreen();
+
                             SetGameScreen(GameScreen.HomeScreen);
                         }
                     }

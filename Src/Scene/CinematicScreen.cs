@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TeamRock.Managers;
 using TeamRock.Scene.Screen_Items.Cinematics;
 using TeamRock.Src.GameObjects;
 using TeamRock.Utils;
@@ -12,10 +14,17 @@ namespace TeamRock.Scene
     {
         private ContentManager _contentManager;
 
+        private Sprite _backgroundSprite;
+        private ScrollingBackground _audienceScrolling;
         private CinematicBackgroundScroller _cinematicBackgroundScroller;
 
+        private List<Audience> _audiences;
+
+        private Sprite _winWrestler;
         private Sprite _stage;
-        private Sprite _player;
+
+        private Player _dummyPlayer;
+        private Sprite _playerSprite;
 
         private float _genericTimer;
 
@@ -40,16 +49,50 @@ namespace TeamRock.Scene
             Texture2D stageTexture = _contentManager.Load<Texture2D>(AssetManager.Stage);
             Texture2D playerTexture = _contentManager.Load<Texture2D>(AssetManager.PlayerFlipped);
             Texture2D scrollerRope = _contentManager.Load<Texture2D>(AssetManager.BackgroundRopes);
+            Texture2D winWrestler = _contentManager.Load<Texture2D>(AssetManager.WinWrestler);
+            Texture2D backgroundTexture = _contentManager.Load<Texture2D>(AssetManager.GameBG);
+            Texture2D wrestlingBackground = _contentManager.Load<Texture2D>(AssetManager.WrestingBackground);
 
             _stage = new Sprite(stageTexture) {Scale = GameInfo.StageScale};
             _stage.SetOriginCenter();
 
-            _player = new Sprite(playerTexture) {Scale = GameInfo.PlayerAssetScale};
-            _player.SetOriginCenter();
+            _playerSprite = new Sprite(playerTexture) {Scale = GameInfo.PlayerAssetScale};
+            _playerSprite.SetOriginCenter();
+
+            _backgroundSprite = new Sprite(backgroundTexture, true);
+            _backgroundSprite.SetOriginCenter();
+            _backgroundSprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
+
+            _audienceScrolling = new ScrollingBackground();
+            _audienceScrolling.Initialize(wrestlingBackground, GameInfo.MaxBackgroundElements,
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight), 1, true);
+            _audienceScrolling.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
 
             _cinematicBackgroundScroller = new CinematicBackgroundScroller();
             _cinematicBackgroundScroller.Initialize(scrollerRope, 0.5f, GameInfo.TotalCinematicRopes,
                 GameInfo.CinematicStageInitialPosition, GameInfo.CinematicRowFinalPosition);
+
+            _winWrestler = new Sprite(winWrestler)
+            {
+                Scale = GameInfo.WrestlerScale
+            };
+            _winWrestler.SetOriginCenter();
+
+            _dummyPlayer = new Player();
+            _dummyPlayer.Initialize(_contentManager);
+
+            CreateAudiences();
+        }
+
+        private void CreateAudiences()
+        {
+            _audiences = new List<Audience>
+            {
+                new Audience(_dummyPlayer, _contentManager)
+                    {Position = new Vector2(GameInfo.LeftAudiencePos, 0), SpawnPeople = false},
+                new Audience(_dummyPlayer, _contentManager)
+                    {Position = new Vector2(GameInfo.RightAudiencePos, 0), SpawnPeople = false}
+            };
         }
 
         #endregion
@@ -58,13 +101,25 @@ namespace TeamRock.Scene
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            _backgroundSprite.Draw(spriteBatch);
+            _audienceScrolling.Draw(spriteBatch);
+
             _cinematicBackgroundScroller.Draw(spriteBatch);
+
             _stage.Draw(spriteBatch);
-            _player.Draw(spriteBatch);
+            _winWrestler.Draw(spriteBatch);
+
+            _playerSprite.Draw(spriteBatch);
+
+            foreach (Audience audience in _audiences)
+            {
+                audience.DrawProjectiles(spriteBatch);
+            }
         }
 
         public override void DrawDebug(SpriteBatch spriteBatch)
         {
+            _dummyPlayer.DrawDebug(spriteBatch);
         }
 
         #endregion
@@ -84,7 +139,7 @@ namespace TeamRock.Scene
                     break;
 
                 case CinematicState.Climbing:
-                    UpdatePlayerClimbing(deltaTime);
+                    UpdatePlayerClimbing(deltaTime, gameTime);
                     break;
 
                 case CinematicState.PlayerReachedTop:
@@ -115,8 +170,8 @@ namespace TeamRock.Scene
 
         private void UpdatePlayerMoveToPosition(float deltaTime)
         {
-            _player.Position -= Vector2.UnitY * GameInfo.PlayerInitialClimbSpeed * deltaTime;
-            if (_player.Position.Y <= GameInfo.PlayerMoveToRopePosition)
+            _playerSprite.Position -= Vector2.UnitY * GameInfo.PlayerInitialClimbSpeed * deltaTime;
+            if (_playerSprite.Position.Y <= GameInfo.PlayerMoveToRopePosition)
             {
                 _cinematicBackgroundScroller.StartScrolling = true;
                 _cinematicBackgroundScroller.ScrollingSpeed = GameInfo.CinematicScrollMoveSpeed;
@@ -130,15 +185,15 @@ namespace TeamRock.Scene
             {
                 _genericTimer = GameInfo.PlayerSpriteFlipRate;
 
-                SpriteEffects playerSpriteEffects = _player.SpriteEffects;
+                SpriteEffects playerSpriteEffects = _playerSprite.SpriteEffects;
                 switch (playerSpriteEffects)
                 {
                     case SpriteEffects.None:
-                        _player.SpriteEffects = SpriteEffects.FlipHorizontally;
+                        _playerSprite.SpriteEffects = SpriteEffects.FlipHorizontally;
                         break;
 
                     case SpriteEffects.FlipHorizontally:
-                        _player.SpriteEffects = SpriteEffects.None;
+                        _playerSprite.SpriteEffects = SpriteEffects.None;
                         break;
 
                     case SpriteEffects.FlipVertically:
@@ -150,22 +205,22 @@ namespace TeamRock.Scene
             }
         }
 
-        private void UpdatePlayerClimbing(float deltaTime)
+        private void UpdatePlayerClimbing(float deltaTime, float gameTime)
         {
             _genericTimer -= deltaTime;
             if (_genericTimer <= 0)
             {
                 _genericTimer = GameInfo.PlayerSpriteFlipRate;
 
-                SpriteEffects playerSpriteEffects = _player.SpriteEffects;
+                SpriteEffects playerSpriteEffects = _playerSprite.SpriteEffects;
                 switch (playerSpriteEffects)
                 {
                     case SpriteEffects.None:
-                        _player.SpriteEffects = SpriteEffects.FlipHorizontally;
+                        _playerSprite.SpriteEffects = SpriteEffects.FlipHorizontally;
                         break;
 
                     case SpriteEffects.FlipHorizontally:
-                        _player.SpriteEffects = SpriteEffects.None;
+                        _playerSprite.SpriteEffects = SpriteEffects.None;
                         break;
 
                     case SpriteEffects.FlipVertically:
@@ -176,8 +231,17 @@ namespace TeamRock.Scene
                 }
             }
 
+            foreach (Audience audience in _audiences)
+            {
+                audience.Update(deltaTime, gameTime);
+            }
+
+            _dummyPlayer.GameObject.Position = _playerSprite.Position;
+
+            _winWrestler.Position += Vector2.UnitY * GameInfo.CinematicScrollMoveSpeed * deltaTime;
             _stage.Position += Vector2.UnitY * GameInfo.CinematicScrollMoveSpeed * deltaTime;
 
+            _audienceScrolling.Update(deltaTime, -GameInfo.CinematicScrollMoveSpeed);
             _cinematicBackgroundScroller.Update(deltaTime);
         }
 
@@ -194,7 +258,7 @@ namespace TeamRock.Scene
             _genericTimer -= deltaTime;
             if (_genericTimer <= 0)
             {
-                _player.SpriteEffects = SpriteEffects.FlipVertically;
+                _playerSprite.SpriteEffects = SpriteEffects.FlipVertically;
                 _genericTimer = GameInfo.StageDivingWaitTimer;
 
                 SetCinematicState(CinematicState.PlayerJump);
@@ -217,13 +281,18 @@ namespace TeamRock.Scene
         public void ResetScreen()
         {
             _stage.Position = GameInfo.CinematicStageInitialPosition;
-            _player.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 200);
-            _player.SpriteEffects = SpriteEffects.None;
+            _winWrestler.Position = _stage.Position - Vector2.UnitY * 50;
 
-            _cinematicBackgroundScroller.Reset();
+            _playerSprite.Position = _stage.Position - Vector2.UnitY * 150;
+            _playerSprite.SpriteEffects = SpriteEffects.None;
 
-            SetCinematicState(CinematicState.StageDisplay);
+            foreach (Audience audience in _audiences)
+            {
+                audience.ClearProjectiles();
+            }
+
             _genericTimer = GameInfo.InitialStageDisplayWaitTimer;
+            SetCinematicState(CinematicState.StageDisplay);
         }
 
         #endregion

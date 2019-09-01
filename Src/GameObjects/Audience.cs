@@ -30,6 +30,7 @@ namespace TeamRock.Src.GameObjects
         private SoundEffect _hitSound3;
         private SoundEffect _hitSound4;
 
+        private bool _spawnPeople = true;
         private bool _isProjectileSpawningActive;
 
         #region Initialization
@@ -44,11 +45,10 @@ namespace TeamRock.Src.GameObjects
             _projectiles = new List<Projectile>();
             _audienceRectangle = new RectangleF();
 
-
             _cheer = contentManager.Load<SoundEffect>(AssetManager.Cheer);
             _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
             _hitSound2 = contentManager.Load<SoundEffect>(AssetManager.Boo);
-            _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.Oof_Girl);
+            _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.OofGirl);
             _hitSound4 = contentManager.Load<SoundEffect>(AssetManager.Boy);
 
             _isProjectileSpawningActive = true;
@@ -177,6 +177,12 @@ namespace TeamRock.Src.GameObjects
             set => _isProjectileSpawningActive = value;
         }
 
+        public bool SpawnPeople
+        {
+            get => _spawnPeople;
+            set => _spawnPeople = value;
+        }
+
         public void ClearProjectiles() => _projectiles.Clear();
 
         #endregion
@@ -210,6 +216,12 @@ namespace TeamRock.Src.GameObjects
             launchDirection.Normalize();
 
             float random = ExtensionFunctions.Random();
+
+            if (!_spawnPeople && random >= 0.9f)
+            {
+                random = 0.8f;
+            }
+
             Projectile.ProjSprite projSprite;
             string textureLoad;
             if (random < 0.5)

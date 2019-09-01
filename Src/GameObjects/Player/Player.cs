@@ -31,10 +31,12 @@ namespace TeamRock.Src.GameObjects
 
         private Vector2 _spriteSheetPosition;
 
-        private bool _currPose = false;
+        private bool _currentPose;
         private Texture2D _playerPose;
         private Texture2D _pose1;
         private Texture2D _pose2;
+
+        private bool _useAsDummy; // This is a very hacky method that handles Custom Player Hiding and Collision Boxes
 
         #region Initialization
 
@@ -81,6 +83,11 @@ namespace TeamRock.Src.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (_useAsDummy)
+            {
+                return;
+            }
+
             if (_dashCooldown <= 0 && _poseDuration <= 0)
             {
                 _playerFallingSpriteSheet.Draw(spriteBatch);
@@ -89,12 +96,19 @@ namespace TeamRock.Src.GameObjects
             _playerGameObject.Draw(spriteBatch);
         }
 
+        public void DrawDebug(SpriteBatch spriteBatch) => _playerGameObject.DrawDebug(spriteBatch);
+
         #endregion
 
         #region Update
 
         public void Update(float deltaTime, float gameTime)
         {
+            if (_useAsDummy)
+            {
+                return;
+            }
+
             UpdateDurations(deltaTime);
 
             if (_playerGameObject.Velocity.Y < GameInfo.PlayerMaxYVelocity)
@@ -111,17 +125,18 @@ namespace TeamRock.Src.GameObjects
         private void HandleInput(float deltaTime)
         {
             int speedFactor = 1;
-            if (_playerController.DidPlayerPressDash && _dashCooldown <= 0 && ExtensionFunctions.FloatCompare(1, _velocityScaler))
+            if (_playerController.DidPlayerPressDash && _dashCooldown <= 0 &&
+                ExtensionFunctions.FloatCompare(1, _velocityScaler))
             {
-                if (_currPose)
+                if (_currentPose)
                 {
                     GameObject.Sprite.UpdateTexture(_pose1);
-                    _currPose = !_currPose;
+                    _currentPose = !_currentPose;
                 }
                 else
                 {
                     GameObject.Sprite.UpdateTexture(_pose2);
-                    _currPose = !_currPose;
+                    _currentPose = !_currentPose;
                 }
 
                 _dashDuration = GameInfo.PlayerDashDuration;
@@ -135,7 +150,7 @@ namespace TeamRock.Src.GameObjects
                 {
                     speedFactor = 3;
                 }
-                
+
                 _playerGameObject.Position += _dashDirection * GameInfo.PlayerDashVelocity * deltaTime;
             }
 
@@ -202,10 +217,10 @@ namespace TeamRock.Src.GameObjects
                 _dashDuration -= deltaTime;
             }
 
-            if(_boostDuration > 0)
+            if (_boostDuration > 0)
             {
                 _boostDuration -= deltaTime;
-                if(_boostDuration <= 0)
+                if (_boostDuration <= 0)
                 {
                     _velocityScaler = 1;
                 }
@@ -268,10 +283,7 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
-        public bool IsPosing()
-        {
-            return (_poseDuration > 0);
-        }
+        public bool IsPosing() => _poseDuration > 0;
 
         public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;
 
@@ -280,26 +292,35 @@ namespace TeamRock.Src.GameObjects
             _velocityScaler = 1.0f;
             _dashCooldown = 0;
             _dashDuration = 0;
-            _currPose = false;
+            _currentPose = false;
             _playerGameObject.Sprite.UpdateTexture(_playerPose);
         }
 
-        public void setPose(Poses pose)
+        public void SetPose(Poses pose)
         {
             switch (pose)
             {
                 case Poses.Normal:
                     _playerGameObject.Sprite.UpdateTexture(_playerPose);
                     break;
+
                 case Poses.Pose_1:
                     _playerGameObject.Sprite.UpdateTexture(_pose1);
                     break;
+
                 case Poses.Pose_2:
                     _playerGameObject.Sprite.UpdateTexture(_pose2);
                     break;
+
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public bool UseAsDummy
+        {
+            get => _useAsDummy;
+            set => _useAsDummy = value;
         }
 
         public GameObject GameObject => _playerGameObject;

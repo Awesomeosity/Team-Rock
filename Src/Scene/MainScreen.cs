@@ -271,7 +271,7 @@ namespace TeamRock.Scene
         public override void DrawDebug(SpriteBatch spriteBatch)
         {
             _stage.DrawDebug(spriteBatch);
-            _player.GameObject.DrawDebug(spriteBatch);
+            _player.DrawDebug(spriteBatch);
 
             foreach (Audience audience in _audiences)
             {
@@ -429,7 +429,7 @@ namespace TeamRock.Scene
                     SetGameState(GameState.EndStarted);
 
                     _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
-                    _player.setPose(Player.Poses.Pose_1);
+                    _player.SetPose(Player.Poses.Pose_1);
 
                     foreach (Audience audience in _audiences)
                     {
@@ -456,7 +456,7 @@ namespace TeamRock.Scene
                 _winWrestler.Position += new Vector2(100, -100);
 
                 _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
-                _player.setPose(Player.Poses.Normal);
+                _player.SetPose(Player.Poses.Normal);
 
                 foreach (Audience audience in _audiences)
                 {
