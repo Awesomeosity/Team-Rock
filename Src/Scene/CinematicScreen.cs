@@ -89,9 +89,17 @@ namespace TeamRock.Scene
             _audiences = new List<Audience>
             {
                 new Audience(_dummyPlayer, _contentManager)
-                    {Position = new Vector2(GameInfo.LeftAudiencePos, 0), SpawnPeople = false},
+                {
+                    Position = new Vector2(GameInfo.LeftAudiencePos, 0), SpawnPeople = false,
+                    IsProjectileSpawningActive = false,
+                    IsCollisionActive = false
+                },
                 new Audience(_dummyPlayer, _contentManager)
-                    {Position = new Vector2(GameInfo.RightAudiencePos, 0), SpawnPeople = false}
+                {
+                    Position = new Vector2(GameInfo.RightAudiencePos, 0), SpawnPeople = false,
+                    IsProjectileSpawningActive = false,
+                    IsCollisionActive = false
+                }
             };
         }
 
@@ -154,6 +162,11 @@ namespace TeamRock.Scene
                     throw new ArgumentOutOfRangeException();
             }
 
+            foreach (Audience audience in _audiences)
+            {
+                audience.Update(deltaTime, gameTime);
+            }
+
             return _exitScreen;
         }
 
@@ -176,6 +189,11 @@ namespace TeamRock.Scene
                 _cinematicBackgroundScroller.StartScrolling = true;
                 _cinematicBackgroundScroller.ScrollingSpeed = GameInfo.CinematicScrollMoveSpeed;
                 _cinematicBackgroundScroller.OnPositionReached += PlayerClimbingPositionReached;
+
+                foreach (Audience audience in _audiences)
+                {
+                    audience.IsProjectileSpawningActive = true;
+                }
 
                 SetCinematicState(CinematicState.Climbing);
             }
@@ -231,11 +249,6 @@ namespace TeamRock.Scene
                 }
             }
 
-            foreach (Audience audience in _audiences)
-            {
-                audience.Update(deltaTime, gameTime);
-            }
-
             _dummyPlayer.GameObject.Position = _playerSprite.Position;
 
             _winWrestler.Position += Vector2.UnitY * GameInfo.CinematicScrollMoveSpeed * deltaTime;
@@ -249,6 +262,11 @@ namespace TeamRock.Scene
         {
             _cinematicBackgroundScroller.OnPositionReached -= PlayerClimbingPositionReached;
             _genericTimer = GameInfo.StageTopWaitTimer;
+
+            foreach (Audience audience in _audiences)
+            {
+                audience.IsProjectileSpawningActive = false;
+            }
 
             SetCinematicState(CinematicState.PlayerReachedTop);
         }

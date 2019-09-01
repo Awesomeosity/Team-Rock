@@ -347,7 +347,7 @@ namespace TeamRock.Scene
 
             foreach (Audience audience in _audiences)
             {
-                audience.IsProjectileSPawningActive = true;
+                audience.IsProjectileSpawningActive = true;
                 audience.ClearProjectiles();
             }
 
@@ -433,7 +433,7 @@ namespace TeamRock.Scene
 
                     foreach (Audience audience in _audiences)
                     {
-                        audience.IsProjectileSPawningActive = false;
+                        audience.IsProjectileSpawningActive = false;
                         audience.ClearProjectiles();
                     }
 
@@ -460,7 +460,7 @@ namespace TeamRock.Scene
 
                 foreach (Audience audience in _audiences)
                 {
-                    audience.IsProjectileSPawningActive = false;
+                    audience.IsProjectileSpawningActive = false;
                     audience.ClearProjectiles();
                 }
 

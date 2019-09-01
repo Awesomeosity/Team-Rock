@@ -30,6 +30,7 @@ namespace TeamRock.Src.GameObjects
         private SoundEffect _hitSound3;
         private SoundEffect _hitSound4;
 
+        private bool _isCollisionActive;
         private bool _spawnPeople = true;
         private bool _isProjectileSpawningActive;
 
@@ -52,6 +53,7 @@ namespace TeamRock.Src.GameObjects
             _hitSound4 = contentManager.Load<SoundEffect>(AssetManager.Boy);
 
             _isProjectileSpawningActive = true;
+            _isCollisionActive = true;
         }
 
         #endregion
@@ -73,9 +75,10 @@ namespace TeamRock.Src.GameObjects
             {
                 _projectiles[i].Update(deltaTime, gameTime);
 
-                if (_projectiles[i].IsProjectileDestroyed || _projectiles[i].DidCollide(_player.GameObject))
+                if (_projectiles[i].IsProjectileDestroyed ||
+                    (_projectiles[i].DidCollide(_player.GameObject) && _isCollisionActive))
                 {
-                    if (_projectiles[i].DidCollide(_player.GameObject))
+                    if (_projectiles[i].DidCollide(_player.GameObject) && _isCollisionActive)
                     {
                         if (_projectiles[i].Position.X < _player.GameObject.Position.X)
                         {
@@ -171,7 +174,7 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
-        public bool IsProjectileSPawningActive
+        public bool IsProjectileSpawningActive
         {
             get => _isProjectileSpawningActive;
             set => _isProjectileSpawningActive = value;
@@ -181,6 +184,12 @@ namespace TeamRock.Src.GameObjects
         {
             get => _spawnPeople;
             set => _spawnPeople = value;
+        }
+
+        public bool IsCollisionActive
+        {
+            get => _isCollisionActive;
+            set => _isCollisionActive = value;
         }
 
         public void ClearProjectiles() => _projectiles.Clear();
