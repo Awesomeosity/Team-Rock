@@ -79,8 +79,7 @@ namespace TeamRock.Scene
         public override bool Update(float deltaTime, float gameTime)
         {
             UpdateControls();
-            SoundManager.Instance.CheckSound(_musicIndex);
-
+            
             return _gameStarted;
         }
 
@@ -120,8 +119,7 @@ namespace TeamRock.Scene
 
         public void StartMusic()
         {
-            _musicIndex = SoundManager.Instance.PlaySound(_music);
-            SoundManager.Instance.SetSoundLooping(_musicIndex);
+            _musicIndex = SoundManager.Instance.PlaySound(_music, true);
             SoundManager.Instance.SetSoundVolume(_musicIndex, 0.5f);
         }
 

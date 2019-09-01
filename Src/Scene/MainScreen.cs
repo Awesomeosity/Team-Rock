@@ -316,9 +316,7 @@ namespace TeamRock.Scene
             {
                 audience.Update(deltaTime, gameTime);
             }
-
-            SoundManager.Instance.CheckSound(_musicIndex);
-
+            
             return _gameState == GameState.GameOver;
         }
 
@@ -363,8 +361,7 @@ namespace TeamRock.Scene
 
         public void StartMusic()
         {
-            _musicIndex = SoundManager.Instance.PlaySound(_music);
-            SoundManager.Instance.SetSoundLooping(_musicIndex, true);
+            _musicIndex = SoundManager.Instance.PlaySound(_music, true);
             SoundManager.Instance.SetSoundVolume(_musicIndex, 0.75f);
         }
 
