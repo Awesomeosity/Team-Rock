@@ -41,6 +41,9 @@ namespace TeamRock.Src.GameObjects
 
         private ColorFlashSwitcher _playerColorFlasher;
 
+        public delegate void PlayerHitNotification();
+        public PlayerHitNotification OnPlayerHitNotification;
+
         private bool _useAsDummy; // This is a very hacky method that handles Custom Player Hiding and Collision Boxes
 
         #region Initialization
@@ -309,6 +312,7 @@ namespace TeamRock.Src.GameObjects
         public void PlayerHit()
         {
             _playerColorFlasher.StartFlash = true;
+            OnPlayerHitNotification?.Invoke();
         }
 
         public bool IsPosing() => _poseDuration > 0;

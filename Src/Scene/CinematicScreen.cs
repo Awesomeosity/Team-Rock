@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TeamRock.Common;
 using TeamRock.Managers;
 using TeamRock.Scene.Screen_Items.Cinematics;
 using TeamRock.Src.GameObjects;
@@ -27,6 +28,7 @@ namespace TeamRock.Scene
 
         private Player _dummyPlayer;
         private Sprite _playerSprite;
+        private ColorFlashSwitcher _playerFlasher;
 
         private float _cinematicSceneVariable_1;
         private float _cinematicSceneVariable_2;
@@ -37,7 +39,6 @@ namespace TeamRock.Scene
         private SoundEffect _voiceOver_3;
         private SoundEffect _voiceOver_4;
         private SoundEffect _voiceOver_5;
-        private SoundEffect _voiceOver_6;
 
         private bool _screenActive;
 
@@ -72,6 +73,16 @@ namespace TeamRock.Scene
             _playerSprite = new Sprite(playerTexture) {Scale = GameInfo.PlayerAssetScale};
             _playerSprite.SetOriginCenter();
 
+            _playerFlasher = new ColorFlashSwitcher()
+            {
+                StartFlash = false,
+                StartColor = Color.White * 1,
+                EndColor = Color.White * 0,
+                FlashCount = GameInfo.PlayerFlashCount,
+                LerpRate = GameInfo.PlayerFlashRate,
+                ResetAutomatically = true
+            };
+
             _backgroundSprite = new Sprite(backgroundTexture, true);
             _backgroundSprite.SetOriginCenter();
             _backgroundSprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
@@ -93,6 +104,7 @@ namespace TeamRock.Scene
 
             _dummyPlayer = new Player();
             _dummyPlayer.Initialize(_contentManager);
+            _dummyPlayer.OnPlayerHitNotification += HandlePlayerHit;
 
             CreateAudiences();
             CreateSounds();
@@ -106,13 +118,13 @@ namespace TeamRock.Scene
                 {
                     Position = new Vector2(GameInfo.LeftAudiencePos, 0), SpawnPeople = false,
                     IsProjectileSpawningActive = false,
-                    IsCollisionActive = false
+                    IsCollisionActive = true
                 },
                 new Audience(_dummyPlayer, _contentManager)
                 {
                     Position = new Vector2(GameInfo.RightAudiencePos, 0), SpawnPeople = false,
                     IsProjectileSpawningActive = false,
-                    IsCollisionActive = false
+                    IsCollisionActive = true
                 }
             };
         }
@@ -124,7 +136,6 @@ namespace TeamRock.Scene
             _voiceOver_3 = _contentManager.Load<SoundEffect>(AssetManager.VOScene3);
             _voiceOver_4 = _contentManager.Load<SoundEffect>(AssetManager.VOScene4);
             _voiceOver_5 = _contentManager.Load<SoundEffect>(AssetManager.VOScene5);
-            _voiceOver_6 = _contentManager.Load<SoundEffect>(AssetManager.VOScene6);
         }
 
         #endregion
@@ -173,7 +184,7 @@ namespace TeamRock.Scene
                         break;
 
                     case CinematicState.Climbing:
-                        UpdatePlayerClimbing(deltaTime, gameTime);
+                        UpdatePlayerClimbing(deltaTime);
                         break;
 
                     case CinematicState.PlayerReachedTop:
@@ -193,6 +204,8 @@ namespace TeamRock.Scene
                     audience.Update(deltaTime, gameTime);
                 }
             }
+
+            _playerSprite.SpriteColor = _playerFlasher.Update(deltaTime);
 
             return _exitScreen;
         }
@@ -255,7 +268,7 @@ namespace TeamRock.Scene
             }
         }
 
-        private void UpdatePlayerClimbing(float deltaTime, float gameTime)
+        private void UpdatePlayerClimbing(float deltaTime)
         {
             _cinematicSceneVariable_1 -= deltaTime;
             if (_cinematicSceneVariable_1 <= 0)
@@ -388,6 +401,8 @@ namespace TeamRock.Scene
 
             _cinematicState = cinematicState;
         }
+
+        private void HandlePlayerHit() => _playerFlasher.StartFlash = true;
 
         private void HandleFadeIn()
         {
