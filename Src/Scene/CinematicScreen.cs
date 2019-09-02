@@ -28,8 +28,9 @@ namespace TeamRock.Scene
         private Player _dummyPlayer;
         private Sprite _playerSprite;
 
-        private float _genericTimer;
         private float _cinematicSceneVariable_1;
+        private float _cinematicSceneVariable_2;
+        private float _cinematicScreenVariable_3;
 
         private SoundEffect _voiceOver_1;
         private SoundEffect _voiceOver_2;
@@ -198,11 +199,13 @@ namespace TeamRock.Scene
 
         private void UpdateStageDisplay(float deltaTime)
         {
-            _genericTimer -= deltaTime;
+            _cinematicSceneVariable_1 -= deltaTime;
 
-            if (_genericTimer <= 0)
+            if (_cinematicSceneVariable_1 <= 0)
             {
-                _genericTimer = GameInfo.PlayerSpriteFlipRate;
+                _cinematicSceneVariable_1 = GameInfo.PlayerSpriteFlipRate;
+                SoundManager.Instance.PlaySound(_voiceOver_2);
+
                 SetCinematicState(CinematicState.PlayerMoveToPosition);
             }
         }
@@ -221,13 +224,16 @@ namespace TeamRock.Scene
                     audience.IsProjectileSpawningActive = true;
                 }
 
+                _cinematicSceneVariable_2 = GameInfo.WaitTimeForFinalMinutesCommentary;
+                _cinematicScreenVariable_3 = 0;
+
                 SetCinematicState(CinematicState.Climbing);
             }
 
-            _genericTimer -= deltaTime;
-            if (_genericTimer <= 0)
+            _cinematicSceneVariable_1 -= deltaTime;
+            if (_cinematicSceneVariable_1 <= 0)
             {
-                _genericTimer = GameInfo.PlayerSpriteFlipRate;
+                _cinematicSceneVariable_1 = GameInfo.PlayerSpriteFlipRate;
 
                 SpriteEffects playerSpriteEffects = _playerSprite.SpriteEffects;
                 switch (playerSpriteEffects)
@@ -251,10 +257,10 @@ namespace TeamRock.Scene
 
         private void UpdatePlayerClimbing(float deltaTime, float gameTime)
         {
-            _genericTimer -= deltaTime;
-            if (_genericTimer <= 0)
+            _cinematicSceneVariable_1 -= deltaTime;
+            if (_cinematicSceneVariable_1 <= 0)
             {
-                _genericTimer = GameInfo.PlayerSpriteFlipRate;
+                _cinematicSceneVariable_1 = GameInfo.PlayerSpriteFlipRate;
 
                 SpriteEffects playerSpriteEffects = _playerSprite.SpriteEffects;
                 switch (playerSpriteEffects)
@@ -275,6 +281,25 @@ namespace TeamRock.Scene
                 }
             }
 
+            if (_cinematicSceneVariable_2 > 0)
+            {
+                _cinematicSceneVariable_2 -= deltaTime;
+                if (_cinematicSceneVariable_2 <= 0)
+                {
+                    if (_cinematicScreenVariable_3 == 0)
+                    {
+                        SoundManager.Instance.PlaySound(_voiceOver_3);
+                        _cinematicSceneVariable_2 = GameInfo.WaitTimeForThrowingCommentary;
+                    }
+                    else
+                    {
+                        SoundManager.Instance.PlaySound(_voiceOver_4);
+                    }
+
+                    _cinematicScreenVariable_3 += 1;
+                }
+            }
+
             _dummyPlayer.GameObject.Position = _playerSprite.Position;
 
             _winWrestler.Position += Vector2.UnitY * GameInfo.CinematicScrollMoveSpeed * deltaTime;
@@ -287,7 +312,7 @@ namespace TeamRock.Scene
         private void PlayerClimbingPositionReached()
         {
             _cinematicBackgroundScroller.OnPositionReached -= PlayerClimbingPositionReached;
-            _genericTimer = GameInfo.StageTopWaitTimer;
+            _cinematicSceneVariable_1 = GameInfo.StageTopWaitTimer;
 
             foreach (Audience audience in _audiences)
             {
@@ -299,11 +324,13 @@ namespace TeamRock.Scene
 
         private void UpdatePlayerReachedTop(float deltaTime)
         {
-            _genericTimer -= deltaTime;
-            if (_genericTimer <= 0)
+            _cinematicSceneVariable_1 -= deltaTime;
+            if (_cinematicSceneVariable_1 <= 0)
             {
                 _playerSprite.SpriteEffects = SpriteEffects.FlipVertically;
-                _genericTimer = GameInfo.StageDivingWaitTimer;
+                _cinematicSceneVariable_1 = GameInfo.StageDivingWaitTimer;
+
+                SoundManager.Instance.PlaySound(_voiceOver_5);
 
                 SetCinematicState(CinematicState.PlayerJump);
             }
@@ -311,8 +338,8 @@ namespace TeamRock.Scene
 
         private void UpdatePlayerJump(float deltaTime)
         {
-            _genericTimer -= deltaTime;
-            if (_genericTimer <= 0)
+            _cinematicSceneVariable_1 -= deltaTime;
+            if (_cinematicSceneVariable_1 <= 0)
             {
                 _screenActive = false;
                 Fader.Instance.StartFadeIn();
@@ -340,7 +367,7 @@ namespace TeamRock.Scene
             _exitScreen = false;
 
             _cinematicBackgroundScroller.Reset();
-            _genericTimer = GameInfo.InitialStageDisplayWaitTimer;
+            _cinematicSceneVariable_1 = GameInfo.InitialStageDisplayWaitTimer;
 
             Fader.Instance.OnFadeInComplete += HandleFadeIn;
             Fader.Instance.OnFadeOutComplete += HandleFadeOut;
@@ -372,6 +399,8 @@ namespace TeamRock.Scene
         {
             Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
             _screenActive = true;
+
+            SoundManager.Instance.PlaySound(_voiceOver_1);
         }
 
         #endregion

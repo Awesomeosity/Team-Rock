@@ -111,6 +111,9 @@ namespace TeamRock.Utils
         public const float PlayerSpriteFlipRate = 0.125F;
         public const float PlayerInitialClimbSpeed = 250;
 
+        public const float WaitTimeForFinalMinutesCommentary = 2f;
+        public const float WaitTimeForThrowingCommentary = 3f;
+
         public static readonly Vector2 CinematicStageInitialPosition =
             new Vector2(FixedWindowWidth / 2.0f, FixedWindowHeight - 100);
 
