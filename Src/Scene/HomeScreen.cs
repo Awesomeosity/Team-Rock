@@ -17,8 +17,7 @@ namespace TeamRock.Scene
         private SoundEffect _music;
         private int _musicIndex;
 
-        private SpriteFont _defaultFont;
-        private UiTextNode _pressToPlayText;
+        private Sprite _startSprite;
         private Sprite _headerImage;
         private Sprite _luchadorSprite;
         private KeyboardState _oldKeyboardState;
@@ -49,11 +48,13 @@ namespace TeamRock.Scene
             };
             _luchadorSprite.SetOriginCenter();
 
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
-            _pressToPlayText = new UiTextNode();
-            _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO START");
-            _pressToPlayText.Position =
-                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100);
+            Texture2D startTexture = _contentManager.Load<Texture2D>(AssetManager.SpaceToStart);
+            _startSprite = new Sprite(startTexture)
+            {
+                Scale = 0.2f,
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100)
+            };
+            _startSprite.SetOriginCenter();
 
             _music = _contentManager.Load<SoundEffect>(AssetManager.HomeScreenMusic);
         }
@@ -66,7 +67,7 @@ namespace TeamRock.Scene
         {
             _headerImage.Draw(spriteBatch);
             _luchadorSprite.Draw(spriteBatch);
-            _pressToPlayText.Draw(spriteBatch);
+            _startSprite.Draw(spriteBatch);
         }
 
         public override void DrawDebug(SpriteBatch spriteBatch)
@@ -94,8 +95,6 @@ namespace TeamRock.Scene
 
             if (gamePadCapabilities.IsConnected)
             {
-                _pressToPlayText.Text = "PRESS <A> TO START";
-
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
                 if (gamePadState.Buttons.A != ButtonState.Pressed && _oldGamePadState.Buttons.A == ButtonState.Pressed)
                 {
@@ -107,8 +106,6 @@ namespace TeamRock.Scene
             }
             else
             {
-                _pressToPlayText.Text = "PRESS <SPACE> TO START";
-
                 if (keyboardState.IsKeyUp(Keys.Space) && _oldKeyboardState.IsKeyDown(Keys.Space))
                 {
                     _screenActive = false;

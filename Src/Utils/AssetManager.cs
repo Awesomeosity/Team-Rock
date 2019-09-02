@@ -39,6 +39,10 @@
         public const string FillBarGradient = "Textures/Distance Bar Gradient";
         public const string FillBarPointer = "Textures/Distance Bar Indicator";
 
+        public const string SpaceToStart = "Textures/SpacetoStart";
+        public const string SpaceToReturn = "Textures/SpacetoReturn";
+        public const string DashControls = "Textures/dash_2";
+
         #endregion
 
         #region Fonts
