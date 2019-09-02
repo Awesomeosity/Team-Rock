@@ -24,7 +24,8 @@ namespace TeamRock.Scene
         private KeyboardState _oldKeyboardState;
         private GamePadState _oldGamePadState;
 
-        private bool _gameStarted;
+        private bool _screenActive;
+        private bool _exitScreen;
 
         #region Initialization
 
@@ -78,9 +79,12 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            UpdateControls();
-            
-            return _gameStarted;
+            if (_screenActive)
+            {
+                UpdateControls();
+            }
+
+            return _exitScreen;
         }
 
         private void UpdateControls()
@@ -95,7 +99,8 @@ namespace TeamRock.Scene
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
                 if (gamePadState.Buttons.A != ButtonState.Pressed && _oldGamePadState.Buttons.A == ButtonState.Pressed)
                 {
-                    _gameStarted = true;
+                    _screenActive = false;
+                    Fader.Instance.StartFadeIn();
                 }
 
                 _oldGamePadState = gamePadState;
@@ -106,7 +111,8 @@ namespace TeamRock.Scene
 
                 if (keyboardState.IsKeyUp(Keys.Space) && _oldKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    _gameStarted = true;
+                    _screenActive = false;
+                    Fader.Instance.StartFadeIn();
                 }
 
                 _oldKeyboardState = keyboardState;
@@ -125,7 +131,30 @@ namespace TeamRock.Scene
 
         public void StopMusic() => SoundManager.Instance.StopSound(_musicIndex);
 
-        public void ResetScreen() => _gameStarted = false;
+        public void ResetScreen()
+        {
+            _exitScreen = false;
+            _screenActive = false;
+
+            Fader.Instance.OnFadeInComplete += HandleFadeIn;
+            Fader.Instance.OnFadeOutComplete += HandleFadeOut;
+        }
+
+        #endregion
+
+        #region Utility Functions
+
+        private void HandleFadeIn()
+        {
+            Fader.Instance.OnFadeInComplete -= HandleFadeIn;
+            _exitScreen = true;
+        }
+
+        private void HandleFadeOut()
+        {
+            Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
+            _screenActive = true;
+        }
 
         #endregion
 

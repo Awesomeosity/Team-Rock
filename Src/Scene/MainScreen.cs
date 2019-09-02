@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
 using TeamRock.Src.GameObjects;
+using TeamRock.UI;
 using TeamRock.Utils;
 
 namespace TeamRock.Scene
@@ -47,6 +48,9 @@ namespace TeamRock.Scene
         private SpriteFlasher _fillBarFlasher;
         private Sprite _fillBarGradient;
         private FillBarVertical _fillBarVertical;
+
+        private bool _exitScreen;
+        private bool _screenActive;
 
         private enum GameState
         {
@@ -187,7 +191,7 @@ namespace TeamRock.Scene
 
             _fillBarVertical = new FillBarVertical();
             _fillBarVertical.Initialize(fillBarFrame, fillBarBackground, _fillBarGradient, GameInfo.TotalGameTime);
-            
+
             float barXPosition = GameInfo.FixedWindowWidth / 2.0f + GameInfo.CenterBoardWidth / 2.0f;
 
             fillBarBackground.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
@@ -286,38 +290,41 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            UpdateFillBarColor(deltaTime);
-
-            switch (_gameState)
+            if (_screenActive)
             {
-                case GameState.IsRunning:
-                    UpdateGameEndTimer(deltaTime);
-                    UpdatePlayerRacingTimer(deltaTime);
-                    UpdateGameObjectsBeforeTime(deltaTime, gameTime);
-                    break;
+                UpdateFillBarColor(deltaTime);
 
-                case GameState.EndStarted:
-                    UpdateStageAndPlayerEndState(deltaTime, gameTime);
-                    break;
+                switch (_gameState)
+                {
+                    case GameState.IsRunning:
+                        UpdateGameEndTimer(deltaTime);
+                        UpdatePlayerRacingTimer(deltaTime);
+                        UpdateGameObjectsBeforeTime(deltaTime, gameTime);
+                        break;
 
-                case GameState.EndAnimations:
-                    UpdateEndStateAnimations(deltaTime);
-                    break;
+                    case GameState.EndStarted:
+                        UpdateStageAndPlayerEndState(deltaTime, gameTime);
+                        break;
 
-                case GameState.GameOver:
-                    // Don't do Anything
-                    break;
+                    case GameState.EndAnimations:
+                        UpdateEndStateAnimations(deltaTime);
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    case GameState.GameOver:
+                        // Don't do Anything
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                foreach (Audience audience in _audiences)
+                {
+                    audience.Update(deltaTime, gameTime);
+                }
             }
 
-            foreach (Audience audience in _audiences)
-            {
-                audience.Update(deltaTime, gameTime);
-            }
-            
-            return _gameState == GameState.GameOver;
+            return _exitScreen;
         }
 
         #endregion
@@ -355,6 +362,12 @@ namespace TeamRock.Scene
             _confetti2.StopSpriteAnimation();
 
             _timeToGameOver = GameInfo.EndGameTime;
+
+            _exitScreen = false;
+            _screenActive = false;
+
+            Fader.Instance.OnFadeInComplete += HandleFadeIn;
+            Fader.Instance.OnFadeOutComplete += HandleFadeOut;
 
             SetGameState(GameState.IsRunning);
         }
@@ -526,6 +539,9 @@ namespace TeamRock.Scene
 
             if (_timeToGameOver <= 0)
             {
+                _screenActive = false;
+                Fader.Instance.StartFadeIn();
+
                 SetGameState(GameState.GameOver);
             }
         }
@@ -538,6 +554,18 @@ namespace TeamRock.Scene
             }
 
             _gameState = gameState;
+        }
+
+        private void HandleFadeIn()
+        {
+            Fader.Instance.OnFadeInComplete -= HandleFadeIn;
+            _exitScreen = true;
+        }
+
+        private void HandleFadeOut()
+        {
+            Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
+            _screenActive = true;
         }
 
         #endregion

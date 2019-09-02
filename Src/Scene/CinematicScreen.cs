@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TeamRock.Managers;
 using TeamRock.Scene.Screen_Items.Cinematics;
 using TeamRock.Src.GameObjects;
+using TeamRock.UI;
 using TeamRock.Utils;
 
 namespace TeamRock.Scene
@@ -27,6 +29,16 @@ namespace TeamRock.Scene
         private Sprite _playerSprite;
 
         private float _genericTimer;
+        private float _cinematicSceneVariable_1;
+
+        private SoundEffect _voiceOver_1;
+        private SoundEffect _voiceOver_2;
+        private SoundEffect _voiceOver_3;
+        private SoundEffect _voiceOver_4;
+        private SoundEffect _voiceOver_5;
+        private SoundEffect _voiceOver_6;
+
+        private bool _screenActive;
 
         private enum CinematicState
         {
@@ -82,6 +94,7 @@ namespace TeamRock.Scene
             _dummyPlayer.Initialize(_contentManager);
 
             CreateAudiences();
+            CreateSounds();
         }
 
         private void CreateAudiences()
@@ -101,6 +114,16 @@ namespace TeamRock.Scene
                     IsCollisionActive = false
                 }
             };
+        }
+
+        private void CreateSounds()
+        {
+            _voiceOver_1 = _contentManager.Load<SoundEffect>(AssetManager.VOScene1);
+            _voiceOver_2 = _contentManager.Load<SoundEffect>(AssetManager.VOScene2);
+            _voiceOver_3 = _contentManager.Load<SoundEffect>(AssetManager.VOScene3);
+            _voiceOver_4 = _contentManager.Load<SoundEffect>(AssetManager.VOScene4);
+            _voiceOver_5 = _contentManager.Load<SoundEffect>(AssetManager.VOScene5);
+            _voiceOver_6 = _contentManager.Load<SoundEffect>(AssetManager.VOScene6);
         }
 
         #endregion
@@ -136,35 +159,38 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            switch (_cinematicState)
+            if (_screenActive)
             {
-                case CinematicState.StageDisplay:
-                    UpdateStageDisplay(deltaTime);
-                    break;
+                switch (_cinematicState)
+                {
+                    case CinematicState.StageDisplay:
+                        UpdateStageDisplay(deltaTime);
+                        break;
 
-                case CinematicState.PlayerMoveToPosition:
-                    UpdatePlayerMoveToPosition(deltaTime);
-                    break;
+                    case CinematicState.PlayerMoveToPosition:
+                        UpdatePlayerMoveToPosition(deltaTime);
+                        break;
 
-                case CinematicState.Climbing:
-                    UpdatePlayerClimbing(deltaTime, gameTime);
-                    break;
+                    case CinematicState.Climbing:
+                        UpdatePlayerClimbing(deltaTime, gameTime);
+                        break;
 
-                case CinematicState.PlayerReachedTop:
-                    UpdatePlayerReachedTop(deltaTime);
-                    break;
+                    case CinematicState.PlayerReachedTop:
+                        UpdatePlayerReachedTop(deltaTime);
+                        break;
 
-                case CinematicState.PlayerJump:
-                    UpdatePlayerJump(deltaTime);
-                    break;
+                    case CinematicState.PlayerJump:
+                        UpdatePlayerJump(deltaTime);
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
-            foreach (Audience audience in _audiences)
-            {
-                audience.Update(deltaTime, gameTime);
+                foreach (Audience audience in _audiences)
+                {
+                    audience.Update(deltaTime, gameTime);
+                }
             }
 
             return _exitScreen;
@@ -288,7 +314,8 @@ namespace TeamRock.Scene
             _genericTimer -= deltaTime;
             if (_genericTimer <= 0)
             {
-                _exitScreen = true;
+                _screenActive = false;
+                Fader.Instance.StartFadeIn();
             }
         }
 
@@ -309,10 +336,14 @@ namespace TeamRock.Scene
                 audience.ClearProjectiles();
             }
 
+            _screenActive = false;
             _exitScreen = false;
 
             _cinematicBackgroundScroller.Reset();
             _genericTimer = GameInfo.InitialStageDisplayWaitTimer;
+
+            Fader.Instance.OnFadeInComplete += HandleFadeIn;
+            Fader.Instance.OnFadeOutComplete += HandleFadeOut;
 
             SetCinematicState(CinematicState.StageDisplay);
         }
@@ -329,6 +360,18 @@ namespace TeamRock.Scene
             }
 
             _cinematicState = cinematicState;
+        }
+
+        private void HandleFadeIn()
+        {
+            Fader.Instance.OnFadeInComplete -= HandleFadeIn;
+            _exitScreen = true;
+        }
+
+        private void HandleFadeOut()
+        {
+            Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
+            _screenActive = true;
         }
 
         #endregion

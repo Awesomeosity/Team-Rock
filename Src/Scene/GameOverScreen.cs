@@ -19,6 +19,9 @@ namespace TeamRock.Scene
         private KeyboardState _oldState;
         private GamePadState _oldControl;
 
+        private bool _screenActive;
+        private bool _exitScreen;
+
         #region Initialization
 
         public override void Initialize(ContentManager contentManager)
@@ -71,7 +74,8 @@ namespace TeamRock.Scene
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
                 if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
                 {
-                    return true;
+                    _screenActive = false;
+                    Fader.Instance.StartFadeIn();
                 }
 
                 _oldControl = gamePadState;
@@ -82,13 +86,14 @@ namespace TeamRock.Scene
 
                 if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
                 {
-                    return true;
+                    _screenActive = false;
+                    Fader.Instance.StartFadeIn();
                 }
 
                 _oldState = keyboardState;
             }
 
-            return false;
+            return _exitScreen;
         }
 
         #endregion
@@ -99,6 +104,28 @@ namespace TeamRock.Scene
         {
             _oldState = Keyboard.GetState();
             _oldControl = GamePad.GetState(PlayerIndex.One);
+
+            _exitScreen = false;
+            _screenActive = false;
+
+            Fader.Instance.OnFadeInComplete += HandleFadeIn;
+            Fader.Instance.OnFadeOutComplete += HandleFadeOut;
+        }
+
+        #endregion
+
+        #region Utility Functions
+
+        private void HandleFadeIn()
+        {
+            Fader.Instance.OnFadeInComplete -= HandleFadeIn;
+            _exitScreen = true;
+        }
+
+        private void HandleFadeOut()
+        {
+            Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
+            _screenActive = true;
         }
 
         #endregion

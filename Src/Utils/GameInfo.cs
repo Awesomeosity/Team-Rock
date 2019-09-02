@@ -120,5 +120,9 @@ namespace TeamRock.Utils
         public const float InitialStageDisplayWaitTimer = 3f;
         public const float StageTopWaitTimer = 3f;
         public const float StageDivingWaitTimer = 3f;
+
+        // Fader
+        public const float ScreenFadeInRate = 0.7f;
+        public const float ScreenFadeOutRate = 1;
     }
 }

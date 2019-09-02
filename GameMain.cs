@@ -7,6 +7,7 @@ using MonoGame.Extended.ViewportAdapters;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
 using TeamRock.Scene;
+using TeamRock.UI;
 using TeamRock.Utils;
 
 namespace TeamRock
@@ -29,6 +30,8 @@ namespace TeamRock
         private CameraShaker _cameraShaker;
 
         private bool _drawDebug = false; // TODO: Change this later on...
+
+        private Fader _screenFader;
 
         #region Screen Management
 
@@ -92,8 +95,8 @@ namespace TeamRock
             SetupScreens();
             SetupOtherItems();
 
-            SetGameScreen(GameScreen.HomeScreen);
             _homeScreen.StartMusic();
+            SetGameScreen(GameScreen.HomeScreen);
         }
 
         private void SetupCamerasAndViewports()
@@ -141,6 +144,14 @@ namespace TeamRock
         {
             _soundManager = SoundManager.Instance;
             _soundManager.Initialize();
+
+            _screenFader = Fader.Instance;
+            _screenFader.Initialize(Content, GameInfo.ScreenFadeInRate, GameInfo.ScreenFadeOutRate);
+
+            // Set Initial Screen Status Before First Run
+            _screenFader.SetSpriteColor(Color.Black);
+            _screenFader.StartFadeOut();
+            _homeScreen.ResetScreen();
         }
 
         #endregion
@@ -180,6 +191,8 @@ namespace TeamRock
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            _screenFader.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -255,6 +268,8 @@ namespace TeamRock
                             _homeScreen.StopMusic();
                             _cinematicScreen.ResetScreen();
 
+                            Fader.Instance.StartFadeOut();
+
                             SetGameScreen(GameScreen.CinematicScreen);
                         }
                     }
@@ -269,6 +284,8 @@ namespace TeamRock
                             _mainScreen.ResetScreen();
                             _mainScreen.StartMusic();
 
+                            Fader.Instance.StartFadeOut();
+
                             SetGameScreen(GameScreen.MainScreen);
                         }
                     }
@@ -281,6 +298,8 @@ namespace TeamRock
                         {
                             _mainScreen.StopMusic();
                             _gameOverScreen.ResetScreen();
+
+                            Fader.Instance.StartFadeOut();
 
                             SetGameScreen(GameScreen.GameOverScreen);
                         }
@@ -295,6 +314,8 @@ namespace TeamRock
                             _homeScreen.StartMusic();
                             _homeScreen.ResetScreen();
 
+                            Fader.Instance.StartFadeOut();
+
                             SetGameScreen(GameScreen.HomeScreen);
                         }
                     }
@@ -303,6 +324,8 @@ namespace TeamRock
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                _screenFader.Update(deltaTime);
             }
             else
             {
