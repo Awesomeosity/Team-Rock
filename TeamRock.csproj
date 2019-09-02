@@ -65,6 +65,7 @@
     <Compile Include="Src\Scene\CustomScreen.cs" />
     <Compile Include="Src\Scene\GameOverScreen.cs" />
     <Compile Include="Src\Scene\HomeScreen.cs" />
+    <Compile Include="Src\Scene\InstructionScreen.cs" />
     <Compile Include="Src\Scene\MainScreen.cs" />
     <Compile Include="Src\Scene\Screen Items\Cinematics\CinematicBackgroundScroller.cs" />
     <Compile Include="Src\UI\Fader.cs" />

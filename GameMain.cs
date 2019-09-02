@@ -37,6 +37,7 @@ namespace TeamRock
 
         private HomeScreen _homeScreen;
         private CinematicScreen _cinematicScreen;
+        private InstructionScreen _instructionScreen;
         private MainScreen _mainScreen;
         private GameOverScreen _gameOverScreen;
 
@@ -44,6 +45,7 @@ namespace TeamRock
         {
             HomeScreen,
             CinematicScreen,
+            InstructionsScreen,
             MainScreen,
             GameOverScreen
         }
@@ -133,6 +135,9 @@ namespace TeamRock
             _cinematicScreen = CinematicScreen.Instance;
             _cinematicScreen.Initialize(Content);
 
+            _instructionScreen = InstructionScreen.Instance;
+            _instructionScreen.Initialize(Content);
+
             _mainScreen = MainScreen.Instance;
             _mainScreen.Initialize(Content);
 
@@ -180,6 +185,10 @@ namespace TeamRock
                     _cinematicScreen.Draw(_spriteBatch);
                     break;
 
+                case GameScreen.InstructionsScreen:
+                    _instructionScreen.Draw(_spriteBatch);
+                    break;
+
                 case GameScreen.MainScreen:
                     _mainScreen.Draw(_spriteBatch);
                     break;
@@ -214,6 +223,10 @@ namespace TeamRock
 
                 case GameScreen.CinematicScreen:
                     _cinematicScreen.DrawDebug(_spriteBatch);
+                    break;
+
+                case GameScreen.InstructionsScreen:
+                    _instructionScreen.DrawDebug(_spriteBatch);
                     break;
 
                 case GameScreen.MainScreen:
@@ -281,6 +294,20 @@ namespace TeamRock
 
                         if (switchScreen)
                         {
+                            _instructionScreen.ResetScreen();
+                            
+                            Fader.Instance.StartFadeOut();
+                            SetGameScreen(GameScreen.InstructionsScreen);
+                        }
+                    }
+                        break;
+
+                    case GameScreen.InstructionsScreen:
+                    {
+                        bool switchScreen = _instructionScreen.Update(deltaTime, totalGameTime);
+
+                        if (switchScreen)
+                        {
                             _mainScreen.ResetScreen();
                             _mainScreen.StartMusic();
 
@@ -290,6 +317,7 @@ namespace TeamRock
                         }
                     }
                         break;
+
 
                     case GameScreen.MainScreen:
                     {

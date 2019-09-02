@@ -351,6 +351,8 @@ namespace TeamRock.Scene
             _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250);
             _winWrestler.Velocity = new Vector2(0, 0);
 
+            _fillBarPointer.Position = _fillBarPointerInitialPosition;
+            _fillBarVertical.Reset();
 
             foreach (Audience audience in _audiences)
             {

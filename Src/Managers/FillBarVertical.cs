@@ -110,6 +110,14 @@ namespace TeamRock.Managers
 
         public float BarHeight => _barHeight;
 
+        public void Reset()
+        {
+            _currentValue = 0;
+            _barHeight = 0;
+
+            _topBar.SetSize((int)_topBar.ScaledWidth, (int)_barHeight);
+        }
+
         #endregion
     }
 }

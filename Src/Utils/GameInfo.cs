@@ -37,7 +37,7 @@ namespace TeamRock.Utils
         public const float PlayerSlowdownRate = 0.5f;
 
         public const float PlayerDashDuration = 0.2f;
-        public const float PlayerDashCooldown = 1;
+        public const float PlayerDashCooldown = 3;
         public const float PlayerDashVelocity = 750;
         public const float PlayerPoseDuration = 2;
         public const int MaxPoseCount = 3;
@@ -93,8 +93,8 @@ namespace TeamRock.Utils
 
         public const float PlayerTimerChangeRate = 1.15f;
         public const float PlayerHitTimerChangeRate = 0.5f;
-        public const float PlayerHitTimerAffectTime = 2f;
-        public const float PlayerDashTimerChangeRate = 1.3f;
+        public const float PlayerHitTimerAffectTime = 2.3f;
+        public const float PlayerDashTimerChangeRate = 1.2f;
         public const float PlayerDashAffectTime = 0.3f;
 
         // Game Ending Control
@@ -123,6 +123,9 @@ namespace TeamRock.Utils
         public const float InitialStageDisplayWaitTimer = 3f;
         public const float StageTopWaitTimer = 3f;
         public const float StageDivingWaitTimer = 3f;
+
+        // Instructions
+        public const float InstructionScreenWaitTimer = 3;
 
         // Fader
         public const float ScreenFadeInRate = 0.7f;

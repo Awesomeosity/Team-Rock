@@ -67,29 +67,33 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
-            if (gamePadCapabilities.IsConnected)
+            if (_screenActive)
             {
-                GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
+                KeyboardState keyboardState = Keyboard.GetState();
+                GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+                if (gamePadCapabilities.IsConnected)
                 {
-                    _screenActive = false;
-                    Fader.Instance.StartFadeIn();
-                }
+                    GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+                    if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
+                    {
+                        _screenActive = false;
+                        Fader.Instance.StartFadeIn();
+                    }
 
-                _oldControl = gamePadState;
-            }
-            else
-            {
-                if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
+                    _oldControl = gamePadState;
+                }
+                else
                 {
-                    _screenActive = false;
-                    Fader.Instance.StartFadeIn();
-                }
+                    if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
+                    {
+                        _screenActive = false;
+                        Fader.Instance.StartFadeIn();
+                    }
 
-                _oldState = keyboardState;
+                    _oldState = keyboardState;
+                }
             }
+
 
             return _exitScreen;
         }
