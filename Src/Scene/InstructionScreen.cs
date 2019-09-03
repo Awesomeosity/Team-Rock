@@ -12,8 +12,7 @@ namespace TeamRock.Scene
     public class InstructionScreen : CustomScreen
     {
         private ContentManager _contentManager;
-
-        private SoundEffect _voiceOver_6;
+        
         private Sprite _dashTutorial;
 
         private float _countDownTimer;
@@ -25,8 +24,6 @@ namespace TeamRock.Scene
         public override void Initialize(ContentManager contentManager)
         {
             _contentManager = contentManager;
-
-            _voiceOver_6 = _contentManager.Load<SoundEffect>(AssetManager.VOScene6);
 
             Texture2D dashTutorial = _contentManager.Load<Texture2D>(AssetManager.DashControls);
             _dashTutorial = new Sprite(dashTutorial)
@@ -98,8 +95,6 @@ namespace TeamRock.Scene
         {
             Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
             _screenActive = true;
-
-            SoundManager.Instance.PlaySound(_voiceOver_6);
         }
 
         #endregion

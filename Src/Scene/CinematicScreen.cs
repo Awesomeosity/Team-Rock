@@ -21,6 +21,10 @@ namespace TeamRock.Scene
         private ScrollingBackground _audienceScrolling;
         private CinematicBackgroundScroller _cinematicBackgroundScroller;
 
+        private Sprite _starSprite;
+        private SpriteSheetAnimationManager _starSpriteSheetAnimationManager;
+        private Vector2 _starsOffset;
+
         private List<Audience> _audiences;
 
         private Sprite _winWrestler;
@@ -29,6 +33,9 @@ namespace TeamRock.Scene
         private Player _dummyPlayer;
         private Sprite _playerSprite;
         private ColorFlashSwitcher _playerFlasher;
+
+        private float _booTimer;
+        private SoundEffect _booSoundEffect;
 
         private float _cinematicSceneVariable_1;
         private float _cinematicSceneVariable_2;
@@ -39,6 +46,7 @@ namespace TeamRock.Scene
         private SoundEffect _voiceOver_3;
         private SoundEffect _voiceOver_4;
         private SoundEffect _voiceOver_5;
+        private SoundEffect _voiceOver_6;
 
         private bool _screenActive;
 
@@ -102,6 +110,14 @@ namespace TeamRock.Scene
             };
             _winWrestler.SetOriginCenter();
 
+            _starSpriteSheetAnimationManager = new SpriteSheetAnimationManager();
+            _starSpriteSheetAnimationManager.Initialize(_contentManager, AssetManager.StarBase,
+                AssetManager.StarTotalCount, 0, true);
+            _starSpriteSheetAnimationManager.FrameTime = AssetManager.StarAnimationSpeed;
+            _starSprite = _starSpriteSheetAnimationManager.Sprite;
+            _starSprite.Scale = 0.4f;
+            _starsOffset = new Vector2(_winWrestler.Width - 50, 70);
+
             _dummyPlayer = new Player();
             _dummyPlayer.Initialize(_contentManager);
             _dummyPlayer.OnPlayerHitNotification += HandlePlayerHit;
@@ -136,6 +152,9 @@ namespace TeamRock.Scene
             _voiceOver_3 = _contentManager.Load<SoundEffect>(AssetManager.VOScene3);
             _voiceOver_4 = _contentManager.Load<SoundEffect>(AssetManager.VOScene4);
             _voiceOver_5 = _contentManager.Load<SoundEffect>(AssetManager.VOScene5);
+            _voiceOver_6 = _contentManager.Load<SoundEffect>(AssetManager.VOScene6);
+
+            _booSoundEffect = _contentManager.Load<SoundEffect>(AssetManager.Boo);
         }
 
         #endregion
@@ -151,6 +170,7 @@ namespace TeamRock.Scene
 
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);
+            _starSpriteSheetAnimationManager.Draw(spriteBatch);
 
             _playerSprite.Draw(spriteBatch);
 
@@ -205,6 +225,15 @@ namespace TeamRock.Scene
                 }
             }
 
+            _booTimer -= deltaTime;
+            if (_booTimer <= 0)
+            {
+                _booTimer = ExtensionFunctions.RandomInRange(GameInfo.CinematicBooMinTime,
+                    GameInfo.CinematicBooMaxTime);
+                SoundManager.Instance.PlaySound(_booSoundEffect);
+            }
+
+            _starSpriteSheetAnimationManager.Update(deltaTime);
             _playerSprite.SpriteColor = _playerFlasher.Update(deltaTime);
 
             return _exitScreen;
@@ -317,6 +346,7 @@ namespace TeamRock.Scene
 
             _winWrestler.Position += Vector2.UnitY * GameInfo.CinematicScrollMoveSpeed * deltaTime;
             _stage.Position += Vector2.UnitY * GameInfo.CinematicScrollMoveSpeed * deltaTime;
+            _starSprite.Position += Vector2.UnitY * GameInfo.CinematicScrollMoveSpeed * deltaTime;
 
             _audienceScrolling.Update(deltaTime, -GameInfo.CinematicScrollMoveSpeed);
             _cinematicBackgroundScroller.Update(deltaTime);
@@ -332,6 +362,7 @@ namespace TeamRock.Scene
                 audience.IsProjectileSpawningActive = false;
             }
 
+            SoundManager.Instance.PlaySound(_voiceOver_5);
             SetCinematicState(CinematicState.PlayerReachedTop);
         }
 
@@ -343,7 +374,7 @@ namespace TeamRock.Scene
                 _playerSprite.SpriteEffects = SpriteEffects.FlipVertically;
                 _cinematicSceneVariable_1 = GameInfo.StageDivingWaitTimer;
 
-                SoundManager.Instance.PlaySound(_voiceOver_5);
+                SoundManager.Instance.PlaySound(_voiceOver_6);
 
                 SetCinematicState(CinematicState.PlayerJump);
             }
@@ -367,6 +398,7 @@ namespace TeamRock.Scene
         {
             _stage.Position = GameInfo.CinematicStageInitialPosition;
             _winWrestler.Position = _stage.Position - Vector2.UnitY * 50;
+            _starSprite.Position = _winWrestler.Position - _starsOffset;
 
             _playerSprite.Position = _stage.Position - Vector2.UnitY * 150;
             _playerSprite.SpriteEffects = SpriteEffects.None;

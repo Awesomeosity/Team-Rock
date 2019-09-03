@@ -79,6 +79,11 @@
         public const int ConfettiTotalCount_2 = 81;
         public const float ConfettiAnimationSpeed_2 = 0.01235F;
 
+        // Star
+        public const string StarBase = "SpriteSheets/Star/Star_";
+        public const int StarTotalCount = 3;
+        public const float StarAnimationSpeed = 0.1666667F;
+
         #endregion
 
         #region Sounds
@@ -113,7 +118,7 @@
         public const string VOScene4 = "VoiceOvers/VO-4";
         public const string VOScene5 = "VoiceOvers/VO-5";
         public const string VOScene6 = "VoiceOvers/VO-6";
-        
+
         #endregion
     }
 }

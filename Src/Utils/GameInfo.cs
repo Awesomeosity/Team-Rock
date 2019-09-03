@@ -39,7 +39,7 @@ namespace TeamRock.Utils
         public const float PlayerDashDuration = 0.2f;
         public const float PlayerDashCooldown = 3;
         public const float PlayerDashVelocity = 750;
-        public const float PlayerPoseDuration = 2;
+        public const float PlayerPoseDuration = 1f;
         public const int MaxPoseCount = 3;
         public const float PlayerBoostDuration = 3;
 
@@ -92,8 +92,8 @@ namespace TeamRock.Utils
         public static readonly Color FlashBarColor = new Color(204, 0, 0);
 
         public const float PlayerTimerChangeRate = 1.15f;
-        public const float PlayerHitTimerChangeRate = 0.5f;
-        public const float PlayerHitTimerAffectTime = 2.3f;
+        public const float PlayerHitTimerChangeRate = 0.2f;
+        public const float PlayerHitTimerAffectTime = 3f;
         public const float PlayerDashTimerChangeRate = 1.2f;
         public const float PlayerDashAffectTime = 0.3f;
 
@@ -123,6 +123,9 @@ namespace TeamRock.Utils
         public const float InitialStageDisplayWaitTimer = 3f;
         public const float StageTopWaitTimer = 3f;
         public const float StageDivingWaitTimer = 3f;
+
+        public const float CinematicBooMinTime = 7;
+        public const float CinematicBooMaxTime = 14;
 
         // Instructions
         public const float InstructionScreenWaitTimer = 3;

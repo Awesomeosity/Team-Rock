@@ -20,6 +20,10 @@ namespace TeamRock.Scene
         private SoundEffect _clap;
         private SoundEffect _explosionSound;
 
+        private Sprite _starSprite;
+        private SpriteSheetAnimationManager _starSpriteSheetAnimationManager;
+        private Vector2 _starsOffset;
+
         private GameObject _stage;
         private GameObject _winWrestler;
         private Player _player;
@@ -129,6 +133,14 @@ namespace TeamRock.Scene
             {
                 Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250)
             };
+
+            _starSpriteSheetAnimationManager = new SpriteSheetAnimationManager();
+            _starSpriteSheetAnimationManager.Initialize(_contentManager, AssetManager.StarBase,
+                AssetManager.StarTotalCount, 0, true);
+            _starSpriteSheetAnimationManager.FrameTime = AssetManager.StarAnimationSpeed;
+            _starSprite = _starSpriteSheetAnimationManager.Sprite;
+            _starSprite.Scale = 0.4f;
+            _starsOffset = new Vector2(_winWrestler.Sprite.Width - 50, 70);
         }
 
         private void CreateAudiences()
@@ -240,6 +252,11 @@ namespace TeamRock.Scene
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);
 
+            if (_unhinderedTimeToImpact > 0)
+            {
+                _starSpriteSheetAnimationManager.Draw(spriteBatch);
+            }
+
             switch (_gameState)
             {
                 case GameState.IsRunning:
@@ -294,6 +311,7 @@ namespace TeamRock.Scene
             if (_screenActive)
             {
                 UpdateFillBarColor(deltaTime);
+                _starSpriteSheetAnimationManager.Update(deltaTime);
 
                 switch (_gameState)
                 {
@@ -350,6 +368,7 @@ namespace TeamRock.Scene
             _winWrestler.Sprite.UpdateTexture(_contentManager.Load<Texture2D>(AssetManager.WinWrestler));
             _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250);
             _winWrestler.Velocity = new Vector2(0, 0);
+            _starSprite.Position = _winWrestler.Position - _starsOffset;
 
             _fillBarPointer.Position = _fillBarPointerInitialPosition;
             _fillBarVertical.Reset();
@@ -503,6 +522,7 @@ namespace TeamRock.Scene
                 _stage.Update(deltaTime, gameTime);
                 _winWrestler.Velocity = -Vector2.UnitY * GameInfo.StageMoveUpSpeed;
                 _winWrestler.Update(deltaTime, gameTime);
+                _starSprite.Position = _winWrestler.Position - _starsOffset;
             }
 
             _player.GameObject.Velocity = Vector2.UnitY * GameInfo.PlayerMaxYVelocity;
