@@ -1,10 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
+using TeamRock.Common;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
 {
     public class Projectile : GameObject
     {
+        private ColorFlashSwitcher _colorFlashSwitcher;
+
         private float _lifeTime;
         private bool _isProjectileDestroyed;
 
@@ -30,6 +34,12 @@ namespace TeamRock.Src.GameObjects
         {
         }
 
+        public ColorFlashSwitcher ColorFlashSwitcher
+        {
+            get => _colorFlashSwitcher;
+            set => _colorFlashSwitcher = value;
+        }
+
         #endregion
 
         #region Update
@@ -37,6 +47,10 @@ namespace TeamRock.Src.GameObjects
         public override void Update(float deltaTime, float gameTime)
         {
             base.Update(deltaTime, gameTime);
+
+            Color spriteColor = _colorFlashSwitcher.Update(deltaTime);
+            Sprite.SpriteColor = spriteColor;
+
             UpdateRotation(deltaTime);
             UpdateAssetScale();
 
@@ -61,7 +75,7 @@ namespace TeamRock.Src.GameObjects
             _positionToTarget = positionToTarget;
             _initialDistanceToTarget = Vector2.DistanceSquared(Position, _positionToTarget);
 
-            if(_projSprite != ProjSprite.Girl && _projSprite != ProjSprite.Jordan)
+            if (_projSprite != ProjSprite.Girl && _projSprite != ProjSprite.Jordan)
             {
                 _rotationSpeed = ExtensionFunctions.RandomInRange(GameInfo.ProjectileMinRotationSpeed,
                     GameInfo.ProjectileMaxRotationSpeed);
@@ -69,7 +83,7 @@ namespace TeamRock.Src.GameObjects
             else
             {
                 _rotationSpeed = 0;
-                Sprite.Rotation = (float)System.Math.Atan2((double)directionNormalized.Y, (double)directionNormalized.X) + 90;
+                Sprite.Rotation = (float) Math.Atan2(directionNormalized.Y, directionNormalized.X) + 90;
             }
         }
 
@@ -90,7 +104,6 @@ namespace TeamRock.Src.GameObjects
             return _projSprite;
         }
 
-
         #endregion
 
         #region Utility Functions
@@ -109,7 +122,6 @@ namespace TeamRock.Src.GameObjects
         }
 
         private void UpdateRotation(float deltaTime) => Sprite.Rotation += _rotationSpeed * deltaTime;
-
 
         #endregion
     }

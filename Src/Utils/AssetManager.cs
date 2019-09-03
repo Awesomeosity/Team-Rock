@@ -15,12 +15,15 @@
 
         public const string Stage = "Textures/Stage Prop";
         public const string BackgroundRopes = "Textures/Background Ropes Tiling";
-        public const string WrestingBackground = "Textures/WrestlingBackground";
+        public const string WrestingBackground = "Textures/Scrollable Crowd BG";
+        public const string GameBG = "Textures/Game BG";
 
         public const string Soda = "Textures/Soda";
         public const string Popcorn = "Textures/PopCorn";
 
         public const string Player = "Textures/Player";
+        public const string PlayerFlipped = "Textures/Player Filpped";
+
         public const string Pose1 = "Textures/pose01";
         public const string Pose2 = "Textures/pose02";
         public const string Girl = "Textures/Girl";
@@ -35,6 +38,10 @@
         public const string FillBarFrame = "Textures/Distance Bar Frame";
         public const string FillBarGradient = "Textures/Distance Bar Gradient";
         public const string FillBarPointer = "Textures/Distance Bar Indicator";
+
+        public const string SpaceToStart = "Textures/SpacetoStart";
+        public const string SpaceToReturn = "Textures/SpacetoReturn";
+        public const string DashControls = "Textures/dash_2";
 
         #endregion
 
@@ -72,6 +79,11 @@
         public const int ConfettiTotalCount_2 = 81;
         public const float ConfettiAnimationSpeed_2 = 0.01235F;
 
+        // Star
+        public const string StarBase = "SpriteSheets/Star/Star_";
+        public const int StarTotalCount = 3;
+        public const float StarAnimationSpeed = 0.1666667F;
+
         #endregion
 
         #region Sounds
@@ -85,7 +97,7 @@
         public const string CottonCandy = "Sounds/Cotton_Candy";
         public const string Hit = "Sounds/Hit_Hurt";
         public const string Explosion = "Sounds/Explosion";
-        public const string Oof_Girl = "Sounds/Girl";
+        public const string OofGirl = "Sounds/Girl";
         public const string Cheer = "Sounds/NewClap";
         public const string Boy = "Sounds/Boy";
 
@@ -95,6 +107,17 @@
 
         public const string HomeScreenMusic = "Music/Hermanos_Ranchero";
         public const string MainScreenMusic = "Music/Mariachiando";
+
+        #endregion
+
+        #region Voice Overs
+
+        public const string VOScene1 = "VoiceOvers/VO-1";
+        public const string VOScene2 = "VoiceOvers/VO-2";
+        public const string VOScene3 = "VoiceOvers/VO-3";
+        public const string VOScene4 = "VoiceOvers/VO-4";
+        public const string VOScene5 = "VoiceOvers/VO-5";
+        public const string VOScene6 = "VoiceOvers/VO-6";
 
         #endregion
     }

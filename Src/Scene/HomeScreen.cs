@@ -17,14 +17,14 @@ namespace TeamRock.Scene
         private SoundEffect _music;
         private int _musicIndex;
 
-        private SpriteFont _defaultFont;
-        private UiTextNode _pressToPlayText;
+        private Sprite _startSprite;
         private Sprite _headerImage;
         private Sprite _luchadorSprite;
         private KeyboardState _oldKeyboardState;
         private GamePadState _oldGamePadState;
 
-        private bool _gameStarted;
+        private bool _screenActive;
+        private bool _exitScreen;
 
         #region Initialization
 
@@ -48,11 +48,13 @@ namespace TeamRock.Scene
             };
             _luchadorSprite.SetOriginCenter();
 
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
-            _pressToPlayText = new UiTextNode();
-            _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO START");
-            _pressToPlayText.Position =
-                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100);
+            Texture2D startTexture = _contentManager.Load<Texture2D>(AssetManager.SpaceToStart);
+            _startSprite = new Sprite(startTexture)
+            {
+                Scale = 0.2f,
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100)
+            };
+            _startSprite.SetOriginCenter();
 
             _music = _contentManager.Load<SoundEffect>(AssetManager.HomeScreenMusic);
         }
@@ -65,7 +67,7 @@ namespace TeamRock.Scene
         {
             _headerImage.Draw(spriteBatch);
             _luchadorSprite.Draw(spriteBatch);
-            _pressToPlayText.Draw(spriteBatch);
+            _startSprite.Draw(spriteBatch);
         }
 
         public override void DrawDebug(SpriteBatch spriteBatch)
@@ -78,10 +80,12 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            UpdateControls();
-            SoundManager.Instance.CheckSound(_musicIndex);
+            if (_screenActive)
+            {
+                UpdateControls();
+            }
 
-            return _gameStarted;
+            return _exitScreen;
         }
 
         private void UpdateControls()
@@ -91,23 +95,21 @@ namespace TeamRock.Scene
 
             if (gamePadCapabilities.IsConnected)
             {
-                _pressToPlayText.Text = "PRESS <A> TO START";
-
                 GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
                 if (gamePadState.Buttons.A != ButtonState.Pressed && _oldGamePadState.Buttons.A == ButtonState.Pressed)
                 {
-                    _gameStarted = true;
+                    _screenActive = false;
+                    Fader.Instance.StartFadeIn();
                 }
 
                 _oldGamePadState = gamePadState;
             }
             else
             {
-                _pressToPlayText.Text = "PRESS <SPACE> TO START";
-
                 if (keyboardState.IsKeyUp(Keys.Space) && _oldKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    _gameStarted = true;
+                    _screenActive = false;
+                    Fader.Instance.StartFadeIn();
                 }
 
                 _oldKeyboardState = keyboardState;
@@ -120,14 +122,36 @@ namespace TeamRock.Scene
 
         public void StartMusic()
         {
-            _musicIndex = SoundManager.Instance.PlaySound(_music);
-            SoundManager.Instance.SetSoundLooping(_musicIndex);
+            _musicIndex = SoundManager.Instance.PlaySound(_music, true);
             SoundManager.Instance.SetSoundVolume(_musicIndex, 0.5f);
         }
 
         public void StopMusic() => SoundManager.Instance.StopSound(_musicIndex);
 
-        public void ResetScreen() => _gameStarted = false;
+        public void ResetScreen()
+        {
+            _exitScreen = false;
+            _screenActive = false;
+
+            Fader.Instance.OnFadeInComplete += HandleFadeIn;
+            Fader.Instance.OnFadeOutComplete += HandleFadeOut;
+        }
+
+        #endregion
+
+        #region Utility Functions
+
+        private void HandleFadeIn()
+        {
+            Fader.Instance.OnFadeInComplete -= HandleFadeIn;
+            _exitScreen = true;
+        }
+
+        private void HandleFadeOut()
+        {
+            Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
+            _screenActive = true;
+        }
 
         #endregion
 

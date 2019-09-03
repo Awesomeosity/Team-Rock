@@ -33,8 +33,8 @@ namespace TeamRock.Managers
             _topBar.Origin = new Vector2(_topBar.TextureWidth / 2.0f, 0);
             _topBar.UseSize = true;
 
-            _maxTopBarHeight = _topBar.Height;
-            _topBar.SetSize((int) _topBar.Width, 0);
+            _maxTopBarHeight = _topBar.ScaledHeight;
+            _topBar.SetSize((int) _topBar.ScaledWidth, 0);
         }
 
         #endregion
@@ -57,7 +57,7 @@ namespace TeamRock.Managers
             float ratio = _currentValue / _maxValue;
             _barHeight = ExtensionFunctions.Map(ratio, 0, 1, 0, _maxTopBarHeight);
 
-            _topBar.SetSize((int) _topBar.Width, (int) _barHeight);
+            _topBar.SetSize((int) _topBar.ScaledWidth, (int) _barHeight);
         }
 
         #endregion
@@ -109,6 +109,14 @@ namespace TeamRock.Managers
         }
 
         public float BarHeight => _barHeight;
+
+        public void Reset()
+        {
+            _currentValue = 0;
+            _barHeight = 0;
+
+            _topBar.SetSize((int)_topBar.ScaledWidth, (int)_barHeight);
+        }
 
         #endregion
     }

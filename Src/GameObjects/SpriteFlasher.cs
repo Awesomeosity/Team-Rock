@@ -16,9 +16,13 @@ namespace TeamRock.Src.GameObjects
 
         private Color _spriteColor;
 
+        #region Initialization
+
         public SpriteFlasher(Texture2D texture2D, bool useSize = false) : base(texture2D, useSize)
         {
         }
+
+        #endregion
 
         #region Draw
 

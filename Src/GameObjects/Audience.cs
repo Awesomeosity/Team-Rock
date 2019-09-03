@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended;
+using TeamRock.Common;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
-using TeamRock.Scene;
 using TeamRock.Utils;
 
 namespace TeamRock.Src.GameObjects
@@ -30,6 +30,8 @@ namespace TeamRock.Src.GameObjects
         private SoundEffect _hitSound3;
         private SoundEffect _hitSound4;
 
+        private bool _isCollisionActive;
+        private bool _spawnPeople = true;
         private bool _isProjectileSpawningActive;
 
         #region Initialization
@@ -44,14 +46,14 @@ namespace TeamRock.Src.GameObjects
             _projectiles = new List<Projectile>();
             _audienceRectangle = new RectangleF();
 
-
             _cheer = contentManager.Load<SoundEffect>(AssetManager.Cheer);
             _hitSound = contentManager.Load<SoundEffect>(AssetManager.Hit);
             _hitSound2 = contentManager.Load<SoundEffect>(AssetManager.Boo);
-            _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.Oof_Girl);
+            _hitSound3 = contentManager.Load<SoundEffect>(AssetManager.OofGirl);
             _hitSound4 = contentManager.Load<SoundEffect>(AssetManager.Boy);
 
             _isProjectileSpawningActive = true;
+            _isCollisionActive = true;
         }
 
         #endregion
@@ -73,11 +75,11 @@ namespace TeamRock.Src.GameObjects
             {
                 _projectiles[i].Update(deltaTime, gameTime);
 
-                if (_projectiles[i].IsProjectileDestroyed || _projectiles[i].DidCollide(_player.GameObject))
+                if (_projectiles[i].IsProjectileDestroyed ||
+                    (_projectiles[i].DidCollide(_player.GameObject) && _isCollisionActive))
                 {
-                    if (_projectiles[i].DidCollide(_player.GameObject))
+                    if (_projectiles[i].DidCollide(_player.GameObject) && _isCollisionActive)
                     {
-
                         if (_projectiles[i].Position.X < _player.GameObject.Position.X)
                         {
                             GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMaxIntensity,
@@ -88,6 +90,8 @@ namespace TeamRock.Src.GameObjects
                             GamePadVibrationController.Instance.StartVibration(GameInfo.GamePadMinIntensity,
                                 GameInfo.GamePadMaxIntensity, GameInfo.GamePadVibrationTime);
                         }
+
+                        _player.PlayerHit();
 
                         CameraShaker.Instance.StartShake(GameInfo.GamePadVibrationTime, 5);
                         int soundIndex = 0;
@@ -104,12 +108,13 @@ namespace TeamRock.Src.GameObjects
                             case Projectile.ProjSprite.Girl:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound3);
                                 break;
+
                             case Projectile.ProjSprite.Jordan:
                                 soundIndex = SoundManager.Instance.PlaySound(_hitSound4);
                                 break;
 
                             default:
-                                break;
+                                throw new ArgumentOutOfRangeException();
                         }
 
                         SoundManager.Instance.SetSoundVolume(soundIndex, 0.25f);
@@ -172,10 +177,22 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
-        public bool IsProjectileSPawningActive
+        public bool IsProjectileSpawningActive
         {
             get => _isProjectileSpawningActive;
             set => _isProjectileSpawningActive = value;
+        }
+
+        public bool SpawnPeople
+        {
+            get => _spawnPeople;
+            set => _spawnPeople = value;
+        }
+
+        public bool IsCollisionActive
+        {
+            get => _isCollisionActive;
+            set => _isCollisionActive = value;
         }
 
         public void ClearProjectiles() => _projectiles.Clear();
@@ -211,14 +228,20 @@ namespace TeamRock.Src.GameObjects
             launchDirection.Normalize();
 
             float random = ExtensionFunctions.Random();
+
+            if (!_spawnPeople && random >= 0.9f)
+            {
+                random = 0.8f;
+            }
+
             Projectile.ProjSprite projSprite;
             string textureLoad;
-            if(random < 0.5)
+            if (random < 0.5)
             {
                 projSprite = Projectile.ProjSprite.Soda;
                 textureLoad = AssetManager.Soda;
             }
-            else if(random >= 0.5 && random < 0.9)
+            else if (random >= 0.5 && random < 0.9)
             {
                 projSprite = Projectile.ProjSprite.Popcorn;
                 textureLoad = AssetManager.Popcorn;
@@ -226,7 +249,7 @@ namespace TeamRock.Src.GameObjects
             else
             {
                 random = ExtensionFunctions.Random();
-                if(random <= 0.5)
+                if (random <= 0.5)
                 {
                     projSprite = Projectile.ProjSprite.Girl;
                     textureLoad = AssetManager.Girl;
@@ -240,6 +263,7 @@ namespace TeamRock.Src.GameObjects
 
             Texture2D projectileTexture;
             Sprite projectileSprite;
+
             if (textureLoad == AssetManager.Girl && launchDirection.X < 0)
             {
                 projectileTexture = _contentManager.Load<Texture2D>(AssetManager.FlipGirl);
@@ -249,7 +273,7 @@ namespace TeamRock.Src.GameObjects
                 };
                 projectileSprite.SetOriginCenter();
             }
-            else if(textureLoad == AssetManager.Jordan && launchDirection.X < 0)
+            else if (textureLoad == AssetManager.Jordan && launchDirection.X < 0)
             {
                 projectileTexture = _contentManager.Load<Texture2D>(AssetManager.JordanFlip);
                 projectileSprite = new Sprite(projectileTexture)
@@ -274,6 +298,15 @@ namespace TeamRock.Src.GameObjects
             {
                 Position = launchPosition
             };
+            ColorFlashSwitcher colorFlashSwitcher = new ColorFlashSwitcher()
+            {
+                StartColor = GameInfo.ProjectileFlashStartColor,
+                EndColor = GameInfo.ProjectileFlashEndColor,
+                LerpRate = GameInfo.ProjectileFlashRate,
+                StartFlash = true
+            };
+            projectile.ColorFlashSwitcher = colorFlashSwitcher;
+
 
             projectile.SetSprite(projSprite);
             projectile.LaunchProjectile(launchDirection, _player.GameObject.Position);

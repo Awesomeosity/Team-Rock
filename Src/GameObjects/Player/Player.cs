@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TeamRock.Common;
 using TeamRock.Managers;
 using TeamRock.Scene;
 using TeamRock.Utils;
@@ -26,15 +27,25 @@ namespace TeamRock.Src.GameObjects
         private float _dashCooldown;
         private float _dashDuration;
         private Vector2 _dashDirection;
+
         private float _poseDuration;
+        private int _consecutivePoseCount;
         private float _boostDuration;
 
         private Vector2 _spriteSheetPosition;
 
-        private bool _currPose = false;
+        private bool _currentPose;
         private Texture2D _playerPose;
         private Texture2D _pose1;
         private Texture2D _pose2;
+
+        private ColorFlashSwitcher _playerColorFlasher;
+
+        public delegate void PlayerHitNotification();
+
+        public PlayerHitNotification OnPlayerHitNotification;
+
+        private bool _useAsDummy; // This is a very hacky method that handles Custom Player Hiding and Collision Boxes
 
         #region Initialization
 
@@ -54,6 +65,7 @@ namespace TeamRock.Src.GameObjects
             _playerFallingSpriteSheet.Initialize(contentManager, AssetManager.FireFallingBase,
                 AssetManager.FireFallingTotalCount, 1, true);
             _playerFallingSpriteSheet.FrameTime = 0.01666667F;
+            _playerFallingSpriteSheet.RenderOnStopped = false;
             _playerFallingSpriteSheet.Sprite.SetOriginCenter();
             _spriteSheetPosition = Vector2.Zero;
 
@@ -72,7 +84,18 @@ namespace TeamRock.Src.GameObjects
             _dashCooldown = 0;
             _dashDuration = 0;
             _poseDuration = 0;
+            _consecutivePoseCount = 0;
             _boostDuration = 0;
+
+            _playerColorFlasher = new ColorFlashSwitcher()
+            {
+                StartFlash = false,
+                StartColor = Color.White * 1,
+                EndColor = Color.White * 0,
+                FlashCount = GameInfo.PlayerFlashCount,
+                LerpRate = GameInfo.PlayerFlashRate,
+                ResetAutomatically = true
+            };
         }
 
         #endregion
@@ -81,6 +104,11 @@ namespace TeamRock.Src.GameObjects
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (_useAsDummy)
+            {
+                return;
+            }
+
             if (_dashCooldown <= 0 && _poseDuration <= 0)
             {
                 _playerFallingSpriteSheet.Draw(spriteBatch);
@@ -89,12 +117,19 @@ namespace TeamRock.Src.GameObjects
             _playerGameObject.Draw(spriteBatch);
         }
 
+        public void DrawDebug(SpriteBatch spriteBatch) => _playerGameObject.DrawDebug(spriteBatch);
+
         #endregion
 
         #region Update
 
         public void Update(float deltaTime, float gameTime)
         {
+            if (_useAsDummy)
+            {
+                return;
+            }
+
             UpdateDurations(deltaTime);
 
             if (_playerGameObject.Velocity.Y < GameInfo.PlayerMaxYVelocity)
@@ -102,7 +137,26 @@ namespace TeamRock.Src.GameObjects
                 _playerGameObject.UpdateOnlyVelocity(deltaTime, gameTime);
             }
 
+            _playerGameObject.Sprite.SpriteColor = _playerColorFlasher.Update(deltaTime);
+
             _playerController.Update();
+
+            if (_playerGameObject.Position.X < GameInfo.PlayerLeftPosition)
+            {
+                _playerGameObject.Position = new Vector2(GameInfo.PlayerLeftPosition, _playerGameObject.Position.Y);
+            }
+            else if (_playerGameObject.Position.X > GameInfo.PlayerRightPosition)
+            {
+                _playerGameObject.Position = new Vector2(GameInfo.PlayerRightPosition, _playerGameObject.Position.Y);
+            }
+            else if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition)
+            {
+                _playerGameObject.Position = new Vector2(_playerGameObject.Position.X, GameInfo.PlayerMinYPosition);
+            }
+            else if (_playerGameObject.Position.Y > GameInfo.PlayerMaxYPosition)
+            {
+                _playerGameObject.Position = new Vector2(_playerGameObject.Position.X, GameInfo.PlayerMaxYPosition);
+            }
 
             HandleInput(deltaTime);
             UpdateSpriteSheet(deltaTime);
@@ -111,22 +165,24 @@ namespace TeamRock.Src.GameObjects
         private void HandleInput(float deltaTime)
         {
             int speedFactor = 1;
-            if (_playerController.DidPlayerPressDash && _dashCooldown <= 0 && ExtensionFunctions.FloatCompare(1, _velocityScaler))
+            if (_playerController.DidPlayerPressDash && _dashCooldown <= 0 &&
+                ExtensionFunctions.FloatCompare(1, _velocityScaler) && _consecutivePoseCount < GameInfo.MaxPoseCount)
             {
-                if (_currPose)
+                if (_currentPose)
                 {
                     GameObject.Sprite.UpdateTexture(_pose1);
-                    _currPose = !_currPose;
+                    _currentPose = !_currentPose;
                 }
                 else
                 {
                     GameObject.Sprite.UpdateTexture(_pose2);
-                    _currPose = !_currPose;
+                    _currentPose = !_currentPose;
                 }
 
                 _dashDuration = GameInfo.PlayerDashDuration;
                 _dashDirection = _playerController.DashDirection;
                 _poseDuration = GameInfo.PlayerPoseDuration;
+                _consecutivePoseCount += 1;
             }
 
             if (_dashDuration > 0)
@@ -135,32 +191,21 @@ namespace TeamRock.Src.GameObjects
                 {
                     speedFactor = 3;
                 }
-                
+
                 _playerGameObject.Position += _dashDirection * GameInfo.PlayerDashVelocity * deltaTime;
             }
 
             if (_playerController.State == PlayerController.ControllerState.Right)
             {
-                if (_playerGameObject.Position.X > GameInfo.PlayerRightPosition)
-                {
-                    return;
-                }
-
                 _playerGameObject.Position += GameInfo.HorizontalVelocity * deltaTime * _velocityScaler * speedFactor;
             }
             else if (_playerController.State == PlayerController.ControllerState.Left)
             {
-                if (_playerGameObject.Position.X < GameInfo.PlayerLeftPosition)
-                {
-                    return;
-                }
-
                 _playerGameObject.Position -= GameInfo.HorizontalVelocity * deltaTime * _velocityScaler * speedFactor;
             }
             else if (_playerController.State == PlayerController.ControllerState.Up)
             {
-                if (_playerGameObject.Position.Y < GameInfo.PlayerMinYPosition ||
-                    _playerGameObject.Velocity.Y < GameInfo.PlayerMinYVelocity)
+                if (_playerGameObject.Velocity.Y < GameInfo.PlayerMinYVelocity)
                 {
                     return;
                 }
@@ -170,11 +215,6 @@ namespace TeamRock.Src.GameObjects
             }
             else if (_playerController.State == PlayerController.ControllerState.Down)
             {
-                if (_playerGameObject.Position.Y > GameInfo.PlayerMaxYPosition)
-                {
-                    return;
-                }
-
                 _playerGameObject.Position += GameInfo.VerticalVelocity * deltaTime * _velocityScaler * speedFactor;
                 _playerGameObject.Acceleration += GameInfo.AccelerationChangeRate * deltaTime;
             }
@@ -202,10 +242,10 @@ namespace TeamRock.Src.GameObjects
                 _dashDuration -= deltaTime;
             }
 
-            if(_boostDuration > 0)
+            if (_boostDuration > 0)
             {
                 _boostDuration -= deltaTime;
-                if(_boostDuration <= 0)
+                if (_boostDuration <= 0)
                 {
                     _velocityScaler = 1;
                 }
@@ -223,6 +263,8 @@ namespace TeamRock.Src.GameObjects
                     }
 
                     GameObject.Sprite.UpdateTexture(_playerPose);
+
+                    _consecutivePoseCount = 0;
                     _dashCooldown = GameInfo.PlayerDashCooldown;
                 }
             }
@@ -242,7 +284,7 @@ namespace TeamRock.Src.GameObjects
 
         public void ReduceVelocity()
         {
-            //Prevent player from slowing down/speeding up while speed is different.
+            // Prevent player from slowing down/speeding up while speed is different.
             if (!ExtensionFunctions.FloatCompare(_velocityScaler, 1))
             {
                 return;
@@ -268,38 +310,71 @@ namespace TeamRock.Src.GameObjects
             }
         }
 
-        public bool IsPosing()
+        public void PlayerHit()
         {
-            return (_poseDuration > 0);
+            _playerColorFlasher.StartFlash = true;
+            OnPlayerHitNotification?.Invoke();
         }
+
+        public bool IsPosing() => _poseDuration > 0;
 
         public Vector2 GetScaledVelocity() => _velocityScaler * _playerGameObject.Velocity;
 
         public void ResetPlayer()
         {
             _velocityScaler = 1.0f;
+
             _dashCooldown = 0;
             _dashDuration = 0;
-            _currPose = false;
+
+            _poseDuration = 0;
+            _currentPose = false;
+            _consecutivePoseCount = 0;
+
             _playerGameObject.Sprite.UpdateTexture(_playerPose);
+
+            _playerFallingSpriteSheet.StartSpriteAnimation();
+            _spriteSheetPosition.X = _playerGameObject.Position.X;
+            _spriteSheetPosition.Y = _playerGameObject.Position.Y - _playerGameObject.Sprite.Height / 2.0f;
+            _playerFallingSpriteSheet.Sprite.Position = _spriteSheetPosition;
         }
 
-        public void setPose(Poses pose)
+        public void PlayerSetEndState()
+        {
+            _playerColorFlasher.StopAndReset();
+        }
+
+        public void SetPose(Poses pose)
         {
             switch (pose)
             {
                 case Poses.Normal:
                     _playerGameObject.Sprite.UpdateTexture(_playerPose);
                     break;
+
                 case Poses.Pose_1:
                     _playerGameObject.Sprite.UpdateTexture(_pose1);
                     break;
+
                 case Poses.Pose_2:
                     _playerGameObject.Sprite.UpdateTexture(_pose2);
                     break;
+
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public bool UseAsDummy
+        {
+            get => _useAsDummy;
+            set => _useAsDummy = value;
+        }
+
+        public SpriteSheetAnimationManager PlayerSpriteSheet
+        {
+            get => _playerFallingSpriteSheet;
+            set => _playerFallingSpriteSheet = value;
         }
 
         public GameObject GameObject => _playerGameObject;

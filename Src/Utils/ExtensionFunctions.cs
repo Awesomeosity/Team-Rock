@@ -31,14 +31,6 @@ namespace TeamRock.Utils
             return to;
         }
 
-        public static bool FloatCompare(float f1, float f2)
-        {
-            if(Math.Abs(f1 - f2) < 0.01f)
-            {
-                return true;
-            }
-            return false;
-        }
-
+        public static bool FloatCompare(float f1, float f2) => Math.Abs(f1 - f2) < 0.01f;
     }
 }

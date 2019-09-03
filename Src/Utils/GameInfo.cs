@@ -5,21 +5,21 @@ namespace TeamRock.Utils
     public static class GameInfo
     {
         // Window Size
-        public const int FixedWindowWidth = 600;
+        public const int FixedWindowWidth = 1334;
         public const int FixedWindowHeight = 800;
 
         // Background
         public const int MaxBackgroundElements = 3;
 
         // Center Board
-        public const int CenterBoardWidth = 300;
+        public const int CenterBoardWidth = 400;
 
         // Player State
         public static readonly Vector2 PlayerInitialPosition =
             new Vector2(FixedWindowWidth / 2.0f, 70);
 
         public const float PlayerMinYPosition = 50;
-        public const float PlayerMaxYPosition = FixedWindowHeight - 300;
+        public const float PlayerMaxYPosition = FixedWindowHeight - 50;
         public const float PlayerAssetScale = 0.1f;
         public const float PlayerMinYVelocity = 50;
         public const float PlayerMaxYVelocity = 500;
@@ -37,12 +37,15 @@ namespace TeamRock.Utils
         public const float PlayerSlowdownRate = 0.5f;
 
         public const float PlayerDashDuration = 0.2f;
-        public const float PlayerDashCooldown = 1;
+        public const float PlayerDashCooldown = 3;
         public const float PlayerDashVelocity = 750;
-        public const float PlayerPoseDuration = 2;
+        public const float PlayerPoseDuration = 1f;
+        public const int MaxPoseCount = 3;
         public const float PlayerBoostDuration = 3;
 
         public const float PlayerKnockBack = 5;
+        public const float PlayerFlashRate = 14;
+        public const int PlayerFlashCount = 5;
 
         // Stage
         public const float StageScale = 0.3f;
@@ -57,20 +60,23 @@ namespace TeamRock.Utils
         public const int AudienceWidth = (FixedWindowWidth - CenterBoardWidth) / 2;
         public const float AudienceTopBuffer = 300;
         public const float LeftAudiencePos = 0;
-        public const float RightAudiencePos = 480;
+        public const float RightAudiencePos = FixedWindowWidth - AudienceWidth;
 
         // Projectile
         public const float MinProjectileVelocity = 150;
         public const float MaxProjectileVelocity = 300;
         public const float ProjectileLifeTime = 5f;
         public const float MinProjectileSpawnTimer = 1;
-        public const float MaxProjectileSpawnTimer = 5;
+        public const float MaxProjectileSpawnTimer = 3;
         public const float MaxProjectileAssetScaleDistanceSq = 400;
         public const float ProjectileStartAssetScale = 0.05f;
         public const float ProjectileFinalAssetScale = 0.2f;
         public const float ProjectileAimRadius = 100;
         public const float ProjectileMinRotationSpeed = 3;
         public const float ProjectileMaxRotationSpeed = 10;
+        public const float ProjectileFlashRate = 5;
+        public static readonly Color ProjectileFlashStartColor = Color.White;
+        public static readonly Color ProjectileFlashEndColor = Color.Red;
 
         // SpriteSheet Animations
         public const float DefaultAnimationSpeed = 0.01666667F;
@@ -85,10 +91,10 @@ namespace TeamRock.Utils
         public const float MaxBarFlashRate = 7;
         public static readonly Color FlashBarColor = new Color(204, 0, 0);
 
-        public const float PlayerTimerChangeRate = 1.2f;
-        public const float PlayerHitTimerChangeRate = 0.5f;
-        public const float PlayerHitTimerAffectTime = 2f;
-        public const float PlayerDashTimerChangeRate = 1.5f;
+        public const float PlayerTimerChangeRate = 1.15f;
+        public const float PlayerHitTimerChangeRate = 0.2f;
+        public const float PlayerHitTimerAffectTime = 3f;
+        public const float PlayerDashTimerChangeRate = 1.2f;
         public const float PlayerDashAffectTime = 0.3f;
 
         // Game Ending Control
@@ -97,5 +103,35 @@ namespace TeamRock.Utils
         public const float StageMoveUpSpeed = 500;
         public const float IncreasedItemPosition = 480F;
         public const int IncreasedItemFrequency = 5;
+
+        // Cinematics
+        public const int TotalCinematicRopes = 5;
+        public const float CinematicScrollMoveSpeed = 250;
+        public const float PlayerMoveToRopePosition = FixedWindowHeight / 2.0f;
+        public const float PlayerSpriteFlipRate = 0.125F;
+        public const float PlayerInitialClimbSpeed = 250;
+
+        public const float WaitTimeForFinalMinutesCommentary = 2f;
+        public const float WaitTimeForThrowingCommentary = 3f;
+
+        public static readonly Vector2 CinematicStageInitialPosition =
+            new Vector2(FixedWindowWidth / 2.0f, FixedWindowHeight - 100);
+
+        public static readonly Vector2 CinematicRowFinalPosition =
+            new Vector2(FixedWindowWidth / 2.0f, FixedWindowHeight + 300);
+
+        public const float InitialStageDisplayWaitTimer = 3f;
+        public const float StageTopWaitTimer = 3f;
+        public const float StageDivingWaitTimer = 3f;
+
+        public const float CinematicBooMinTime = 7;
+        public const float CinematicBooMaxTime = 14;
+
+        // Instructions
+        public const float InstructionScreenWaitTimer = 3;
+
+        // Fader
+        public const float ScreenFadeInRate = 0.7f;
+        public const float ScreenFadeOutRate = 1;
     }
 }

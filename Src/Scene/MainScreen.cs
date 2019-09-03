@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
 using TeamRock.Src.GameObjects;
+using TeamRock.UI;
 using TeamRock.Utils;
 
 namespace TeamRock.Scene
@@ -19,12 +20,16 @@ namespace TeamRock.Scene
         private SoundEffect _clap;
         private SoundEffect _explosionSound;
 
+        private Sprite _starSprite;
+        private SpriteSheetAnimationManager _starSpriteSheetAnimationManager;
+        private Vector2 _starsOffset;
+
         private GameObject _stage;
         private GameObject _winWrestler;
         private Player _player;
 
-
-        private SpriteSheetAnimationManager _backgroundSpriteSheet;
+        private Sprite _backgroundSprite;
+        private ScrollingBackground _backgroundAudience;
         private ScrollingBackground _scrollingBackground;
 
         private SpriteSheetAnimationManager _endExplosion;
@@ -32,8 +37,6 @@ namespace TeamRock.Scene
         private SpriteSheetAnimationManager _confetti2;
 
         private List<Audience> _audiences;
-
-        private SpriteFont _defaultFont;
 
         private float _hinderedPlayerTimer;
         private float _currentIncrementModifierTimer;
@@ -49,6 +52,9 @@ namespace TeamRock.Scene
         private SpriteFlasher _fillBarFlasher;
         private Sprite _fillBarGradient;
         private FillBarVertical _fillBarVertical;
+
+        private bool _exitScreen;
+        private bool _screenActive;
 
         private enum GameState
         {
@@ -87,16 +93,24 @@ namespace TeamRock.Scene
 
             _playerCollisionTimerRate = GameInfo.PlayerTimerChangeRate;
 
-            _backgroundSpriteSheet = new SpriteSheetAnimationManager();
-            _backgroundSpriteSheet.Initialize(_contentManager, AssetManager.WrestlingBackgroundBase,
-                AssetManager.WrestlingBackgroundTotalCount, 0, true);
-            _backgroundSpriteSheet.Sprite.UseSize = true;
-            _backgroundSpriteSheet.Sprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
-            _backgroundSpriteSheet.FrameTime = AssetManager.WrestlingBackgroundAnimationSpeed;
+            Texture2D backgroundTexture = _contentManager.Load<Texture2D>(AssetManager.GameBG);
+            Texture2D wrestlingBackground = _contentManager.Load<Texture2D>(AssetManager.WrestingBackground);
+
+            _backgroundSprite = new Sprite(backgroundTexture, true);
+            _backgroundSprite.SetOriginCenter();
+            _backgroundSprite.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
+            _backgroundSprite.Position =
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight / 2.0f);
+
+            _backgroundAudience = new ScrollingBackground();
+            _backgroundAudience.Initialize(wrestlingBackground, GameInfo.MaxBackgroundElements,
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight), 1, true);
+            _backgroundAudience.SetSize(GameInfo.FixedWindowWidth, GameInfo.FixedWindowHeight);
 
             Texture2D scrollingBackgroundTexture = _contentManager.Load<Texture2D>(AssetManager.BackgroundRopes);
             _scrollingBackground = new ScrollingBackground();
-            _scrollingBackground.Initialization(scrollingBackgroundTexture, GameInfo.FixedWindowWidth);
+            _scrollingBackground.Initialize(scrollingBackgroundTexture, GameInfo.MaxBackgroundElements,
+                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight), 0.5f);
 
             Texture2D stage = _contentManager.Load<Texture2D>(AssetManager.Stage);
             Sprite stageSprite = new Sprite(stage)
@@ -119,6 +133,14 @@ namespace TeamRock.Scene
             {
                 Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250)
             };
+
+            _starSpriteSheetAnimationManager = new SpriteSheetAnimationManager();
+            _starSpriteSheetAnimationManager.Initialize(_contentManager, AssetManager.StarBase,
+                AssetManager.StarTotalCount, 0, true);
+            _starSpriteSheetAnimationManager.FrameTime = AssetManager.StarAnimationSpeed;
+            _starSprite = _starSpriteSheetAnimationManager.Sprite;
+            _starSprite.Scale = 0.4f;
+            _starsOffset = new Vector2(_winWrestler.Sprite.Width - 50, 70);
         }
 
         private void CreateAudiences()
@@ -136,7 +158,6 @@ namespace TeamRock.Scene
             _hinderedPlayerTimer = GameInfo.TotalGameTime;
 
             _timeToGameOver = GameInfo.EndGameTime;
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
 
             _endExplosion = new SpriteSheetAnimationManager();
             _endExplosion.Initialize(_contentManager, AssetManager.EndExplosionBase,
@@ -182,14 +203,13 @@ namespace TeamRock.Scene
 
             _fillBarVertical = new FillBarVertical();
             _fillBarVertical.Initialize(fillBarFrame, fillBarBackground, _fillBarGradient, GameInfo.TotalGameTime);
-            _fillBarVertical.CurrentValue = 50;
 
             float barXPosition = GameInfo.FixedWindowWidth / 2.0f + GameInfo.CenterBoardWidth / 2.0f;
 
             fillBarBackground.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
             fillBarFrame.Position = new Vector2(barXPosition, GameInfo.FixedWindowHeight / 2.0f);
             _fillBarGradient.Position = new Vector2(barXPosition,
-                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.ScaledHeight / 2.0f);
 
             Texture2D whitePixel = _contentManager.Load<Texture2D>(AssetManager.WhitePixel);
             _fillBarFlasher = new SpriteFlasher(whitePixel, true);
@@ -198,19 +218,22 @@ namespace TeamRock.Scene
             _fillBarFlasher.StartFlashing(GameInfo.InitialBarFlashRate, GameInfo.FlashBarMinAlpha,
                 GameInfo.FlashBarMaxAlpha);
             _fillBarFlasher.Position = new Vector2(barXPosition,
-                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+                GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.ScaledHeight / 2.0f);
             _fillBarFlasher.SetSpriteColor(GameInfo.FlashBarColor);
 
             Texture2D fillBarPointer = _contentManager.Load<Texture2D>(AssetManager.FillBarPointer);
             _fillBarPointer = new Sprite(fillBarPointer);
             _fillBarPointer.SetOriginCenter();
             _fillBarPointer.Scale = 0.5f;
-            _fillBarPointer.Position = new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f);
 
             _fillBarPointerInitialPosition =
-                new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.Height / 2.0f);
+                new Vector2(barXPosition + 35,
+                    GameInfo.FixedWindowHeight / 2.0f - _fillBarGradient.ScaledHeight / 2.0f);
             _fillBarPointerFinalPosition =
-                new Vector2(barXPosition + 35, GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.Height / 2.0f);
+                new Vector2(barXPosition + 35,
+                    GameInfo.FixedWindowHeight / 2.0f + _fillBarGradient.ScaledHeight / 2.0f);
+
+            _fillBarPointer.Position = _fillBarPointerInitialPosition;
         }
 
         #endregion
@@ -219,7 +242,7 @@ namespace TeamRock.Scene
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _backgroundSpriteSheet.Draw(spriteBatch);
+            _backgroundAudience.Draw(spriteBatch);
             _scrollingBackground.Draw(spriteBatch);
 
             _fillBarVertical.Draw(spriteBatch);
@@ -229,6 +252,11 @@ namespace TeamRock.Scene
             _stage.Draw(spriteBatch);
             _winWrestler.Draw(spriteBatch);
 
+            if (_unhinderedTimeToImpact > 0)
+            {
+                _starSpriteSheetAnimationManager.Draw(spriteBatch);
+            }
+
             switch (_gameState)
             {
                 case GameState.IsRunning:
@@ -237,7 +265,7 @@ namespace TeamRock.Scene
                     break;
 
                 case GameState.EndAnimations:
-                    if (_endExplosion.IsAnimationActive == true)
+                    if (_endExplosion.IsAnimationActive)
                     {
                         _endExplosion.Draw(spriteBatch);
                     }
@@ -266,7 +294,7 @@ namespace TeamRock.Scene
         public override void DrawDebug(SpriteBatch spriteBatch)
         {
             _stage.DrawDebug(spriteBatch);
-            _player.GameObject.DrawDebug(spriteBatch);
+            _player.DrawDebug(spriteBatch);
 
             foreach (Audience audience in _audiences)
             {
@@ -280,41 +308,42 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            _backgroundSpriteSheet.Update(deltaTime);
-            UpdateFillBarColor(deltaTime);
-
-            switch (_gameState)
+            if (_screenActive)
             {
-                case GameState.IsRunning:
-                    UpdateGameEndTimer(deltaTime);
-                    UpdatePlayerRacingTimer(deltaTime);
-                    UpdateGameObjectsBeforeTime(deltaTime, gameTime);
-                    break;
+                UpdateFillBarColor(deltaTime);
+                _starSpriteSheetAnimationManager.Update(deltaTime);
 
-                case GameState.EndStarted:
-                    UpdateStageAndPlayerEndState(deltaTime, gameTime);
-                    break;
+                switch (_gameState)
+                {
+                    case GameState.IsRunning:
+                        UpdateGameEndTimer(deltaTime);
+                        UpdatePlayerRacingTimer(deltaTime);
+                        UpdateGameObjectsBeforeTime(deltaTime, gameTime);
+                        break;
 
-                case GameState.EndAnimations:
-                    UpdateEndStateAnimations(deltaTime);
-                    break;
+                    case GameState.EndStarted:
+                        UpdateStageAndPlayerEndState(deltaTime, gameTime);
+                        break;
 
-                case GameState.GameOver:
-                    // Don't do Anything
-                    break;
+                    case GameState.EndAnimations:
+                        UpdateEndStateAnimations(deltaTime);
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    case GameState.GameOver:
+                        // Don't do Anything
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                foreach (Audience audience in _audiences)
+                {
+                    audience.Update(deltaTime, gameTime);
+                }
             }
 
-            foreach (Audience audience in _audiences)
-            {
-                audience.Update(deltaTime, gameTime);
-            }
-
-            SoundManager.Instance.CheckSound(_musicIndex);
-
-            return _gameState == GameState.GameOver;
+            return _exitScreen;
         }
 
         #endregion
@@ -339,11 +368,14 @@ namespace TeamRock.Scene
             _winWrestler.Sprite.UpdateTexture(_contentManager.Load<Texture2D>(AssetManager.WinWrestler));
             _winWrestler.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight + 250);
             _winWrestler.Velocity = new Vector2(0, 0);
+            _starSprite.Position = _winWrestler.Position - _starsOffset;
 
+            _fillBarPointer.Position = _fillBarPointerInitialPosition;
+            _fillBarVertical.Reset();
 
             foreach (Audience audience in _audiences)
             {
-                audience.IsProjectileSPawningActive = true;
+                audience.IsProjectileSpawningActive = true;
                 audience.ClearProjectiles();
             }
 
@@ -353,13 +385,18 @@ namespace TeamRock.Scene
 
             _timeToGameOver = GameInfo.EndGameTime;
 
+            _exitScreen = false;
+            _screenActive = false;
+
+            Fader.Instance.OnFadeInComplete += HandleFadeIn;
+            Fader.Instance.OnFadeOutComplete += HandleFadeOut;
+
             SetGameState(GameState.IsRunning);
         }
 
         public void StartMusic()
         {
-            _musicIndex = SoundManager.Instance.PlaySound(_music);
-            SoundManager.Instance.SetSoundLooping(_musicIndex, true);
+            _musicIndex = SoundManager.Instance.PlaySound(_music, true);
             SoundManager.Instance.SetSoundVolume(_musicIndex, 0.75f);
         }
 
@@ -425,11 +462,13 @@ namespace TeamRock.Scene
                     SetGameState(GameState.EndStarted);
 
                     _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
-                    _player.setPose(Player.Poses.Pose_1);
+                    _player.SetPose(Player.Poses.Pose_1);
+                    _player.PlayerSpriteSheet.StopSpriteAnimation();
+                    _player.PlayerSetEndState();
 
                     foreach (Audience audience in _audiences)
                     {
-                        audience.IsProjectileSPawningActive = false;
+                        audience.IsProjectileSpawningActive = false;
                         audience.ClearProjectiles();
                     }
 
@@ -452,11 +491,12 @@ namespace TeamRock.Scene
                 _winWrestler.Position += new Vector2(100, -100);
 
                 _player.GameObject.Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, 0);
-                _player.setPose(Player.Poses.Normal);
+                _player.SetPose(Player.Poses.Normal);
+                _player.PlayerSetEndState();
 
                 foreach (Audience audience in _audiences)
                 {
-                    audience.IsProjectileSPawningActive = false;
+                    audience.IsProjectileSpawningActive = false;
                     audience.ClearProjectiles();
                 }
 
@@ -467,6 +507,7 @@ namespace TeamRock.Scene
 
         private void UpdateGameObjectsBeforeTime(float deltaTime, float gameTime)
         {
+            _backgroundAudience.Update(deltaTime, _player.GetScaledVelocity().Y);
             _scrollingBackground.Update(deltaTime, _player.GetScaledVelocity().Y);
             _player.Update(deltaTime, gameTime);
             _stage.Update(deltaTime, gameTime);
@@ -475,13 +516,13 @@ namespace TeamRock.Scene
 
         private void UpdateStageAndPlayerEndState(float deltaTime, float gameTime)
         {
-            // TODO: Change this. It is super hacky
             if (_stage.Position.Y > GameInfo.FixedWindowHeight - 100)
             {
                 _stage.Velocity = -Vector2.UnitY * GameInfo.StageMoveUpSpeed;
                 _stage.Update(deltaTime, gameTime);
                 _winWrestler.Velocity = -Vector2.UnitY * GameInfo.StageMoveUpSpeed;
                 _winWrestler.Update(deltaTime, gameTime);
+                _starSprite.Position = _winWrestler.Position - _starsOffset;
             }
 
             _player.GameObject.Velocity = Vector2.UnitY * GameInfo.PlayerMaxYVelocity;
@@ -521,6 +562,9 @@ namespace TeamRock.Scene
 
             if (_timeToGameOver <= 0)
             {
+                _screenActive = false;
+                Fader.Instance.StartFadeIn();
+
                 SetGameState(GameState.GameOver);
             }
         }
@@ -533,6 +577,18 @@ namespace TeamRock.Scene
             }
 
             _gameState = gameState;
+        }
+
+        private void HandleFadeIn()
+        {
+            Fader.Instance.OnFadeInComplete -= HandleFadeIn;
+            _exitScreen = true;
+        }
+
+        private void HandleFadeOut()
+        {
+            Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
+            _screenActive = true;
         }
 
         #endregion

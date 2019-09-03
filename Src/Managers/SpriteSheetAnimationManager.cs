@@ -22,6 +22,8 @@ namespace TeamRock.Managers
         private bool _animationActive;
         private bool _isRepeating;
 
+        private bool _renderOnStopped;
+
         #region Initialization
 
         public void Initialize(ContentManager contentManager, string assetBaseName, int totalAssetIndex,
@@ -48,13 +50,28 @@ namespace TeamRock.Managers
             {
                 StartSpriteAnimation();
             }
+
+            _renderOnStopped = true;
         }
 
         #endregion
 
         #region Render
 
-        public void Draw(SpriteBatch spriteBatch) => _sprite.Draw(spriteBatch);
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            if (_renderOnStopped)
+            {
+                _sprite.Draw(spriteBatch);
+            }
+            else
+            {
+                if (_animationActive)
+                {
+                    _sprite.Draw(spriteBatch);
+                }
+            }
+        }
 
         #endregion
 
@@ -110,7 +127,11 @@ namespace TeamRock.Managers
             }
         }
 
-
+        public bool RenderOnStopped
+        {
+            get => _renderOnStopped;
+            set => _renderOnStopped = value;
+        }
 
         public void ResetSpriteAnimation()
         {

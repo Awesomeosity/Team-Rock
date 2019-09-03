@@ -27,7 +27,7 @@ namespace TeamRock.Managers
 
         #region Play Sound
 
-        public int PlaySound(SoundEffect soundEffect)
+        public int PlaySound(SoundEffect soundEffect, bool isLooping = false)
         {
             if (!_soundEffects.Contains(soundEffect))
             {
@@ -35,11 +35,10 @@ namespace TeamRock.Managers
             }
 
             SoundData soundData = GetEmptySoundEffect(soundEffect);
+            soundData.SoundEffectInstance.IsLooped = isLooping;
             soundData.SoundEffectInstance.Play();
 
             return soundData.SoundIndex;
-
-            return -1;
         }
 
         public void PlaySound(int soundIndex)
@@ -143,21 +142,6 @@ namespace TeamRock.Managers
         #endregion
 
         #endregion
-
-        public void CheckSound(int soundIndex)
-        {
-            SoundData soundData = GetEffectByIndex(soundIndex);
-            if (soundData == null)
-            {
-                Console.WriteLine("Invalid Sound Requested");
-                return;
-            }
-
-            if (soundData.SoundEffectInstance.State == SoundState.Stopped)
-            {
-                soundData.SoundEffectInstance.Play();
-            }
-        }
 
         #region Utility Functions
 

@@ -7,6 +7,7 @@ using MonoGame.Extended.ViewportAdapters;
 using TeamRock.CustomCamera;
 using TeamRock.Managers;
 using TeamRock.Scene;
+using TeamRock.UI;
 using TeamRock.Utils;
 
 namespace TeamRock
@@ -30,15 +31,21 @@ namespace TeamRock
 
         private bool _drawDebug = false; // TODO: Change this later on...
 
+        private Fader _screenFader;
+
         #region Screen Management
 
         private HomeScreen _homeScreen;
+        private CinematicScreen _cinematicScreen;
+        private InstructionScreen _instructionScreen;
         private MainScreen _mainScreen;
         private GameOverScreen _gameOverScreen;
 
         private enum GameScreen
         {
             HomeScreen,
+            CinematicScreen,
+            InstructionsScreen,
             MainScreen,
             GameOverScreen
         }
@@ -90,8 +97,8 @@ namespace TeamRock
             SetupScreens();
             SetupOtherItems();
 
-            SetGameScreen(GameScreen.HomeScreen);
             _homeScreen.StartMusic();
+            SetGameScreen(GameScreen.HomeScreen);
         }
 
         private void SetupCamerasAndViewports()
@@ -125,6 +132,12 @@ namespace TeamRock
             _homeScreen = HomeScreen.Instance;
             _homeScreen.Initialize(Content);
 
+            _cinematicScreen = CinematicScreen.Instance;
+            _cinematicScreen.Initialize(Content);
+
+            _instructionScreen = InstructionScreen.Instance;
+            _instructionScreen.Initialize(Content);
+
             _mainScreen = MainScreen.Instance;
             _mainScreen.Initialize(Content);
 
@@ -136,6 +149,14 @@ namespace TeamRock
         {
             _soundManager = SoundManager.Instance;
             _soundManager.Initialize();
+
+            _screenFader = Fader.Instance;
+            _screenFader.Initialize(Content, GameInfo.ScreenFadeInRate, GameInfo.ScreenFadeOutRate);
+
+            // Set Initial Screen Status Before First Run
+            _screenFader.SetSpriteColor(Color.Black);
+            _screenFader.StartFadeOut();
+            _homeScreen.ResetScreen();
         }
 
         #endregion
@@ -160,6 +181,14 @@ namespace TeamRock
                     _homeScreen.Draw(_spriteBatch);
                     break;
 
+                case GameScreen.CinematicScreen:
+                    _cinematicScreen.Draw(_spriteBatch);
+                    break;
+
+                case GameScreen.InstructionsScreen:
+                    _instructionScreen.Draw(_spriteBatch);
+                    break;
+
                 case GameScreen.MainScreen:
                     _mainScreen.Draw(_spriteBatch);
                     break;
@@ -171,6 +200,8 @@ namespace TeamRock
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            _screenFader.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -188,6 +219,14 @@ namespace TeamRock
             {
                 case GameScreen.HomeScreen:
                     _homeScreen.DrawDebug(_spriteBatch);
+                    break;
+
+                case GameScreen.CinematicScreen:
+                    _cinematicScreen.DrawDebug(_spriteBatch);
+                    break;
+
+                case GameScreen.InstructionsScreen:
+                    _instructionScreen.DrawDebug(_spriteBatch);
                     break;
 
                 case GameScreen.MainScreen:
@@ -240,12 +279,45 @@ namespace TeamRock
                         if (switchScreen)
                         {
                             _homeScreen.StopMusic();
-                            _mainScreen.ResetScreen();
-                            SetGameScreen(GameScreen.MainScreen);
-                            _mainScreen.StartMusic();
+                            _cinematicScreen.ResetScreen();
+
+                            Fader.Instance.StartFadeOut();
+
+                            SetGameScreen(GameScreen.CinematicScreen);
                         }
                     }
                         break;
+
+                    case GameScreen.CinematicScreen:
+                    {
+                        bool switchScreen = _cinematicScreen.Update(deltaTime, totalGameTime);
+
+                        if (switchScreen)
+                        {
+                            _instructionScreen.ResetScreen();
+                            
+                            Fader.Instance.StartFadeOut();
+                            SetGameScreen(GameScreen.InstructionsScreen);
+                        }
+                    }
+                        break;
+
+                    case GameScreen.InstructionsScreen:
+                    {
+                        bool switchScreen = _instructionScreen.Update(deltaTime, totalGameTime);
+
+                        if (switchScreen)
+                        {
+                            _mainScreen.ResetScreen();
+                            _mainScreen.StartMusic();
+
+                            Fader.Instance.StartFadeOut();
+
+                            SetGameScreen(GameScreen.MainScreen);
+                        }
+                    }
+                        break;
+
 
                     case GameScreen.MainScreen:
                     {
@@ -254,6 +326,9 @@ namespace TeamRock
                         {
                             _mainScreen.StopMusic();
                             _gameOverScreen.ResetScreen();
+
+                            Fader.Instance.StartFadeOut();
+
                             SetGameScreen(GameScreen.GameOverScreen);
                         }
                     }
@@ -266,6 +341,9 @@ namespace TeamRock
                         {
                             _homeScreen.StartMusic();
                             _homeScreen.ResetScreen();
+
+                            Fader.Instance.StartFadeOut();
+
                             SetGameScreen(GameScreen.HomeScreen);
                         }
                     }
@@ -274,6 +352,8 @@ namespace TeamRock
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                _screenFader.Update(deltaTime);
             }
             else
             {

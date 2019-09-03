@@ -13,17 +13,20 @@ namespace TeamRock.Scene
     {
         private ContentManager _contentManager;
         private Sprite _gameOverSprite;
-        private UiTextNode _pressToPlayText;
-        private SpriteFont _defaultFont;
+        private Sprite _returnSprite;
 
         private KeyboardState _oldState;
         private GamePadState _oldControl;
+
+        private bool _screenActive;
+        private bool _exitScreen;
 
         #region Initialization
 
         public override void Initialize(ContentManager contentManager)
         {
             _contentManager = contentManager;
+
             Texture2D gameOverTexture = contentManager.Load<Texture2D>(AssetManager.GameOverImage);
             _gameOverSprite = new Sprite(gameOverTexture)
             {
@@ -32,11 +35,13 @@ namespace TeamRock.Scene
             };
             _gameOverSprite.SetOriginCenter();
 
-            _defaultFont = _contentManager.Load<SpriteFont>(AssetManager.Luckiest_Guy);
-            _pressToPlayText = new UiTextNode();
-            _pressToPlayText.Initialize(_defaultFont, "PRESS <SPACE> TO RESTART");
-            _pressToPlayText.Position =
-                new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100);
+            Texture2D returnTexture = _contentManager.Load<Texture2D>(AssetManager.SpaceToReturn);
+            _returnSprite = new Sprite(returnTexture)
+            {
+                Scale = 0.2f,
+                Position = new Vector2(GameInfo.FixedWindowWidth / 2.0f, GameInfo.FixedWindowHeight - 100)
+            };
+            _returnSprite.SetOriginCenter();
 
             _oldState = Keyboard.GetState();
             _oldControl = GamePad.GetState(PlayerIndex.One);
@@ -48,8 +53,8 @@ namespace TeamRock.Scene
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _pressToPlayText.Draw(spriteBatch);
             _gameOverSprite.Draw(spriteBatch);
+            _returnSprite.Draw(spriteBatch);
         }
 
         public override void DrawDebug(SpriteBatch spriteBatch)
@@ -62,33 +67,35 @@ namespace TeamRock.Scene
 
         public override bool Update(float deltaTime, float gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
-            if (gamePadCapabilities.IsConnected)
+            if (_screenActive)
             {
-                _pressToPlayText.Text = "PRESS <A> TO RETURN";
-
-                GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-                if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
+                KeyboardState keyboardState = Keyboard.GetState();
+                GamePadCapabilities gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+                if (gamePadCapabilities.IsConnected)
                 {
-                    return true;
+                    GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+                    if (gamePadState.Buttons.A != ButtonState.Pressed && _oldControl.Buttons.A == ButtonState.Pressed)
+                    {
+                        _screenActive = false;
+                        Fader.Instance.StartFadeIn();
+                    }
+
+                    _oldControl = gamePadState;
                 }
-
-                _oldControl = gamePadState;
-            }
-            else
-            {
-                _pressToPlayText.Text = "PRESS <SPACE> TO RETURN";
-
-                if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
+                else
                 {
-                    return true;
-                }
+                    if (keyboardState.IsKeyUp(Keys.Space) && _oldState.IsKeyDown(Keys.Space))
+                    {
+                        _screenActive = false;
+                        Fader.Instance.StartFadeIn();
+                    }
 
-                _oldState = keyboardState;
+                    _oldState = keyboardState;
+                }
             }
 
-            return false;
+
+            return _exitScreen;
         }
 
         #endregion
@@ -99,6 +106,28 @@ namespace TeamRock.Scene
         {
             _oldState = Keyboard.GetState();
             _oldControl = GamePad.GetState(PlayerIndex.One);
+
+            _exitScreen = false;
+            _screenActive = false;
+
+            Fader.Instance.OnFadeInComplete += HandleFadeIn;
+            Fader.Instance.OnFadeOutComplete += HandleFadeOut;
+        }
+
+        #endregion
+
+        #region Utility Functions
+
+        private void HandleFadeIn()
+        {
+            Fader.Instance.OnFadeInComplete -= HandleFadeIn;
+            _exitScreen = true;
+        }
+
+        private void HandleFadeOut()
+        {
+            Fader.Instance.OnFadeOutComplete -= HandleFadeOut;
+            _screenActive = true;
         }
 
         #endregion
